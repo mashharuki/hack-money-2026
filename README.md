@@ -1,6 +1,6 @@
 # hack-money-2026
 
-## short discription
+## short description
 
 Zombie L2 Clearinghouse は、
 低稼働なEthereum L2チェーンの計算リソースをトークン化し、
