@@ -138,7 +138,7 @@ Zombie L2 Clearinghouse は、**ユーザー需要に依存しない収益モデ
 
 ### 2. プログラム可能な価格市場を作る
 
-Uniswap v4 を用いて CPT / USDC の基準市場を構築し、v4 Hook によって L2 の稼働率に応じて手数料やスプレッドを動的に調整します。
+Uniswap v4 を用いて **CPT / USDC** の基準市場を構築し、v4 Hook によって L2 の稼働率に応じて手数料やスプレッドを動的に調整します。
 
 これにより、**「空いているL2ほどCPTが安くなり、買われやすい」** という市場ルールが自動的に成立します。
 
@@ -297,8 +297,6 @@ sequenceDiagram
 
 ### 2-3. Uniswap v4 Hook（稼働率連動の手数料/スプレッド調整）
 
-> ここが「Uniswap v4を使う必然性」の核です（審査員が最も評価しやすい部分）。
-
 ```mermaid
 sequenceDiagram
   autonumber
@@ -382,8 +380,6 @@ sequenceDiagram
 ```
 
 ### 2-7. 最終決済（Arc + USDC）→ Operator Vault入金
-
-※ここは実装の都合で「Arcで最終USDCを受け取る」形にしておくと、デモが非常に分かりやすいです。
 
 ```mermaid
 sequenceDiagram
