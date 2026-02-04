@@ -5,6 +5,7 @@
 Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソースをトークン化し、ガスレス裁定によってUSDC収益を生み出す財務レイヤーです。
 
 本プロジェクトは ETH Global HackMoney 2026 ハッカソンプロジェクトとして、以下3つのスポンサー技術を統合的に活用します：
+
 - **Uniswap v4**: CPT/USDC市場のHookによる動的制御
 - **Yellow SDK**: ステートチャネルによるガスレス裁定実行
 - **Arc + Circle**: USDC決済と収益集約
