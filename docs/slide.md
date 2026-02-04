@@ -32,35 +32,52 @@ ETH Global HackMoney 2026
 
 ## Why L2s in 2026?
 ### L2の役割は「スケーリング」から「付加価値」へ
-- L1自体がスケールし、L2の“必然”が変わった
-- L2は **独立した価値提供チェーンのスペクトラム** に
-- 低レイテンシ/特化VM/非金融ユースケースなどの価値が重要に
-
----
-
-## 2026-02-03 Vitalikの示唆
-- L2のStage 2到達が想定より遅い
-- L1がスケールし、ガスリミット増加も進行
-- 「L2は“スケーリング以外”の価値を出すべき」
+- L1自体がスケールし、ガスリミット増加も進行
+- L2は**独立した価値提供チェーンのスペクトラム**に
+- 低レイテンシ/特化VM/非金融ユースケースなどが重要
 
 ---
 
 ## Zombie L2 Clearinghouseの立ち位置
 **L2は“安価で余っている計算資源”**
 - 低稼働L2のブロックスペースを資産化
-- 需要が戻るまで **経済的に生き延びる時間** を提供
-- Ethereumとは **信用が必要な部分だけ接続**
+- 需要が戻るまで**経済的に生き延びる時間**を提供
+- 信用が必要な部分だけEthereumと接続
 
 ---
 
-## 解決：需要に依存しない収益モデル
-### 3つの柱
-1. **Compute Token (CPT)**  
-   空き計算リソースをERC20化
-2. **Uniswap v4 Hook**  
-   稼働率連動で手数料/スプレッド制御
-3. **Yellow + Arc/USDC**  
-   ガスレス裁定 → USDC決済で収益確定
+## Why Tokenize Compute?
+### For Traders
+- 実行コストのボラティリティを取引可能に
+- 需要/混雑の予測を価格に反映
+
+### For Developers
+- 複数L2の実行コストを事前購入・予算化
+- ガス高騰リスクを低減しUXを安定化
+
+---
+
+## Concrete Use Cases
+- **NFT / Launch**: 需要集中でも安定コストで実行
+- **Trading / Arbitrage Bots**: ガス高騰の自然ヘッジ
+- **AI / Batch Compute**: 最安L2へ動的ルーティング
+- **L2 Operators**: 余剰計算資源を収益化
+
+---
+
+## 参加者と役割
+- **L2 Operators**: CPT発行・供給
+- **Developers**: CPT購入・消費
+- **Traders / Bots**: 流動性提供・裁定
+- **Zombie L2 Clearinghouse**: 市場設計・裁定・USDC決済
+
+---
+
+## 解決アプローチ（4ステップ）
+1. **CPTを発行**（計算リソースのERC20化）
+2. **CPT/USDC基準市場**をUniswap v4で形成
+3. **Yellowセッション**でガスレス裁定
+4. **Arc + USDC**で利益確定 → Vaultへ還元
 
 ---
 
@@ -71,41 +88,66 @@ ETH Global HackMoney 2026
 
 ---
 
-## 仕組み（フロー）
-1. L2ごとに **CPT/USDC 基準市場**を構築  
-2. **v4 Hook** が稼働率に応じ手数料を調整  
-3. 価格差を **Watcher** が検知  
-4. **Yellowセッション**でガスレス裁定  
-5. **Arc** でUSDC決済 → **Vault**に集約  
+## CPT Flow
+```mermaid
+flowchart LR
+  OP[L2 Operator]
+  DEV[Developer / App]
+  TR[Trader / Bot]
+  CL[Zombie L2 Clearinghouse]
+  UNI[Uniswap v4\nCPT / USDC Pool]
+  YEL[Yellow Session]
+  ARC[Arc + USDC]
+  VAULT[Operator Vault]
+
+  OP -->|mint / supply CPT| UNI
+  DEV -->|buy CPT| UNI
+  TR -->|trade CPT| UNI
+  CL -->|price discrepancy| YEL
+  YEL -->|gasless arbitrage| UNI
+  YEL -->|net result| ARC
+  ARC -->|USDC profit| VAULT
+```
 
 ---
 
-## アーキテクチャ（3層）
+## System Architecture Diagram
 ```mermaid
-graph TB
-  subgraph Frontend
-    UI[Dashboard]
+flowchart LR
+  subgraph L2A["Low-Activity L2 A (e.g. Base)"]
+    CPTA["CPT-A\n(Compute Token)"]
   end
-  subgraph Offchain
-    W[Price Watcher]
-    E[Arbitrage Engine]
-    Y[Yellow Session]
-    S[Settlement Orchestrator]
+  subgraph L2B["Low-Activity L2 B (e.g. WorldCoin)"]
+    CPTB["CPT-B\n(Compute Token)"]
   end
-  subgraph Onchain L2A
-    A[CPT-A / v4 Pool / Hook]
+  subgraph UNI["Uniswap v4 Pricing Layer"]
+    POOLA["CPT-A / USDC Pool\n+ v4 Hook"]
+    POOLB["CPT-B / USDC Pool\n+ v4 Hook"]
   end
-  subgraph Onchain L2B
-    B[CPT-B / v4 Pool / Hook]
+  WATCHER["Price Discrepancy Watcher"]
+  ENGINE["Ghost Arbitrage Engine"]
+  subgraph YELLOW["Yellow Network\n(State Channel Execution)"]
+    SESSION["Gasless Arbitrage Session"]
   end
-  subgraph Arc
-    V[Operator Vault]
+  subgraph ARC["Arc + Circle Settlement Hub"]
+    USDC["USDC Settlement"]
   end
+  VAULT["Operator Vault\n(USDC)"]
+  DASH["Dashboard / UI"]
 
-  UI --> W
-  W --> E --> Y --> S --> V
-  W --> A
-  W --> B
+  CPTA --> POOLA
+  CPTB --> POOLB
+  POOLA --> WATCHER
+  POOLB --> WATCHER
+  WATCHER --> ENGINE
+  ENGINE --> SESSION
+  SESSION --> USDC
+  USDC --> VAULT
+
+  POOLA -. price .-> DASH
+  POOLB -. price .-> DASH
+  SESSION -. trades .-> DASH
+  VAULT -. balance .-> DASH
 ```
 
 ---
@@ -140,13 +182,6 @@ graph TB
   - Yellowセッション裁定
   - Arc決済
   - Dashboard可視化
-
----
-
-## スポンサープライズ適合
-- **Uniswap v4**: Hookで市場ルール制御（本質的価値）
-- **Yellow**: ガスレス・高速裁定
-- **Arc/Circle**: USDC収益確定・集約
 
 ---
 

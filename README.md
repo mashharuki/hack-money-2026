@@ -2,7 +2,7 @@
 
 ## short description
 
-Zombie L2 Clearinghouse は 低稼働なEthereum L2チェーンの計算リソースをトークン化し、ガスレス裁定によってUSDC収益を生み出す財務レイヤーです。
+Zombie L2 Clearinghouse は 低稼働なEthereum L2チェーンの計算リソースをトークン化し、ガスレス裁定によってL2運営者にUSDC収益を生み出す財務レイヤーです。
 
 ## Overview
 
@@ -54,6 +54,131 @@ L2はユーザーが増えない限り、
 
 👉 **問題の本質は「需要がないと何もできないL2運営モデル」そのものです。**
 
+## Why Tokenize Compute?」
+
+### For Traders
+
+Compute Token は、**ブロックチェーンの実行コストに対する投機やヘッジを可能にし、ガス代のボラティリティを取引可能な資産へと変えます。**
+
+これによりトレーダーはインフラの混雑やチェーンの稼働状況を予測し、**計算コストそのものを市場で売買する**ことができます。
+
+### For Developers
+
+計算リソースをトークン化することで、開発者は**複数のL2にまたがる実行コストを事前に購入・予算化し、予測可能な価格で最適化**することができます。
+
+これにより、ガス代の急騰によるUX低下や予算超過を防ぎ、**AWSやGoogle Cloudなどのパブリッククラウドに近い感覚でインフラコストを管理**できます。
+
+### One-liner
+
+> **計算コストをトークン化することで、実行コストは「不確実性」から「市場」へと変わります。**
+
+## Concrete Use Cases
+
+### 🖼 NFT / Launch Events
+
+**課題**
+NFTミントやエアドロ時には、一時的にトランザクションが集中し、
+ガス代の高騰やUXの崩壊が起こりやすい。
+
+**CPTを使うと**
+
+* 事前に必要な計算量分のCPTを購入・確保
+* ミント当日でも安定したコストで実行可能
+* 需要が予想以上に高い場合は、CPTを高値で売却して実行を遅らせる判断も可能
+
+👉 **一時的な負荷を「市場」で吸収できる**
+
+### 🤖 Trading / Arbitrage Bots
+
+**課題**
+裁定ボットや高頻度トレードは、
+ガス代の急騰によって突然赤字化するリスクを抱えている。
+
+**CPTを使うと**
+
+* 実行コストを事前にロック
+* ガス代上昇時にはCPT価格が上昇し、自然なヘッジになる
+* 「ガス代が上がるほど不利」な構造から脱却できる
+
+👉 **実行コストが戦略変数になる**
+
+### 🧠 AI / Batch Compute
+
+**課題**
+AI inference やバッチ処理は、
+「いつ・どこで・どれくらい安く計算できるか」が重要。
+
+**CPTを使うと**
+
+* 低稼働なL2の計算リソースをまとめて購入
+* 処理を最も安いL2に動的にルーティング
+* 実行コストをUSDC建てで管理可能
+
+👉 **L2が分散型クラウド計算基盤として機能**
+
+### 🛠 Infrastructure / L2 Operators
+
+**課題**
+L2運営はユーザーがいない間も、
+ノード・RPC・シーケンサーなどの固定費を払い続けなければならない。
+
+**CPTを使うと**
+
+* 余っている計算リソースをCPTとして市場に供給
+* トレーダーや開発者による裁定でUSDC収益を獲得
+* ユーザーが来る前にランウェイを確保できる
+
+👉 **「使われないL2」が経済的に意味を持つ**
+
+## Who Buys and Sells CPT?
+
+### 参加者と役割
+
+* **L2 Operators**
+
+  * 計算リソースを提供
+  * CPTを発行・供給する側
+* **Developers**
+
+  * 実行コストを安定させたい
+  * CPTを購入・消費する側
+* **Traders / Bots**
+
+  * 価格差・稼働率の変化を収益化
+  * CPTを売買する流動性提供者
+* **Zombie L2 Clearinghouse**
+
+  * 市場設計・裁定・USDC決済を担う財務レイヤー
+
+## CPT Flow Diagram
+
+```mermaid
+flowchart LR
+  %% Actors
+  OP[L2 Operator]
+  DEV[Developer / App]
+  TR[Trader / Bot]
+  CL[Zombie L2 Clearinghouse]
+  UNI[Uniswap v4\nCPT / USDC Pool]
+  YEL[Yellow Session]
+  ARC[Arc + USDC]
+  VAULT[Operator Vault]
+
+  %% Supply
+  OP -->|mint / supply CPT| UNI
+
+  %% Demand
+  DEV -->|buy CPT (predictable cost)| UNI
+  TR -->|trade CPT (speculation / hedge)| UNI
+
+  %% Arbitrage
+  CL -->|price discrepancy detected| YEL
+  YEL -->|gasless arbitrage| UNI
+
+  %% Settlement
+  YEL -->|net result| ARC
+  ARC -->|USDC profit| VAULT
+```
 
 ## Why L2s in 2026?
 
@@ -562,3 +687,7 @@ sequenceDiagram
 | テスト      | Foundry test / Vitest | Hook・CPT・Vault・botロジックの単体テスト |
 | デプロイ     | スクリプト（TS）             | L2-A/B + Arc へデプロイ           |
 | CI（任意）   | GitHub Actions        | lint/testの自動実行               |
+
+### TL;DR
+
+Zombie L2 Clearinghouse は、**使われていないL2を「失敗」ではなく「安価な計算資源」として再定義し、Uniswap v4・Yellow・USDC を組み合わせて、L2運営に現実的な収益をもたらす財務インフラ** です。
