@@ -53,8 +53,8 @@
 ## Demo Scenario (審査員向け)
 
 ### ストーリー
-1. L2-A (Unichain) が高稼働 → CPT-A が高い
-2. L2-B (Linea) が低稼働 → CPT-B が安い（Hook により手数料減）
+1. L2-A (Base Sepolia) が高稼働 → CPT-A が高い
+2. L2-B (WorldCoin Sepolia) が低稼働 → CPT-B が安い（Hook により手数料減）
 3. Watcher が価格差を検知 → Arbitrage Engine 起動
 4. Yellow セッション内で反復売買（CPT-B 買い → CPT-A 売り）
 5. セッション終了 → Arc で USDC 決済

@@ -12,7 +12,7 @@
 
 - **Language**: TypeScript (オフチェーン・フロントエンド), Solidity (スマートコントラクト)
 - **Runtime**: Node.js 20+
-- **Blockchain**: Unichain (L2-A), Linea (L2-B), Arc (決済ハブ)
+- **Blockchain**: Base Sepolia (L2-A), WorldCoin Sepolia (L2-B), Arc (決済ハブ)
 - **Framework**: Next.js + TailwindCSS + Shadcn/ui (フロントエンド)
 
 ## Key Libraries

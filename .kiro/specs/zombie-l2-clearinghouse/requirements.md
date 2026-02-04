@@ -9,7 +9,7 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 - **Yellow SDK**: ステートチャネルによるガスレス裁定実行
 - **Arc + Circle**: USDC決済と収益集約
 
-**対象チェーン**: Unichain (L2-A), Linea (L2-B)
+**対象チェーン**: Base Sepolia (L2-A), WorldCoin Sepolia (L2-B)
 
 ---
 
@@ -27,7 +27,7 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 4. The CPT Token Contract shall 発行権限を運営者アドレスのみに制限する
 5. When 運営者がCPTをVaultに預ける, the Operator Vault shall CPT残高を記録し、Deposit イベントを発行する
 6. The CPT Token Contract shall Solidity 0.8.x 以上で実装される
-7. The CPT Token Contract shall 各L2チェーン（Unichain, Linea）にそれぞれ独立してデプロイされる
+7. The CPT Token Contract shall 各L2チェーン（Base Sepolia, WorldCoin Sepolia）にそれぞれ独立してデプロイされる
 
 ---
 
@@ -40,7 +40,7 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 1. The Uniswap v4 Pool shall CPT/USDCペアの流動性プールを提供する
 2. When トレーダーがスワップを実行する, the Uniswap v4 Pool shall 入力トークンを受け取り、出力トークンを転送する
 3. When スワップが実行される, the Uniswap v4 Pool shall 価格を更新し、Swap イベントを発行する
-4. The Uniswap v4 Pool shall 各L2チェーン（Unichain, Linea）にそれぞれ独立して存在する
+4. The Uniswap v4 Pool shall 各L2チェーン（Base Sepolia, WorldCoin Sepolia）にそれぞれ独立して存在する
 5. When 流動性が提供される, the Uniswap v4 Pool shall LP トークンを発行する
 
 ---
@@ -68,8 +68,8 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 
 #### Acceptance Criteria
 
-1. The Price Watcher shall 定期的にUnichain上のCPT-A/USDC価格を取得する
-2. The Price Watcher shall 定期的にLinea上のCPT-B/USDC価格を取得する
+1. The Price Watcher shall 定期的にBase Sepolia上のCPT-A/USDC価格を取得する
+2. The Price Watcher shall 定期的にWorldCoin Sepolia上のCPT-B/USDC価格を取得する
 3. When 価格差が設定閾値以上になる, the Price Watcher shall 裁定機会イベントを発行する
 4. The Price Watcher shall 価格取得エラー時にリトライロジックを実行する
 5. If 連続してエラーが発生する, then the Price Watcher shall エラーログを記録し、アラートを発行する
@@ -147,8 +147,8 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 
 #### Acceptance Criteria
 
-1. The Dashboard shall Unichain上のCPT-A/USDC価格をリアルタイムで表示する
-2. The Dashboard shall Linea上のCPT-B/USDC価格をリアルタイムで表示する
+1. The Dashboard shall Base Sepolia上のCPT-A/USDC価格をリアルタイムで表示する
+2. The Dashboard shall WorldCoin Sepolia上のCPT-B/USDC価格をリアルタイムで表示する
 3. The Dashboard shall CPT-A と CPT-B の価格差を計算し、表示する
 4. The Dashboard shall Utilization Hook の現在の手数料設定を表示する
 5. The Dashboard shall Yellow セッションの実行ログを表示する
@@ -166,8 +166,8 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 
 #### Acceptance Criteria
 
-1. The Deployment Script shall CPT Token Contract を Unichain と Linea にデプロイする
-2. The Deployment Script shall Utilization Hook を Unichain と Linea にデプロイする
+1. The Deployment Script shall CPT Token Contract を Base Sepolia, WorldCoin Sepolia にデプロイする
+2. The Deployment Script shall Utilization Hook を Base Sepolia, WorldCoin Sepolia にデプロイする
 3. The Deployment Script shall Operator Vault を Arc にデプロイする
 4. The Deployment Script shall Uniswap v4 Pool を CPT/USDC ペアで初期化する
 5. When デプロイが完了する, the Deployment Script shall コントラクトアドレスを設定ファイルに記録する
@@ -248,7 +248,7 @@ Zombie L2 Clearinghouse は、低稼働なEthereum L2チェーンの計算リソ
 - Dashboard は 3秒以内に初期ロードを完了する
 
 ### Scalability
-- システムは 2チェーン（Unichain, Linea）をサポートする（ハッカソンスコープ）
+- システムは 2チェーン（Base Sepolia, WorldCoin Sepolia）をサポートする（ハッカソンスコープ）
 - 将来的に追加L2への拡張が容易な設計とする
 
 ### Maintainability

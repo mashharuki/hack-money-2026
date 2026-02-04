@@ -41,8 +41,8 @@ Arc + Circle を介して裁定収益を USDC で決済・集約し、L2運営�
 
 ## Target Chains (Hackathon Scope)
 
-- **L2-A**: Unichain
-- **L2-B**: Linea
+- **L2-A**: Base Sepolia
+- **L2-B**: WorldCoin Sepolia
 
 ## Project Context
 

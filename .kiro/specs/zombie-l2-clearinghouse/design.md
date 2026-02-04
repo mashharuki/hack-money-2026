@@ -61,13 +61,13 @@ graph TB
         Settlement[Settlement Orchestrator]
     end
 
-    subgraph OnchainUnichain["Onchain Layer - Unichain L2-A"]
+    subgraph OnchainBase["Onchain Layer - Base Sepolia L2-A"]
         CPTA[CPT Token A]
         PoolA[Uniswap v4 Pool A]
         HookA[Utilization Hook A]
     end
 
-    subgraph OnchainLinea["Onchain Layer - Linea L2-B"]
+    subgraph OnchainWorldCoin["Onchain Layer - WorldCoin Sepolia L2-B"]
         CPTB[CPT Token B]
         PoolB[Uniswap v4 Pool B]
         HookB[Utilization Hook B]
@@ -111,7 +111,7 @@ graph TB
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
 | **Smart Contracts** | Solidity 0.8.x | CPT Token, Utilization Hook, Operator Vault | ERC20標準、Uniswap v4 Hook インターフェース準拠 |
-| **Blockchain** | Unichain (L2-A), Linea (L2-B), Arc (決済ハブ) | CPT発行・市場形成・USDC決済 | Testnet環境でデプロイ |
+| **Blockchain** | Base Sepolia (L2-A), WorldCoin Sepolia (L2-B), Arc (決済ハブ) | CPT発行・市場形成・USDC決済 | Testnet環境でデプロイ |
 | **Uniswap v4** | v4 (latest) | CPT/USDC プール、Hook による動的制御 | スポンサープライズ要件 |
 | **Yellow SDK** | Nitrolite (latest) | ステートチャネル・ガスレスセッション | スポンサープライズ要件 |
 | **Circle** | Gateway / CCTP | USDC決済・クロスチェーン転送 | スポンサープライズ要件 |
@@ -132,8 +132,8 @@ graph TB
 sequenceDiagram
     autonumber
     participant Watcher as Price Watcher
-    participant PoolA as Uniswap v4 Pool A<br/>(Unichain)
-    participant PoolB as Uniswap v4 Pool B<br/>(Linea)
+    participant PoolA as Uniswap v4 Pool A<br/>(Base Sepolia)
+    participant PoolB as Uniswap v4 Pool B<br/>(WorldCoin Sepolia)
     participant Engine as Arbitrage Engine
     participant Yellow as Yellow Session Manager
     participant Settlement as Settlement Orchestrator
@@ -264,7 +264,7 @@ sequenceDiagram
 **Responsibilities & Constraints**
 - ERC20標準インターフェースの完全実装
 - 運営者アドレスのみが発行可能（mint権限）
-- Unichain と Linea に独立してデプロイ
+- Base Sepolia と WorldCoin Sepolia に独立してデプロイ
 
 **Dependencies**
 - Outbound: OpenZeppelin ERC20 — 標準実装 (P0)
@@ -415,12 +415,12 @@ interface IOperatorVault {
 | Requirements | 4.1-4.7 |
 
 **Responsibilities & Constraints**
-- 5秒間隔で Unichain と Linea の価格を取得
+- 5秒間隔で Base Sepolia と WorldCoin Sepolia の価格を取得
 - 価格差が閾値以上の場合、裁定機会イベントを発行
 - エラー時のリトライロジック
 
 **Dependencies**
-- Outbound: Uniswap v4 Pool (Unichain, Linea) — 価格取得 (P0)
+- Outbound: Uniswap v4 Pool (Base Sepolia, WorldCoin Sepolia) — 価格取得 (P0)
 - Outbound: Arbitrage Engine — 裁定機会通知 (P0)
 
 **Contracts**: Event [x]
@@ -620,7 +620,7 @@ interface SettlementOrchestratorService {
 | Requirements | 9.1-9.10 |
 
 **Responsibilities & Constraints**
-- Unichain と Linea の CPT/USDC 価格を表示
+- Base Sepolia と WorldCoin Sepolia の CPT/USDC 価格を表示
 - 価格差を計算・表示
 - Utilization Hook の現在の手数料設定を表示
 - Yellow セッションログを表示
@@ -628,7 +628,7 @@ interface SettlementOrchestratorService {
 - データ更新時に自動リフレッシュ
 
 **Dependencies**
-- Outbound: Uniswap v4 Pool (Unichain, Linea) — 価格取得 (P0)
+- Outbound: Uniswap v4 Pool (Base Sepolia, WorldCoin Sepolia) — 価格取得 (P0)
 - Outbound: Utilization Hook — 手数料設定取得 (P0)
 - Outbound: Yellow Session Manager — ログ取得 (P1)
 - Outbound: Operator Vault — 残高取得 (P0)
@@ -849,7 +849,7 @@ interface SettlementOrchestratorService {
 
 ### Scaling Approach
 
-- **ハッカソンスコープ**: 2チェーン（Unichain, Linea）のみ
+- **ハッカソンスコープ**: 2チェーン（Base Sepolia, WorldCoin Sepolia）のみ
 - **将来拡張**: 追加L2への拡張が容易な設計（設定ファイルでチェーン追加）
 
 ### Caching Strategy
@@ -886,7 +886,7 @@ interface SettlementOrchestratorService {
 ```typescript
 // Price Data
 type PriceData = {
-  chain: 'Unichain' | 'Linea';
+  chain: 'Base' | 'WorldCoin';
   token: 'CPT' | 'USDC';
   price: bigint; // wei 単位
   timestamp: number; // Unix timestamp

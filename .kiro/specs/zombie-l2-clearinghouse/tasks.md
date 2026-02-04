@@ -148,7 +148,7 @@
   - _Requirements: 9.8_
 
 - [ ] 5.2 (P) 価格差表示コンポーネント実装
-  - Unichain と Linea の CPT/USDC 価格表示
+  - Base Sepolia と WorldCoin Sepolia の CPT/USDC 価格表示
   - 価格差計算・表示
   - 5秒間隔の自動リフレッシュ
   - Recharts/Chart.js で価格推移チャート表示
@@ -188,7 +188,7 @@
 
 - [ ] 6.1 コントラクトデプロイスクリプト作成（2.1, 2.2, 2.3, 2.4に依存）
   - Foundry スクリプトで CPT Token, Hook, Vault をデプロイ
-  - Unichain, Linea, Arc への自動デプロイ
+  - Base Sepolia, WorldCoin Sepolia, Arc への自動デプロイ
   - デプロイ後のコントラクトアドレス記録（JSON設定ファイル）
   - デプロイ失敗時のエラー処理
   - _Requirements: 10.1, 10.2, 10.3, 10.5, 10.7_

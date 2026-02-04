@@ -175,7 +175,7 @@ import { formatPrice } from './utils'
 ### ハッカソンスコープでの簡略化
 - **Indexer**: 軽量な自前実装（必要最小限のイベントログ保持、`offchain` パッケージ内）
 - **Oracle**: モック実装可（L2稼働率シグナル、`contracts/test` 内）
-- **Multi-chain**: L2-A (Unichain), L2-B (Linea) の2チェーンに限定
+- **Multi-chain**: L2-A (Base Sepolia), L2-B (WorldCoin Sepolia) の2チェーンに限定
 
 ---
 _Document patterns, not file trees. New files following patterns shouldn't require updates_

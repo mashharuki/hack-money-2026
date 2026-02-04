@@ -30,6 +30,29 @@ ETH Global HackMoney 2026
 
 ---
 
+## Why L2s in 2026?
+### L2の役割は「スケーリング」から「付加価値」へ
+- L1自体がスケールし、L2の“必然”が変わった
+- L2は **独立した価値提供チェーンのスペクトラム** に
+- 低レイテンシ/特化VM/非金融ユースケースなどの価値が重要に
+
+---
+
+## 2026-02-03 Vitalikの示唆
+- L2のStage 2到達が想定より遅い
+- L1がスケールし、ガスリミット増加も進行
+- 「L2は“スケーリング以外”の価値を出すべき」
+
+---
+
+## Zombie L2 Clearinghouseの立ち位置
+**L2は“安価で余っている計算資源”**
+- 低稼働L2のブロックスペースを資産化
+- 需要が戻るまで **経済的に生き延びる時間** を提供
+- Ethereumとは **信用が必要な部分だけ接続**
+
+---
+
 ## 解決：需要に依存しない収益モデル
 ### 3つの柱
 1. **Compute Token (CPT)**  
@@ -88,10 +111,10 @@ graph TB
 ---
 
 ## デモシナリオ（審査員向け）
-1. Unichain 高稼働 → CPT-A 価格上昇  
-2. Linea 低稼働 → CPT-B 価格低下  
-3. **価格乖離検知 → Yellow裁定開始**  
-4. **USDC決済 → Vault残高増加**  
+1. Base Sepolia 高稼働 → CPT-A 価格上昇
+2. WorldCoin Sepolia 低稼働 → CPT-B 価格低下
+3. **価格乖離検知 → Yellow裁定開始**
+4. **USDC決済 → Vault残高増加**
 5. Dashboardでリアルタイム表示
 
 ---
@@ -110,12 +133,12 @@ graph TB
 ---
 
 ## MVPスコープ（HackMoney 2026）
-- L2: **Unichain / Linea**
-- 主要機能  
-  - CPT発行・Vault  
-  - v4 Hook（稼働率連動）  
-  - Yellowセッション裁定  
-  - Arc決済  
+- L2: **Base Sepolia / WorldCoin Sepolia**
+- 主要機能
+  - CPT発行・Vault
+  - v4 Hook（稼働率連動）
+  - Yellowセッション裁定
+  - Arc決済
   - Dashboard可視化
 
 ---
