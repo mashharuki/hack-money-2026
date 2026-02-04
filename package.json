@@ -1,5 +1,15 @@
 {
+	"name": "hack-money-2026",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"transfer": "tsx scripts/arc-transfer.ts",
+		"settle": "tsx scripts/settle-to-vault.ts"
+	},
 	"devDependencies": {
-		"jose": "^6.1.3"
+		"@types/node": "^25.2.0",
+		"jose": "^6.1.3",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3"
 	}
 }
