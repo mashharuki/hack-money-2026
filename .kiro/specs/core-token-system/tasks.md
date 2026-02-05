@@ -4,125 +4,178 @@
 
 本実装計画は、Core Token System（CPT Token, Mock Oracle, Operator Vault）を実装可能なタスクに分解したものです。
 
-**総タスク数**: 12タスク
-**並列実行可能**: 7タスク（マーカー: `(P)`）
-**推定期間**: 1-2日（Phase 1 の一部）
+**総タスク数**: 10 major tasks, 17 sub-tasks
+**並列実行可能**: 9タスク（マーカー: `(P)`）
+**推定期間**: 1-2日（Phase 1）
 
 ---
 
 ## Task List
 
-### 1. プロジェクトセットアップ（並列実行可能）
+### 1. OpenZeppelin Contracts 導入
 
-- [ ] 1.1 (P) 既存プロジェクト構造の確認と設定
-  - **既存ディレクトリ活用**: `contract/` をそのまま使用
-  - TypeScript 設定確認（tsconfig.json、strict mode）
-  - ESLint + Prettier 設定
-  - _Requirements: 4.1_
-  - _Note: 既存資産を活用_
-
-- [ ] 1.2 (P) Foundry プロジェクト拡張
-  - **既存 `contract/` ディレクトリを活用**
-  - `foundry.toml` でコンパイラバージョン設定（Solidity 0.8.x）
-  - OpenZeppelin ライブラリインストール
-  - _Requirements: 4.1, 4.5_
+- [ ] 1. (P) OpenZeppelin Contracts インストール
+  - Foundry で OpenZeppelin Contracts v5.x をインストール（`forge install OpenZeppelin/openzeppelin-contracts`）
+  - foundry.toml で remappings 設定（`@openzeppelin/contracts=lib/openzeppelin-contracts/contracts`）
+  - ERC20, Ownable, ReentrancyGuard が利用可能であることを確認
+  - _Requirements: 1.6, 3.7, 7.6_
 
 ---
 
-### 2. オンチェーンコントラクト実装
+### 2. CPT Token Contract 実装
 
 - [ ] 2.1 (P) CPT Token Contract 実装
-  - ERC20標準実装（OpenZeppelin継承）
-  - mint 関数実装（onlyOwner modifier）
-  - Transfer イベント発行
-  - 単体テスト（mint, transfer, balanceOf）
-  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.6, 6.1_
+  - OpenZeppelin ERC20 + Ownable を継承した ComputeToken コントラクトを実装
+  - mint 関数を実装（onlyOwner modifier、_mint で msg.sender に発行）
+  - NatSpec コメントを追加（@title, @notice, @dev, @param）
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.6_
+  - _Contracts: ComputeToken (Service)_
 
-- [ ] 2.2 (P) Mock Oracle 実装
-  - getUtilization 関数実装（固定値または可変シミュレーション）
-  - setUtilization 関数実装（デモ用）
-  - 稼働率範囲検証（0-100%）
-  - 単体テスト（getUtilization, setUtilization）
-  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 6.2_
-
-- [ ] 2.3 (P) Operator Vault 実装
-  - depositUSDC, withdraw, balanceOf 実装
-  - onlyOwner modifier で引き出し権限制御
-  - Deposit, Withdraw イベント発行
-  - ReentrancyGuard 適用
-  - 単体テスト（入出金、権限制御）
-  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 6.3, 7.6_
-
-- [ ] 2.4 コントラクト統合テスト
-  - CPT Token + Operator Vault の統合動作確認
-  - Mock Oracle の動作確認
-  - _Requirements: 6.4, 6.5_
+- [ ] 2.2 (P) CPT Token 単体テスト
+  - mint 権限テスト（owner のみ発行可能、非 owner は revert）
+  - ERC20 標準機能テスト（transfer, balanceOf, totalSupply）
+  - approve + transferFrom テスト
+  - transferOwnership テスト
+  - _Requirements: 1.5, 1.7, 6.1_
 
 ---
 
-### 3. デプロイスクリプト実装
+### 3. Mock Oracle 実装
 
-- [ ] 3.1 コントラクトデプロイスクリプト作成（2.1, 2.2, 2.3に依存）
-  - Foundry スクリプトで CPT Token, Mock Oracle, Vault をデプロイ
-  - Base Sepolia, WorldCoin Sepolia, Arc への自動デプロイ
-  - デプロイ後のコントラクトアドレス記録（JSON設定ファイル）
-  - デプロイ失敗時のエラー処理
-  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
+- [ ] 3.1 (P) Mock Oracle Contract 実装
+  - _utilization 変数（デフォルト50%）を実装
+  - getUtilization 関数を実装（view）
+  - setUtilization 関数を実装（範囲検証 0-100%、require文）
+  - UtilizationUpdated イベントを実装
+  - NatSpec コメントを追加
+  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.6_
+  - _Contracts: MockOracle (Service)_
 
-- [ ] 3.2 環境設定ファイル管理
-  - .env.example 作成（以下の環境変数テンプレート）
-  - 環境変数読み込みロジック
-  - .gitignore で .env 除外
-  - _Requirements: 7.3, 7.4_
-
-**必要な環境変数:**
-
-```bash
-# RPC URLs
-BASE_SEPOLIA_RPC_URL=
-WORLDCOIN_SEPOLIA_RPC_URL=
-ARC_RPC_URL=
-
-# Private Keys
-DEPLOYER_PRIVATE_KEY=
-
-# USDC Token Addresses (Testnet)
-BASE_SEPOLIA_USDC=
-WORLDCOIN_SEPOLIA_USDC=
-ARC_USDC=
-```
+- [ ] 3.2 (P) Mock Oracle 単体テスト
+  - getUtilization テスト（デフォルト50%）
+  - setUtilization テスト（0-100%範囲、範囲外は revert）
+  - UtilizationUpdated イベント発行確認
+  - _Requirements: 2.5, 6.2_
 
 ---
 
-### 4. セキュリティ実装
+### 4. Operator Vault 実装
 
-- [ ] 4.1 コントラクト権限管理実装（2.1, 2.2, 2.3に依存）
-  - CPT Token の mint 権限を owner のみに制限
-  - Operator Vault の withdraw 権限を owner のみに制限
-  - 権限なしアドレスからの操作を拒否
+- [ ] 4.1 (P) Operator Vault Contract 実装
+  - OpenZeppelin Ownable + ReentrancyGuard を継承した OperatorVault コントラクトを実装
+  - コンストラクタで USDC アドレスと initialOwner を受け取る（ゼロアドレスチェック）
+  - depositUSDC 関数を実装（nonReentrant、amount > 0 チェック、transferFrom、Deposit イベント）
+  - withdraw 関数を実装（onlyOwner、nonReentrant、balance チェック、transfer、Withdraw イベント）
+  - balanceOf 関数を実装（view、usdc.balanceOf(address(this)) を返す）
+  - NatSpec コメントを追加
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 7.6_
+  - _Contracts: OperatorVault (Service, Event)_
+
+- [ ] 4.2 (P) Operator Vault 単体テスト
+  - depositUSDC テスト（approve + depositUSDC、Deposit イベント確認）
+  - withdraw テスト（owner のみ、balance確認、Withdraw イベント確認）
+  - balanceOf テスト
+  - ゼロアドレス・ゼロamount バリデーションテスト
+  - 非 owner からの withdraw が revert することを確認
+  - _Requirements: 3.6, 6.3, 7.2_
+
+- [ ] 4.3 (P) ReentrancyGuard テスト
+  - depositUSDC の再入攻撃防止テスト
+  - withdraw の再入攻撃防止テスト
+  - _Requirements: 7.6_
+
+---
+
+### 5. 統合テスト
+
+- [ ] 5. 統合テスト実装（2.1, 3.1, 4.1に依存）
+  - CPT Token + Mock Oracle の連携テスト（稼働率に基づくシミュレーション）
+  - Operator Vault + USDC Token の連携テスト（入出金フロー）
+  - _Requirements: 6.4_
+
+---
+
+### 6. デプロイスクリプト実装
+
+- [ ] 6.1 DeployCore Script 実装（2.1, 3.1, 4.1に依存）
+  - Foundry Script を継承した DeployCore スクリプトを実装
+  - 環境変数から DEPLOYER_PRIVATE_KEY, CHAIN_NAME, USDC_ADDRESS を読み込む
+  - CHAIN_NAME に基づいて CPT Token, Mock Oracle（L2）または Operator Vault（Arc）をデプロイ
+  - デプロイしたコントラクトアドレスをコンソールに出力
+  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+  - _Contracts: DeployCore (Script)_
+
+- [ ] 6.2 環境変数設定
+  - .env.example を作成（BASE_SEPOLIA_RPC_URL, WORLDCOIN_SEPOLIA_RPC_URL, ARC_RPC_URL, DEPLOYER_PRIVATE_KEY, USDC_ADDRESS）
+  - .gitignore に .env を追加
+  - _Requirements: 4.6, 7.3, 7.4_
+
+- [ ] 6.3 デプロイアドレス記録
+  - デプロイ結果を contract/deployed-addresses.json に記録する仕組みを実装
+  - Base Sepolia, World Chain Sepolia, Arc の3チェーン分のアドレスを記録
+  - _Requirements: 4.4_
+
+---
+
+### 7. セキュリティ検証
+
+- [ ] 7.1 権限管理確認（2.1, 4.1に依存）
+  - CPT Token の mint 権限が owner のみであることを確認
+  - Operator Vault の withdraw 権限が owner のみであることを確認
+  - 非 owner からの操作が revert することを確認
   - _Requirements: 7.1, 7.2, 7.5_
 
-- [ ] 4.2 (P) 環境変数セキュリティ確認
+- [ ] 7.2 (P) 環境変数セキュリティ確認
   - 秘密鍵・APIキーがハードコードされていないことを確認
   - .env ファイルが .gitignore に含まれることを確認
   - _Requirements: 7.3, 7.4_
 
-- [ ] 4.3 (P) Reentrancy ガード適用確認
-  - Operator Vault に ReentrancyGuard が適用されていることを確認
-  - 外部呼び出しの前後で状態変更順序を確認
-  - _Requirements: 7.6_
+---
+
+### 8. エラーハンドリング実装
+
+- [ ] 8. (P) エラーハンドリング確認（2.1, 3.1, 4.1に依存）
+  - すべてのパブリック関数で適切なエラーハンドリングが実装されていることを確認
+  - require 文で明確なエラーメッセージを提供
+  - 重要な処理にイベントログを発行（Mint, Transfer, Deposit, Withdraw, UtilizationUpdated）
+  - _Requirements: 5.1, 5.2, 5.3, 5.4_
+
+---
+
+### 9. テストカバレッジ確認
+
+- [ ] 9. テストカバレッジ測定（2.2, 3.2, 4.2, 4.3, 5に依存）
+  - forge coverage を実行してカバレッジレポートを生成
+  - 最低80%カバレッジを確認
+  - mint, depositUSDC, withdraw は 100% カバレッジを確認
+  - _Requirements: 6.5, 6.6_
+
+---
+
+### 10. Testnet デプロイ検証
+
+- [ ] 10. Testnet デプロイ実行（6.1, 6.2に依存）
+  - Base Sepolia に CPT Token と Mock Oracle をデプロイ
+  - World Chain Sepolia に CPT Token と Mock Oracle をデプロイ
+  - Arc Testnet に Operator Vault をデプロイ（USDC アドレス: 0x3600000000000000000000000000000000000000）
+  - デプロイ結果を deployed-addresses.json に記録
+  - 各コントラクトの基本動作を確認（mint, setUtilization, depositUSDC, withdraw）
+  - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - _Note: USDC Testnet Addresses - Base Sepolia: 0x036CbD53842c5426634e7929541eC2318f3dCF7E, Arc: 0x3600000000000000000000000000000000000000 (ERC-20, 6 decimals)_
 
 ---
 
 ## Requirements Coverage
 
-- **Requirement 1 (CPT Token)**: 1.1, 1.2, 2.1
-- **Requirement 2 (Mock Oracle)**: 1.1, 1.2, 2.2
-- **Requirement 3 (Operator Vault)**: 1.1, 1.2, 2.3
-- **Requirement 4 (デプロイ)**: 3.1, 3.2
-- **Requirement 5 (エラーハンドリング)**: 2.1, 2.2, 2.3, 3.1
-- **Requirement 6 (テスト)**: 2.1, 2.2, 2.3, 2.4
-- **Requirement 7 (セキュリティ)**: 4.1, 4.2, 4.3
+| Requirement | Description | Covered by Tasks |
+|-------------|-------------|------------------|
+| 1.1-1.7 | CPT Token 発行・管理 | 1, 2.1, 2.2, 7.1 |
+| 2.1-2.6 | Mock Oracle 稼働率シグナル | 1, 3.1, 3.2 |
+| 3.1-3.7 | Operator Vault USDC管理 | 1, 4.1, 4.2, 4.3, 7.1 |
+| 4.1-4.6 | デプロイ・初期化 | 6.1, 6.2, 6.3, 10 |
+| 5.1-5.4 | エラーハンドリング・ログ | 8 |
+| 6.1-6.6 | テスト・品質保証 | 2.2, 3.2, 4.2, 4.3, 5, 9 |
+| 7.1-7.6 | セキュリティ・権限管理 | 1, 4.1, 4.3, 7.1, 7.2 |
 
 ---
 
@@ -130,19 +183,29 @@ ARC_USDC=
 
 ### 並列実行可能グループ
 
-**セットアップ（並列可能）**:
-- 1.1, 1.2
+**Phase 1: セットアップ（並列可能）**:
+- 1 (OpenZeppelin 導入)
 
-**オンチェーン実装（並列可能）**:
-- 2.1, 2.2, 2.3
+**Phase 2: コントラクト実装（並列可能）**:
+- 2.1 (CPT Token 実装)
+- 2.2 (CPT Token テスト)
+- 3.1 (Mock Oracle 実装)
+- 3.2 (Mock Oracle テスト)
+- 4.1 (Operator Vault 実装)
+- 4.2 (Operator Vault テスト)
+- 4.3 (ReentrancyGuard テスト)
 
-**セキュリティ確認（並列可能）**:
-- 4.2, 4.3
+**Phase 3: セキュリティ確認（並列可能）**:
+- 7.2 (環境変数セキュリティ確認)
+- 8 (エラーハンドリング確認)
 
-**順序依存タスク**:
-- 2.4（2.1, 2.2, 2.3に依存）
-- 3.1（2.1, 2.2, 2.3に依存）
-- 4.1（2.1, 2.2, 2.3に依存）
+**Phase 4: 順序依存タスク**:
+- 5 (統合テスト) - 2.1, 3.1, 4.1に依存
+- 6.1 (DeployCore Script) - 2.1, 3.1, 4.1に依存
+- 6.2, 6.3 (環境変数・アドレス記録) - 6.1に依存
+- 7.1 (権限管理確認) - 2.1, 4.1に依存
+- 9 (テストカバレッジ確認) - 2.2, 3.2, 4.2, 4.3, 5に依存
+- 10 (Testnet デプロイ検証) - 6.1, 6.2に依存
 
 ---
 
@@ -151,30 +214,53 @@ ARC_USDC=
 ### 優先順位
 
 **Must Have（最優先）**:
-1. セットアップ・オンチェーン実装（1.1, 1.2, 2.1, 2.2, 2.3）
-2. デプロイスクリプト（3.1, 3.2）
-3. セキュリティ実装（4.1, 4.2, 4.3）
+1. OpenZeppelin 導入（1）
+2. コントラクト実装（2.1, 3.1, 4.1）
+3. 単体テスト（2.2, 3.2, 4.2, 4.3）
+4. デプロイスクリプト（6.1, 6.2, 6.3）
+5. セキュリティ検証（7.1, 7.2）
+6. Testnet デプロイ（10）
 
 **Should Have（時間があれば）**:
-- 2.4: 統合テスト（他の仕様との統合時に実施可能）
+- 5: 統合テスト（他の仕様との統合時に実施可能）
+- 8: エラーハンドリング確認（実装時に組み込み済み）
+- 9: テストカバレッジ確認（継続的に改善）
 
 ### 推定工数
 
 | タスクグループ | 期間 |
 |---------------|------|
-| セットアップ | 0.5日 |
-| オンチェーン実装 | 0.5-1日 |
+| OpenZeppelin 導入 | 0.25日 |
+| コントラクト実装 | 0.5-1日 |
+| 単体テスト | 0.5日 |
 | デプロイスクリプト | 0.5日 |
-| セキュリティ実装 | 0.5日 |
-| **合計** | **1-2日** |
+| セキュリティ検証 | 0.25日 |
+| Testnet デプロイ | 0.25日 |
+| **合計** | **1.5-2.5日** |
+
+---
+
+## Key Design References
+
+本実装タスクは以下の設計ドキュメントに基づいています：
+
+- **Architecture Pattern**: Domain-Separated Contracts（CPT Token, Mock Oracle, Operator Vault）
+- **Technology Stack**: Solidity 0.8.26, OpenZeppelin Contracts v5.x, Foundry
+- **USDC Testnet Addresses**:
+  - Base Sepolia: `0x036CbD53842c5426634e7929541eC2318f3dCF7E`
+  - Arc Testnet: `0x3600000000000000000000000000000000000000` (ERC-20, 6 decimals)
+  - World Chain Sepolia: CCTP経由でブリッジ（デモ準備時）
+- **Security Patterns**: OpenZeppelin Ownable (initialOwner), ReentrancyGuard, Input Validation
+
+詳細は `/Users/harukikondo/git/hack-money-2026/.kiro/specs/core-token-system/design.md` および `research.md` を参照してください。
 
 ---
 
 ## Dependencies on Other Specifications
 
-- **uniswap-v4-integration**: Mock Oracle が完成後、Utilization Hook 実装で使用
-- **settlement-layer**: Operator Vault が完成後、決済処理で使用
-- **dashboard-demo**: CPT Token と Operator Vault が完成後、Dashboard で表示
+- **uniswap-v4-integration**: Mock Oracle 完成後、Utilization Hook 実装で使用
+- **settlement-layer**: Operator Vault 完成後、決済処理で使用
+- **dashboard-demo**: CPT Token と Operator Vault 完成後、Dashboard で表示
 
 ---
 
@@ -182,11 +268,12 @@ ARC_USDC=
 
 本仕様のタスクが完了とみなされる条件：
 
-1. すべてのタスクが完了している（チェックボックスがすべて✓）
-2. CPT Token, Mock Oracle, Operator Vault がデプロイされている
-3. すべてのテストがパスしている
-4. デプロイスクリプトが自動化され、コントラクトアドレスが記録されている
-5. セキュリティチェックがすべて完了している
+1. ✅ すべてのタスクが完了している（チェックボックスがすべて✓）
+2. ✅ CPT Token, Mock Oracle, Operator Vault が Base Sepolia, World Chain Sepolia, Arc Testnet にデプロイされている
+3. ✅ すべてのテストがパスしている（カバレッジ >= 80%）
+4. ✅ デプロイスクリプトが自動化され、コントラクトアドレスが deployed-addresses.json に記録されている
+5. ✅ セキュリティチェックがすべて完了している（権限管理、環境変数管理）
+6. ✅ OpenZeppelin Contracts が導入され、セキュリティベストプラクティスが適用されている
 
 ---
 
