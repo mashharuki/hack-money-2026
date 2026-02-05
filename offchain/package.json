@@ -8,20 +8,18 @@
     "build": "tsc",
     "test": "vitest",
     "test:run": "vitest run",
-    "lint": "eslint src test",
-    "format": "prettier --write ."
+    "lint": "biome lint src test",
+    "format": "biome format --write .",
+    "check": "biome check --write ."
   },
   "dependencies": {
     "viem": "^2.21.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@biomejs/biome": "2.3.14",
     "@types/node": "^22.0.0",
-    "eslint": "^9.0.0",
-    "prettier": "^3.4.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.0.0",
     "vitest": "^2.1.0"
   }
 }
