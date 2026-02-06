@@ -24,14 +24,14 @@
 
 ### 2. CPT Token Contract 実装
 
-- [ ] 2.1 (P) CPT Token Contract 実装
+- [x] 2.1 (P) CPT Token Contract 実装
   - OpenZeppelin ERC20 + Ownable を継承した ComputeToken コントラクトを実装
   - mint 関数を実装（onlyOwner modifier、_mint で msg.sender に発行）
   - NatSpec コメントを追加（@title, @notice, @dev, @param）
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.6_
   - _Contracts: ComputeToken (Service)_
 
-- [ ] 2.2 (P) CPT Token 単体テスト
+- [x] 2.2 (P) CPT Token 単体テスト
   - mint 権限テスト（owner のみ発行可能、非 owner は revert）
   - ERC20 標準機能テスト（transfer, balanceOf, totalSupply）
   - approve + transferFrom テスト
