@@ -14,7 +14,7 @@
 
 ### 1. OpenZeppelin Contracts 導入
 
-- [ ] 1. (P) OpenZeppelin Contracts インストール
+- [x] 1. (P) OpenZeppelin Contracts インストール
   - Foundry で OpenZeppelin Contracts v5.x をインストール（`forge install OpenZeppelin/openzeppelin-contracts`）
   - foundry.toml で remappings 設定（`@openzeppelin/contracts=lib/openzeppelin-contracts/contracts`）
   - ERC20, Ownable, ReentrancyGuard が利用可能であることを確認
