@@ -747,11 +747,11 @@ forge test --fork-url $ARC_RPC_URL
 source .env
 
 # base sepolia
-CHAIN_NAME=base-sepolia forge script script/DeployCore.s.sol --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast --verify
+CHAIN_NAME=base-sepolia forge script script/DeployCore.s.sol --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast -vvv
 
 # world sepolia
-CHAIN_NAME=world-chain-sepolia forge script script/DeployCore.s.sol --rpc-url $WORLDCOIN_SEPOLIA_RPC_URL --broadcast --verify
+CHAIN_NAME=world-chain-sepolia forge script script/DeployCore.s.sol --rpc-url $WORLDCOIN_SEPOLIA_RPC_URL --broadcast -vvv
 
 # Arc Testnet
-CHAIN_NAME=arc forge script script/DeployCore.s.sol --rpc-url $ARC_RPC_URL --broadcast --verify
+CHAIN_NAME=arc forge script script/DeployCore.s.sol --rpc-url $ARC_RPC_URL --broadcast -vvv
 ```

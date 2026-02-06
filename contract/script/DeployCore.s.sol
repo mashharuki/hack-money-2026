@@ -14,8 +14,8 @@ contract DeployCore is Script {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
         string memory chainName = vm.envString("CHAIN_NAME");
-        string memory jsonPath = string.concat(vm.projectRoot(), "./deployed-addresses.json");
-        string memory usdcConfigPath = string.concat(vm.projectRoot(), "./usdc-addresses.json");
+        string memory jsonPath = string.concat(vm.projectRoot(), "/deployed-addresses.json");
+        string memory usdcConfigPath = string.concat(vm.projectRoot(), "/usdc-addresses.json");
         _ensureJsonFile(jsonPath);
 
         vm.startBroadcast(deployerPrivateKey);
