@@ -1,1 +1,6 @@
-{}
+{
+  "world-chain-sepolia": {
+    "cpt": "0x9eCE03F901dFC53544E4abf610b6813c6305f262",
+    "oracle": "0xA0e9F77a3E1311301E5a29AEFfDa73113eD316E9"
+  }
+}
