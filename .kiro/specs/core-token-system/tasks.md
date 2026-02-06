@@ -61,7 +61,7 @@
 
 ### 4. Operator Vault 実装
 
-- [ ] 4.1 (P) Operator Vault Contract 実装
+- [x] 4.1 (P) Operator Vault Contract 実装
   - OpenZeppelin Ownable + ReentrancyGuard を継承した OperatorVault コントラクトを実装
   - コンストラクタで USDC アドレスと initialOwner を受け取る（ゼロアドレスチェック）
   - depositUSDC 関数を実装（nonReentrant、amount > 0 チェック、transferFrom、Deposit イベント）
@@ -71,7 +71,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 7.6_
   - _Contracts: OperatorVault (Service, Event)_
 
-- [ ] 4.2 (P) Operator Vault 単体テスト
+- [x] 4.2 (P) Operator Vault 単体テスト
   - depositUSDC テスト（approve + depositUSDC、Deposit イベント確認）
   - withdraw テスト（owner のみ、balance確認、Withdraw イベント確認）
   - balanceOf テスト
@@ -79,7 +79,7 @@
   - 非 owner からの withdraw が revert することを確認
   - _Requirements: 3.6, 6.3, 7.2_
 
-- [ ] 4.3 (P) ReentrancyGuard テスト
+- [x] 4.3 (P) ReentrancyGuard テスト
   - depositUSDC の再入攻撃防止テスト
   - withdraw の再入攻撃防止テスト
   - _Requirements: 7.6_
