@@ -47,11 +47,18 @@ interface IMockOracle {
 /// @notice L2稼働率をモック実装で供給するOracle
 /// @dev デモ・テスト用の簡易実装
 contract MockOracle is IMockOracle {
+    uint8 public constant SOURCE_BOT = 1;
+    uint8 public constant SOURCE_FUNCTIONS = 2;
+    uint256 public constant DEFAULT_STALE_TTL = 20 minutes;
+    uint256 public constant DIVERGENCE_THRESHOLD = 15;
+
     /// @notice 現在の稼働率（0-100%）
     uint256 private _utilization = 50;
     uint256 private _updatedAt;
     uint8 private _source;
-    uint256 private _staleTtl = 20 minutes;
+    uint256 private _staleTtl = DEFAULT_STALE_TTL;
+    uint256 private _lastBotUtilization;
+    uint256 private _lastFunctionsUtilization;
     mapping(address => bool) private _authorizedUpdaters;
 
     /// @notice 稼働率が変更されたときに発行されるイベント
@@ -79,12 +86,14 @@ contract MockOracle is IMockOracle {
     }
 
     function setUtilizationFromBot(uint256 utilization, uint256 timestamp) external {
-        _setUtilization(utilization, timestamp, 1);
+        _lastBotUtilization = utilization;
+        _setUtilization(utilization, timestamp, SOURCE_BOT);
     }
 
     function setUtilizationFromFunctions(uint256 utilization, uint256 timestamp, bytes32 requestId) external {
         requestId;
-        _setUtilization(utilization, timestamp, 2);
+        _lastFunctionsUtilization = utilization;
+        _setUtilization(utilization, timestamp, SOURCE_FUNCTIONS);
     }
 
     function setStaleTtl(uint256 ttlSeconds) external {

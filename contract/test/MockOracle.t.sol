@@ -52,4 +52,21 @@ contract MockOracleTest is Test {
         oracle.setStaleTtl(1200);
         oracle.setAuthorizedUpdater(address(this), true);
     }
+
+    function test_Constants_AreDefinedWithExpectedValues() public view {
+        assertEq(oracle.SOURCE_BOT(), 1);
+        assertEq(oracle.SOURCE_FUNCTIONS(), 2);
+        assertEq(oracle.DIVERGENCE_THRESHOLD(), 15);
+        assertEq(oracle.DEFAULT_STALE_TTL(), 20 minutes);
+    }
+
+    function test_SourceMeta_UsesDefinedConstants() public {
+        oracle.setUtilizationFromBot(60, block.timestamp);
+        (,,, uint8 botSource) = oracle.getUtilizationWithMeta();
+        assertEq(botSource, oracle.SOURCE_BOT());
+
+        oracle.setUtilizationFromFunctions(61, block.timestamp, bytes32("req-2"));
+        (,,, uint8 functionsSource) = oracle.getUtilizationWithMeta();
+        assertEq(functionsSource, oracle.SOURCE_FUNCTIONS());
+    }
 }

@@ -21,7 +21,7 @@
   - `setStaleTtl()` / `setAuthorizedUpdater()` を追加
   - _Requirements: 1.5, 2.1, 2.2, 3.1, 4.3, 10.1, 10.3_
 
-- [ ] 1.2 状態変数と定数を追加する
+- [x] 1.2 状態変数と定数を追加する
   - `_updatedAt`, `_source`, `_staleTtl`, allowlist, divergence追跡変数を追加
   - `SOURCE_BOT=1`, `SOURCE_FUNCTIONS=2`, `DIVERGENCE_THRESHOLD=15` などを定義
   - _Requirements: 1.3, 1.4, 2.3, 4.1, 8.4_
