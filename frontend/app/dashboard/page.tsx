@@ -1,18 +1,37 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { RefreshCw, Play, X } from "lucide-react";
+import { RefreshCw, Play, Square, X } from "lucide-react";
 import { MetricsRow } from "./_components/metrics-row";
 import { PriceSpreadChart } from "./_components/price-spread-chart";
 import { SessionLog } from "./_components/session-log";
+import type { LogEntry } from "./_components/session-log";
 import type { ChainPrice, PriceDataPoint } from "./_types";
+
+function now(): string {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
 
 export default function DashboardPage() {
   const [chainData, setChainData] = useState<ChainPrice[]>([]);
   const [priceHistory, setPriceHistory] = useState<PriceDataPoint[]>([]);
   const [showMockBanner, setShowMockBanner] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isDemoRunning, setIsDemoRunning] = useState(false);
+  const [sessionLogs, setSessionLogs] = useState<LogEntry[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  let logCounter = useRef(0);
+
+  const addLog = useCallback(
+    (type: LogEntry["type"], message: string, detail?: string) => {
+      logCounter.current += 1;
+      setSessionLogs((prev) => [
+        ...prev,
+        { id: String(logCounter.current), timestamp: now(), type, message, detail },
+      ]);
+    },
+    [],
+  );
 
   const fetchChainData = useCallback(async () => {
     try {
@@ -51,6 +70,55 @@ export default function DashboardPage() {
     setIsRefreshing(false);
   };
 
+  const handleRunDemo = async () => {
+    if (isDemoRunning) return;
+    setIsDemoRunning(true);
+    setSessionLogs([]);
+
+    addLog("INFO", "Starting demo...");
+
+    try {
+      const res = await fetch("/api/demo/run", { method: "POST" });
+      const data = await res.json();
+
+      if (!data.ok) {
+        addLog("INFO", "Demo failed to start");
+        setIsDemoRunning(false);
+        return;
+      }
+
+      for (const step of data.steps) {
+        await new Promise((r) => setTimeout(r, 400));
+        const icon = step.status === "done" ? "✅" : step.status === "skipped" ? "⏭️" : "❌";
+        addLog("STEP", `${icon} Step ${step.step}: ${step.label}`, step.detail);
+
+        if (step.step === 4 && step.status === "done") {
+          const detail = step.detail ?? "";
+          const sessionMatch = detail.match(/Session: (mock-session-[\w-]+)/);
+          const profitMatch = detail.match(/Profit: \$([\d.]+)/);
+          if (sessionMatch) {
+            await new Promise((r) => setTimeout(r, 200));
+            addLog("SESSION", "Session created", sessionMatch[1]);
+          }
+          await new Promise((r) => setTimeout(r, 200));
+          addLog("BUY", `BUY CPT-A @ simulated price`, "Base Sepolia");
+          await new Promise((r) => setTimeout(r, 200));
+          addLog("SELL", `SELL CPT-B @ simulated price`, "Unichain Sepolia");
+          if (profitMatch) {
+            await new Promise((r) => setTimeout(r, 200));
+            addLog("PROFIT", `Net P&L: +$${profitMatch[1]} USDC`, `${data.totalDurationMs}ms`);
+          }
+        }
+      }
+
+      addLog("INFO", `Demo complete — ${data.sessionsExecuted} session(s), $${data.totalProfitUsdc.toFixed(4)} USDC profit`);
+    } catch (err) {
+      addLog("INFO", `Demo error: ${err instanceof Error ? err.message : String(err)}`);
+    }
+
+    setIsDemoRunning(false);
+  };
+
   return (
     <div className="flex flex-col gap-6 p-8 px-10">
       {/* Page Header */}
@@ -66,7 +134,8 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 border border-[#2f2f2f] bg-[#0A0A0A] px-4 py-2.5 font-mono text-[11px] font-semibold text-white transition-colors hover:bg-[#1a1a1a]"
+            disabled={isRefreshing}
+            className="flex items-center gap-2 border border-[#2f2f2f] bg-[#0A0A0A] px-4 py-2.5 font-mono text-[11px] font-semibold text-white transition-colors hover:bg-[#1a1a1a] disabled:opacity-50"
           >
             <RefreshCw
               size={14}
@@ -74,9 +143,17 @@ export default function DashboardPage() {
             />
             REFRESH
           </button>
-          <button className="flex items-center gap-2 bg-[#00FF88] px-4 py-2.5 font-mono text-[11px] font-bold text-[#0C0C0C] transition-opacity hover:opacity-90">
-            <Play size={14} />
-            RUN DEMO
+          <button
+            onClick={handleRunDemo}
+            disabled={isDemoRunning}
+            className={`flex items-center gap-2 px-4 py-2.5 font-mono text-[11px] font-bold transition-opacity hover:opacity-90 disabled:opacity-60 ${
+              isDemoRunning
+                ? "bg-[#FF8800] text-[#0C0C0C]"
+                : "bg-[#00FF88] text-[#0C0C0C]"
+            }`}
+          >
+            {isDemoRunning ? <Square size={14} /> : <Play size={14} />}
+            {isDemoRunning ? "RUNNING..." : "RUN DEMO"}
           </button>
         </div>
       </div>
@@ -110,7 +187,7 @@ export default function DashboardPage() {
           <PriceSpreadChart priceHistory={priceHistory} />
         </div>
         <div className="col-span-2">
-          <SessionLog />
+          <SessionLog logs={sessionLogs} isRunning={isDemoRunning} />
         </div>
       </div>
     </div>
