@@ -9,6 +9,7 @@
 		"test:yellow": "tsx scripts/settlement/test-yellow-connection.ts",
 		"yellow:open-channel": "tsx scripts/settlement/open-channel.ts",
 		"arbitrage": "tsx scripts/arbitrage/index.ts",
+		"oracle:updater": "tsx scripts/arbitrage/oracle-updater.ts",
 		"test:arbitrage": "vitest run",
 		"test:arbitrage:watch": "vitest",
 		"demo": "tsx scripts/demo/run-demo.ts"

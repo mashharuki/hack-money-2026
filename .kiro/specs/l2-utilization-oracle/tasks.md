@@ -112,33 +112,33 @@
 
 ---
 
-- [ ] 4. Offchain Oracle Updater Bot 実装（P0）
+- [x] 4. Offchain Oracle Updater Bot 実装（P0）
 
-- [ ] 4.1 `scripts/arbitrage/config.ts` を作成する
+- [x] 4.1 `scripts/arbitrage/config.ts` を作成する
   - primary/fallback RPC、EMA、interval、TTL、chain別設定
   - 環境変数優先を実装
   - _Requirements: 6.5, 11.1, 11.3, 11.4_
 
-- [ ] 4.2 `scripts/arbitrage/oracle-updater.ts` を作成する
+- [x] 4.2 `scripts/arbitrage/oracle-updater.ts` を作成する
   - チェーンごとの実行ループを実装
   - _Requirements: 6.3_
 
-- [ ] 4.3 ブロックデータ取得ロジックを実装する
+- [x] 4.3 ブロックデータ取得ロジックを実装する
   - `gasUsed`, `gasLimit` を直近窓分取得
   - _Requirements: 6.1_
 
-- [ ] 4.4 EMA計算ロジックを実装する
+- [x] 4.4 EMA計算ロジックを実装する
   - 0-100整数へ正規化
   - _Requirements: 1.1, 6.2_
 
-- [ ] 4.5 RPCフェイルオーバーを実装する
+- [x] 4.5 RPCフェイルオーバーを実装する
   - 主系失敗時に副系へ切り替え
   - _Requirements: 6.4_
 
-- [ ] 4.6 `setUtilizationFromBot()` 呼び出しとリトライを実装する
+- [x] 4.6 `setUtilizationFromBot()` 呼び出しとリトライを実装する
   - _Requirements: 2.1, 6.3_
 
-- [ ] 4.7 運用ログを実装する
+- [x] 4.7 運用ログを実装する
   - chain/utilization/source/txHash/fallbackの記録
   - _Requirements: 8.1（運用補助）_
 

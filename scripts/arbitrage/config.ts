@@ -23,6 +23,10 @@ function optionalEnv(name: string, defaultValue: string): string {
   return process.env[name] ?? defaultValue;
 }
 
+function optionalEnvFrom(name: string, defaultValue: string, env: NodeJS.ProcessEnv): string {
+  return env[name] ?? defaultValue;
+}
+
 interface DeployedAddresses {
   [chain: string]: {
     cpt?: string;
@@ -39,6 +43,33 @@ interface UniswapAddresses {
 
 interface UsdcAddresses {
   [chain: string]: string;
+}
+
+export interface ChainOracleConfig {
+  chainId: number;
+  chainName: string;
+  oracleAddress: `0x${string}`;
+  primaryRpc: string;
+  fallbackRpc: string;
+  emaWindow: number;
+  botUpdateInterval: number;
+  functionsEnabled: boolean;
+  functionsVerifyInterval: number;
+  divergenceThreshold: number;
+  staleTtl: number;
+}
+
+export interface ChainlinkConfig {
+  routerAddress: `0x${string}`;
+  subscriptionId: bigint;
+  donId: string;
+  callbackGasLimit: number;
+}
+
+export interface OracleConfig {
+  chains: Record<string, ChainOracleConfig>;
+  chainlink: Record<string, ChainlinkConfig>;
+  deployerPrivateKey: string;
 }
 
 // StateView addresses per chain (from Uniswap v4 periphery deployments)
@@ -130,6 +161,91 @@ export function loadConfig(): ArbitrageConfig {
     minProfitUSDC: BigInt(optionalEnv('MIN_PROFIT_USDC', '1000000')),
     useYellowMock: optionalEnv('USE_YELLOW_MOCK', 'true') === 'true',
     logLevel: optionalEnv('LOG_LEVEL', 'INFO') as LogLevel,
+  };
+
+  return config;
+}
+
+function getOracleAddress(
+  deployed: DeployedAddresses,
+  chainName: string,
+): `0x${string}` {
+  const oracle = deployed[chainName]?.oracle;
+  if (!oracle) {
+    throw new Error(`No oracle address found for chain: ${chainName}`);
+  }
+  return oracle as `0x${string}`;
+}
+
+export function loadOracleConfig(env: NodeJS.ProcessEnv = process.env): OracleConfig {
+  const deployed = readJsonFile<DeployedAddresses>(
+    resolve(CONTRACT_DIR, 'deployed-addresses.json'),
+  );
+
+  const baseChainName = optionalEnvFrom('ORACLE_BASE_CHAIN_NAME', 'base-sepolia', env);
+  const unichainName = optionalEnvFrom('ORACLE_UNICHAIN_CHAIN_NAME', 'unichain-sepolia', env);
+
+  const baseRpcPrimary = optionalEnvFrom('ORACLE_BASE_PRIMARY_RPC', '', env);
+  const baseRpcFallback = optionalEnvFrom('ORACLE_BASE_FALLBACK_RPC', baseRpcPrimary, env);
+  const unichainRpcPrimary = optionalEnvFrom('ORACLE_UNICHAIN_PRIMARY_RPC', '', env);
+  const unichainRpcFallback = optionalEnvFrom('ORACLE_UNICHAIN_FALLBACK_RPC', unichainRpcPrimary, env);
+
+  if (!baseRpcPrimary) {
+    throw new Error('Missing ORACLE_BASE_PRIMARY_RPC');
+  }
+  if (!unichainRpcPrimary) {
+    throw new Error('Missing ORACLE_UNICHAIN_PRIMARY_RPC');
+  }
+
+  const baseEmaWindow = Number(optionalEnvFrom('ORACLE_BASE_EMA_WINDOW', '60', env));
+  const unichainEmaWindow = Number(optionalEnvFrom('ORACLE_UNICHAIN_EMA_WINDOW', '60', env));
+  const botInterval = Number(optionalEnvFrom('ORACLE_BOT_INTERVAL_MS', '60000', env));
+  const verifyInterval = Number(optionalEnvFrom('ORACLE_FUNCTIONS_VERIFY_INTERVAL_MS', '900000', env));
+  const divergenceThreshold = Number(optionalEnvFrom('ORACLE_DIVERGENCE_THRESHOLD', '15', env));
+  const staleTtl = Number(optionalEnvFrom('ORACLE_STALE_TTL_SECONDS', '1200', env));
+
+  const config: OracleConfig = {
+    chains: {
+      [baseChainName]: {
+        chainId: Number(optionalEnvFrom('ORACLE_BASE_CHAIN_ID', '84532', env)),
+        chainName: baseChainName,
+        oracleAddress: getOracleAddress(deployed, baseChainName),
+        primaryRpc: baseRpcPrimary,
+        fallbackRpc: baseRpcFallback,
+        emaWindow: baseEmaWindow,
+        botUpdateInterval: botInterval,
+        functionsEnabled: optionalEnvFrom('ORACLE_BASE_FUNCTIONS_ENABLED', 'true', env) === 'true',
+        functionsVerifyInterval: verifyInterval,
+        divergenceThreshold,
+        staleTtl,
+      },
+      [unichainName]: {
+        chainId: Number(optionalEnvFrom('ORACLE_UNICHAIN_CHAIN_ID', '1301', env)),
+        chainName: unichainName,
+        oracleAddress: getOracleAddress(deployed, unichainName),
+        primaryRpc: unichainRpcPrimary,
+        fallbackRpc: unichainRpcFallback,
+        emaWindow: unichainEmaWindow,
+        botUpdateInterval: botInterval,
+        functionsEnabled: optionalEnvFrom('ORACLE_UNICHAIN_FUNCTIONS_ENABLED', 'false', env) === 'true',
+        functionsVerifyInterval: verifyInterval,
+        divergenceThreshold,
+        staleTtl,
+      },
+    },
+    chainlink: {
+      [baseChainName]: {
+        routerAddress: optionalEnvFrom(
+          'ORACLE_BASE_FUNCTIONS_ROUTER',
+          '0xf9B8fc078197181C841c296C876945aaa425B278',
+          env,
+        ) as `0x${string}`,
+        subscriptionId: BigInt(optionalEnvFrom('ORACLE_BASE_FUNCTIONS_SUBSCRIPTION_ID', '0', env)),
+        donId: optionalEnvFrom('ORACLE_BASE_FUNCTIONS_DON_ID', 'fun-base-sepolia-1', env),
+        callbackGasLimit: Number(optionalEnvFrom('ORACLE_BASE_FUNCTIONS_CALLBACK_GAS_LIMIT', '300000', env)),
+      },
+    },
+    deployerPrivateKey: optionalEnvFrom('DEPLOYER_PRIVATE_KEY', '', env),
   };
 
   return config;
