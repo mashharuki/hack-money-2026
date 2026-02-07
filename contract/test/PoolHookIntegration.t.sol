@@ -37,6 +37,7 @@ contract PoolHookIntegrationTest is Test {
     uint160 internal constant SQRT_PRICE_1_1 = 79228162514264337593543950336; // 2^96
     bytes32 internal constant SWAP_EVENT_SIG =
         keccak256("Swap(bytes32,address,int128,int128,uint160,uint128,int24,uint24)");
+    bytes32 internal constant FEE_OVERRIDDEN_EVENT_SIG = keccak256("FeeOverridden(bytes32,uint256,uint24)");
 
     function test_deployMockOracleAndHookWithCreate2_thenInitializeCptUsdcPool() public {
         (,, PoolKey memory key,,) = _deployAndInitPoolWithLiquidity();
@@ -86,6 +87,37 @@ contract PoolHookIntegrationTest is Test {
 
         uint24 fee = _extractLastSwapFee(vm.getRecordedLogs(), address(poolManager));
         assertEq(fee, 10000, "high utilization should apply high fee");
+    }
+
+    function test_swap_emitsFeeOverriddenWithCorrectValues() public {
+        (PoolManager poolManager, MockOracle oracle, PoolKey memory key, PoolSwapTest swapRouter,) =
+            _deployAndInitPoolWithLiquidity();
+
+        uint256 utilization = 90;
+        oracle.setUtilization(utilization);
+        vm.recordLogs();
+
+        swapRouter.swap(
+            key,
+            IPoolManager.SwapParams({
+                zeroForOne: true,
+                amountSpecified: -1e15,
+                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
+            ""
+        );
+
+        Vm.Log[] memory logs = vm.getRecordedLogs();
+        (bytes32 poolIdFromEvent, uint256 utilizationFromEvent, uint24 feeFromEvent) =
+            _extractLastFeeOverridden(logs, address(key.hooks));
+
+        assertEq(poolIdFromEvent, PoolId.unwrap(key.toId()), "poolId should match");
+        assertEq(utilizationFromEvent, utilization, "utilization should match");
+        assertEq(feeFromEvent, 10000, "fee should match high utilization tier");
+
+        uint24 feeFromSwap = _extractLastSwapFee(logs, address(poolManager));
+        assertEq(feeFromSwap, feeFromEvent, "Swap fee should equal FeeOverridden fee");
     }
 
     function _deployAndInitPoolWithLiquidity()
@@ -143,14 +175,30 @@ contract PoolHookIntegrationTest is Test {
         );
     }
 
-    function _extractLastSwapFee(Vm.Log[] memory logs, address poolManagerAddress) internal pure returns (uint24 fee) {
+    function _extractLastSwapFee(Vm.Log[] memory logs, address) internal pure returns (uint24 fee) {
         for (uint256 i = logs.length; i > 0; i--) {
             Vm.Log memory log = logs[i - 1];
-            if (log.emitter == poolManagerAddress && log.topics.length > 0 && log.topics[0] == SWAP_EVENT_SIG) {
+            if (log.topics.length > 0 && log.topics[0] == SWAP_EVENT_SIG) {
                 (,,,,, fee) = abi.decode(log.data, (int128, int128, uint160, uint128, int24, uint24));
                 return fee;
             }
         }
         revert("Swap event not found");
+    }
+
+    function _extractLastFeeOverridden(Vm.Log[] memory logs, address hookAddress)
+        internal
+        pure
+        returns (bytes32 poolId, uint256 utilization, uint24 fee)
+    {
+        for (uint256 i = logs.length; i > 0; i--) {
+            Vm.Log memory log = logs[i - 1];
+            if (log.emitter == hookAddress && log.topics.length > 0 && log.topics[0] == FEE_OVERRIDDEN_EVENT_SIG) {
+                poolId = log.topics[1];
+                (utilization, fee) = abi.decode(log.data, (uint256, uint24));
+                return (poolId, utilization, fee);
+            }
+        }
+        revert("FeeOverridden event not found");
     }
 }
