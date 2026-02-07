@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
+import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {Script, console} from "forge-std/Script.sol";
 import {IPoolManager} from "v4-core/interfaces/IPoolManager.sol";
 import {PoolKey} from "v4-core/types/PoolKey.sol";
 import {Currency} from "v4-core/types/Currency.sol";
 import {IHooks} from "v4-core/interfaces/IHooks.sol";
 import {LPFeeLibrary} from "v4-core/libraries/LPFeeLibrary.sol";
+import {TickMath} from "v4-core/libraries/TickMath.sol";
+import {FullMath} from "v4-core/libraries/FullMath.sol";
 import {PoolId, PoolIdLibrary} from "v4-core/types/PoolId.sol";
 
 /// @title InitializePool
@@ -14,7 +18,7 @@ import {PoolId, PoolIdLibrary} from "v4-core/types/PoolId.sol";
 contract InitializePool is Script {
     using PoolIdLibrary for PoolKey;
 
-    uint160 internal constant DEFAULT_SQRT_PRICE_X96 = 79228162514264337593543950336; // 2^96 (price = 1)
+    uint256 internal constant Q192 = 2 ** 192;
     int24 internal constant DEFAULT_TICK_SPACING = 60;
 
     /**
@@ -29,12 +33,16 @@ contract InitializePool is Script {
         address cptToken = _readAddress(deployedAddressesPath, chainName, "cpt");
         address usdcToken = _readAddress(string.concat(vm.projectRoot(), "/usdc-addresses.json"), chainName);
         address hook = _readAddress(deployedAddressesPath, chainName, "hook");
+        uint256 initialPriceNumerator = vm.envUint("INITIAL_PRICE_NUMERATOR");
+        uint256 initialPriceDenominator = vm.envUint("INITIAL_PRICE_DENOMINATOR");
 
         PoolKey memory key = _buildPoolKey(cptToken, usdcToken, hook);
         bytes32 poolId = PoolId.unwrap(key.toId());
+        uint160 sqrtPriceX96 =
+            _calculateInitialSqrtPriceX96(cptToken, usdcToken, initialPriceNumerator, initialPriceDenominator);
 
         vm.startBroadcast(deployerPrivateKey);
-        IPoolManager(poolManager).initialize(key, DEFAULT_SQRT_PRICE_X96);
+        IPoolManager(poolManager).initialize(key, sqrtPriceX96);
         vm.stopBroadcast();
 
         recordDeployment(deployedAddressesPath, chainName, hook, poolId);
@@ -45,6 +53,7 @@ contract InitializePool is Script {
         console.log("USDC:", usdcToken);
         console.log("Hook:", hook);
         console.log("PoolId:", vm.toString(poolId));
+        console.log("sqrtPriceX96:", sqrtPriceX96);
     }
 
     /**
@@ -60,6 +69,42 @@ contract InitializePool is Script {
     {
         PoolKey memory key = _buildPoolKey(cptToken, usdcToken, hook);
         IPoolManager(poolManager).initialize(key, sqrtPriceX96);
+    }
+
+    function calculateInitialSqrtPriceX96(
+        address cptToken,
+        address usdcToken,
+        uint8 cptDecimals,
+        uint8 usdcDecimals,
+        uint256 priceNumerator,
+        uint256 priceDenominator
+    ) public pure returns (uint160 sqrtPriceX96) {
+        require(priceNumerator > 0, "InitializePool: invalid numerator");
+        require(priceDenominator > 0, "InitializePool: invalid denominator");
+
+        uint256 cptScale = _pow10(cptDecimals);
+        uint256 usdcScale = _pow10(usdcDecimals);
+
+        uint256 rawNumerator;
+        uint256 rawDenominator;
+        if (cptToken < usdcToken) {
+            // token0 = CPT, token1 = USDC
+            rawNumerator = FullMath.mulDiv(priceNumerator, usdcScale, 1);
+            rawDenominator = FullMath.mulDiv(priceDenominator, cptScale, 1);
+        } else {
+            // token0 = USDC, token1 = CPT
+            rawNumerator = FullMath.mulDiv(priceDenominator, cptScale, 1);
+            rawDenominator = FullMath.mulDiv(priceNumerator, usdcScale, 1);
+        }
+
+        uint256 ratioX192 = FullMath.mulDiv(rawNumerator, Q192, rawDenominator);
+        require(ratioX192 > 0, "InitializePool: invalid price ratio");
+
+        sqrtPriceX96 = uint160(Math.sqrt(ratioX192));
+        require(
+            sqrtPriceX96 > TickMath.MIN_SQRT_PRICE && sqrtPriceX96 < TickMath.MAX_SQRT_PRICE,
+            "InitializePool: sqrtPrice out of range"
+        );
     }
 
     /**
@@ -109,6 +154,19 @@ contract InitializePool is Script {
         });
     }
 
+    function _calculateInitialSqrtPriceX96(
+        address cptToken,
+        address usdcToken,
+        uint256 priceNumerator,
+        uint256 priceDenominator
+    ) private view returns (uint160) {
+        uint8 cptDecimals = IERC20Metadata(cptToken).decimals();
+        uint8 usdcDecimals = IERC20Metadata(usdcToken).decimals();
+        return calculateInitialSqrtPriceX96(
+            cptToken, usdcToken, cptDecimals, usdcDecimals, priceNumerator, priceDenominator
+        );
+    }
+
     function _readAddress(string memory path, string memory chainName) private view returns (address) {
         string memory json = vm.readFile(path);
         return vm.parseJsonAddress(json, string.concat(".", chainName));
@@ -125,6 +183,14 @@ contract InitializePool is Script {
             return (true, addr);
         } catch {
             return (false, address(0));
+        }
+    }
+
+    function _pow10(uint8 exponent) private pure returns (uint256 result) {
+        require(exponent <= 77, "InitializePool: decimals too large");
+        result = 1;
+        for (uint8 i = 0; i < exponent; i++) {
+            result *= 10;
         }
     }
 }

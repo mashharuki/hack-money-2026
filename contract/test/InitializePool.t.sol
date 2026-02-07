@@ -22,6 +22,9 @@ contract MockPoolManagerForInitialize {
 }
 
 contract InitializePoolTest is Test {
+    uint256 internal constant TWO_POW_96 = 79228162514264337593543950336;
+    uint256 internal constant TWO_POW_192 = 6277101735386680763835789423207666416102355444464034512896;
+
     function test_initializePool_sortsTokenOrderAndInitializesDynamicFeePool() public {
         MockPoolManagerForInitialize poolManager = new MockPoolManagerForInitialize();
         InitializePool script = new InitializePool();
@@ -63,5 +66,43 @@ contract InitializePoolTest is Test {
         assertEq(vm.parseJsonAddress(json, ".base-sepolia.oracle"), oracle, "oracle should be preserved");
         assertEq(vm.parseJsonAddress(json, ".base-sepolia.hook"), hook, "hook should be written");
         assertEq(vm.parseJsonBytes32(json, ".base-sepolia.poolId"), poolId, "poolId should be written");
+    }
+
+    function test_calculateInitialSqrtPriceX96_adjustsForDecimals() public {
+        InitializePool script = new InitializePool();
+
+        address cpt = address(0x2000);
+        address usdc = address(0x1000);
+        uint160 sqrtPriceX96 = script.calculateInitialSqrtPriceX96(cpt, usdc, 18, 6, 1, 1);
+
+        assertTrue(uint256(sqrtPriceX96) != TWO_POW_96, "sqrt price must not remain 2^96 with 18/6 decimals");
+        assertEq(uint256(sqrtPriceX96), TWO_POW_96 * 1_000_000, "sqrt price should include decimals adjustment");
+    }
+
+    function test_calculateInitialSqrtPriceX96_handlesTokenOrderSwap() public {
+        InitializePool script = new InitializePool();
+
+        uint160 sqrtPriceWhenToken0IsUsdc = script.calculateInitialSqrtPriceX96(address(0x2000), address(0x1000), 18, 6, 1, 1);
+        uint160 sqrtPriceWhenToken0IsCpt = script.calculateInitialSqrtPriceX96(address(0x1000), address(0x2000), 18, 6, 1, 1);
+
+        assertGt(uint256(sqrtPriceWhenToken0IsUsdc), TWO_POW_96, "USDC token0 should produce > 2^96");
+        assertLt(uint256(sqrtPriceWhenToken0IsCpt), TWO_POW_96, "CPT token0 should produce < 2^96");
+
+        uint256 product = uint256(sqrtPriceWhenToken0IsUsdc) * uint256(sqrtPriceWhenToken0IsCpt);
+        assertLe(TWO_POW_192 - product, uint256(sqrtPriceWhenToken0IsUsdc), "swapped order should stay reciprocal");
+    }
+
+    function test_calculateInitialSqrtPriceX96_revertsWhenDenominatorIsZero() public {
+        InitializePool script = new InitializePool();
+
+        vm.expectRevert(bytes("InitializePool: invalid denominator"));
+        script.calculateInitialSqrtPriceX96(address(0x1000), address(0x2000), 18, 6, 1, 0);
+    }
+
+    function test_calculateInitialSqrtPriceX96_revertsWhenSqrtPriceOutOfRange() public {
+        InitializePool script = new InitializePool();
+
+        vm.expectRevert(bytes("InitializePool: sqrtPrice out of range"));
+        script.calculateInitialSqrtPriceX96(address(0x1000), address(0x2000), 18, 6, 1, 10 ** 28);
     }
 }

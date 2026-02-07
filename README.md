@@ -804,3 +804,31 @@ forge script script/DeployHook.s.sol:DeployHook \
 --rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
 --broadcast -vvv
 ```
+
+Poolを初期化する場合（`INITIAL_PRICE_NUMERATOR / INITIAL_PRICE_DENOMINATOR` は「1 CPT あたり USDC 価格」）
+
+```bash
+# 例: 1 CPT = 1 USDC(以下の値は .envでもセットすればOK!)
+INITIAL_PRICE_NUMERATOR=1
+INITIAL_PRICE_DENOMINATOR=1
+
+source .env
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
