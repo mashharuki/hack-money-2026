@@ -76,14 +76,16 @@ contract HookMinerTest is Test {
 
     /// @notice maxIterations が不十分な場合に revert することを検証
     function test_find_revertsWhenSaltNotFound() public {
+        uint160 flags = Hooks.BEFORE_SWAP_FLAG;
         bytes memory creationCode = type(DummyContract).creationCode;
         bytes memory constructorArgs = abi.encode(uint256(42));
 
-        // 全14ビット (ALL_HOOK_MASK) を要求 — 100回では見つからない
-        uint160 impossibleFlags = uint160((1 << 14) - 1);
+        // maxIterations=0 なら探索が1回も実行されないため、常に deterministic に revert する
+        uint256 seed = 0;
+        uint256 maxIterations = 0;
 
         vm.expectRevert("HookMiner: salt not found");
-        wrapper.find(DEPLOYER, impossibleFlags, creationCode, constructorArgs, 0, 100);
+        wrapper.find(DEPLOYER, flags, creationCode, constructorArgs, seed, maxIterations);
     }
 
     /// @notice computeAddress が正しい CREATE2 アドレスを計算することを検証
