@@ -69,4 +69,30 @@ contract UtilizationHookTest is Test {
         IHooks ihook = IHooks(address(hook));
         assertTrue(address(ihook) != address(0));
     }
+
+    // ─── Task 2.2: getHookPermissions テスト ───
+
+    /// @notice beforeSwap が true であることを検証
+    function test_getHookPermissions_beforeSwapIsTrue() public view {
+        Hooks.Permissions memory perms = hook.getHookPermissions();
+        assertTrue(perms.beforeSwap, "beforeSwap should be true");
+    }
+
+    /// @notice beforeSwap 以外のすべてのフックが false であることを検証
+    function test_getHookPermissions_allOtherPermissionsAreFalse() public view {
+        Hooks.Permissions memory perms = hook.getHookPermissions();
+        assertFalse(perms.beforeInitialize, "beforeInitialize should be false");
+        assertFalse(perms.afterInitialize, "afterInitialize should be false");
+        assertFalse(perms.beforeAddLiquidity, "beforeAddLiquidity should be false");
+        assertFalse(perms.afterAddLiquidity, "afterAddLiquidity should be false");
+        assertFalse(perms.beforeRemoveLiquidity, "beforeRemoveLiquidity should be false");
+        assertFalse(perms.afterRemoveLiquidity, "afterRemoveLiquidity should be false");
+        assertFalse(perms.afterSwap, "afterSwap should be false");
+        assertFalse(perms.beforeDonate, "beforeDonate should be false");
+        assertFalse(perms.afterDonate, "afterDonate should be false");
+        assertFalse(perms.beforeSwapReturnDelta, "beforeSwapReturnDelta should be false");
+        assertFalse(perms.afterSwapReturnDelta, "afterSwapReturnDelta should be false");
+        assertFalse(perms.afterAddLiquidityReturnDelta, "afterAddLiquidityReturnDelta should be false");
+        assertFalse(perms.afterRemoveLiquidityReturnDelta, "afterRemoveLiquidityReturnDelta should be false");
+    }
 }

@@ -35,7 +35,7 @@
   - _Requirements: 2.8, 5.1_
   - _Note: core-token-system の Mock Oracle がデプロイされている前提_
 
-- [ ] 2.2 getHookPermissions 関数を実装する
+- [x] 2.2 getHookPermissions 関数を実装する
   - beforeSwap のみ true に設定する
   - 他のすべてのフックを false に設定する
   - _Requirements: 2.1, 2.8_
