@@ -55,9 +55,7 @@ contract PoolHookIntegrationTest is Test {
         swapRouter.swap(
             key,
             IPoolManager.SwapParams({
-                zeroForOne: true,
-                amountSpecified: -1e15,
-                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+                zeroForOne: true, amountSpecified: -1e15, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             ""
@@ -77,9 +75,7 @@ contract PoolHookIntegrationTest is Test {
         swapRouter.swap(
             key,
             IPoolManager.SwapParams({
-                zeroForOne: true,
-                amountSpecified: -1e15,
-                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+                zeroForOne: true, amountSpecified: -1e15, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             ""
@@ -100,9 +96,7 @@ contract PoolHookIntegrationTest is Test {
         swapRouter.swap(
             key,
             IPoolManager.SwapParams({
-                zeroForOne: true,
-                amountSpecified: -1e15,
-                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+                zeroForOne: true, amountSpecified: -1e15, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             ""
@@ -143,9 +137,7 @@ contract PoolHookIntegrationTest is Test {
         swapRouter.swap(
             key,
             IPoolManager.SwapParams({
-                zeroForOne: true,
-                amountSpecified: -1e15,
-                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+                zeroForOne: true, amountSpecified: -1e15, sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
             }),
             PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
             ""
@@ -157,7 +149,13 @@ contract PoolHookIntegrationTest is Test {
 
     function _deployAndInitPoolWithLiquidity()
         internal
-        returns (PoolManager poolManager, MockOracle oracle, PoolKey memory key, PoolSwapTest swapRouter, ComputeToken cpt)
+        returns (
+            PoolManager poolManager,
+            MockOracle oracle,
+            PoolKey memory key,
+            PoolSwapTest swapRouter,
+            ComputeToken cpt
+        )
     {
         poolManager = new PoolManager(address(this));
         oracle = new MockOracle();
@@ -166,7 +164,8 @@ contract PoolHookIntegrationTest is Test {
         bytes memory constructorArgs = abi.encode(IPoolManager(address(poolManager)), IMockOracle(address(oracle)));
         uint160 flags = Hooks.BEFORE_SWAP_FLAG;
 
-        (address expectedHookAddress, bytes32 salt) = HookMiner.find(address(this), flags, creationCode, constructorArgs);
+        (address expectedHookAddress, bytes32 salt) =
+            HookMiner.find(address(this), flags, creationCode, constructorArgs);
         bytes memory initCode = abi.encodePacked(creationCode, constructorArgs);
         address hookAddress;
         assembly ("memory-safe") { hookAddress := create2(0, add(initCode, 0x20), mload(initCode), salt) }
@@ -186,9 +185,8 @@ contract PoolHookIntegrationTest is Test {
         usdc.approve(address(modifyLiquidityRouter), type(uint256).max);
         usdc.approve(address(swapRouter), type(uint256).max);
 
-        (address token0, address token1) = address(cpt) < address(usdc)
-            ? (address(cpt), address(usdc))
-            : (address(usdc), address(cpt));
+        (address token0, address token1) =
+            address(cpt) < address(usdc) ? (address(cpt), address(usdc)) : (address(usdc), address(cpt));
 
         key = PoolKey({
             currency0: Currency.wrap(token0),

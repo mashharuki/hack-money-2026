@@ -59,7 +59,9 @@ contract VerifyHookBehavior is Script {
 
         _verifyOne(cfg.deployerPrivateKey, swapRouter, key, cfg.oracle, cfg.utilLow, 500, cfg.cpt, cfg.swapInputAmount);
         _verifyOne(cfg.deployerPrivateKey, swapRouter, key, cfg.oracle, cfg.utilMid, 3000, cfg.cpt, cfg.swapInputAmount);
-        _verifyOne(cfg.deployerPrivateKey, swapRouter, key, cfg.oracle, cfg.utilHigh, 10000, cfg.cpt, cfg.swapInputAmount);
+        _verifyOne(
+            cfg.deployerPrivateKey, swapRouter, key, cfg.oracle, cfg.utilHigh, 10000, cfg.cpt, cfg.swapInputAmount
+        );
 
         console.log("VerifyHookBehavior: success");
     }
@@ -112,18 +114,19 @@ contract VerifyHookBehavior is Script {
 
         vm.startBroadcast(deployerPrivateKey);
         IMockOracle(oracle).setUtilization(utilization);
-        PoolSwapTest(swapRouter).swap(
-            key,
-            IPoolManager.SwapParams({
-                zeroForOne: Currency.unwrap(key.currency0) == cpt,
-                amountSpecified: -int256(swapInputAmount),
-                sqrtPriceLimitX96: Currency.unwrap(key.currency0) == cpt
-                    ? TickMath.MIN_SQRT_PRICE + 1
-                    : TickMath.MAX_SQRT_PRICE - 1
-            }),
-            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
-            ""
-        );
+        PoolSwapTest(swapRouter)
+            .swap(
+                key,
+                IPoolManager.SwapParams({
+                    zeroForOne: Currency.unwrap(key.currency0) == cpt,
+                    amountSpecified: -int256(swapInputAmount),
+                    sqrtPriceLimitX96: Currency.unwrap(key.currency0) == cpt
+                        ? TickMath.MIN_SQRT_PRICE + 1
+                        : TickMath.MAX_SQRT_PRICE - 1
+                }),
+                PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
+                ""
+            );
         vm.stopBroadcast();
 
         Vm.Log[] memory logs = vm.getRecordedLogs();
@@ -157,12 +160,20 @@ contract VerifyHookBehavior is Script {
         return vm.parseJsonAddress(json, string.concat(".", chainName));
     }
 
-    function _readAddress(string memory path, string memory chainName, string memory field) internal view returns (address) {
+    function _readAddress(string memory path, string memory chainName, string memory field)
+        internal
+        view
+        returns (address)
+    {
         string memory json = vm.readFile(path);
         return vm.parseJsonAddress(json, string.concat(".", chainName, ".", field));
     }
 
-    function _readPoolId(string memory path, string memory chainName, string memory field) internal view returns (bytes32) {
+    function _readPoolId(string memory path, string memory chainName, string memory field)
+        internal
+        view
+        returns (bytes32)
+    {
         string memory json = vm.readFile(path);
         return vm.parseJsonBytes32(json, string.concat(".", chainName, ".", field));
     }

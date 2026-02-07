@@ -39,7 +39,11 @@ contract MintCpt is Script {
         console.log("Amount:", mintAmount);
     }
 
-    function _readAddress(string memory path, string memory chainName, string memory field) private view returns (address) {
+    function _readAddress(string memory path, string memory chainName, string memory field)
+        private
+        view
+        returns (address)
+    {
         string memory json = vm.readFile(path);
         return vm.parseJsonAddress(json, string.concat(".", chainName, ".", field));
     }

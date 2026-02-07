@@ -57,7 +57,10 @@ contract InitializePoolTest is Test {
         address hook = address(0x3333);
         bytes32 poolId = bytes32(uint256(0x1234));
 
-        vm.writeFile(path, '{"base-sepolia":{"cpt":"0x0000000000000000000000000000000000001111","oracle":"0x0000000000000000000000000000000000002222"}}');
+        vm.writeFile(
+            path,
+            '{"base-sepolia":{"cpt":"0x0000000000000000000000000000000000001111","oracle":"0x0000000000000000000000000000000000002222"}}'
+        );
 
         script.recordDeployment(path, chainName, hook, poolId);
 
@@ -82,8 +85,10 @@ contract InitializePoolTest is Test {
     function test_calculateInitialSqrtPriceX96_handlesTokenOrderSwap() public {
         InitializePool script = new InitializePool();
 
-        uint160 sqrtPriceWhenToken0IsUsdc = script.calculateInitialSqrtPriceX96(address(0x2000), address(0x1000), 18, 6, 1, 1);
-        uint160 sqrtPriceWhenToken0IsCpt = script.calculateInitialSqrtPriceX96(address(0x1000), address(0x2000), 18, 6, 1, 1);
+        uint160 sqrtPriceWhenToken0IsUsdc =
+            script.calculateInitialSqrtPriceX96(address(0x2000), address(0x1000), 18, 6, 1, 1);
+        uint160 sqrtPriceWhenToken0IsCpt =
+            script.calculateInitialSqrtPriceX96(address(0x1000), address(0x2000), 18, 6, 1, 1);
 
         assertGt(uint256(sqrtPriceWhenToken0IsUsdc), TWO_POW_96, "USDC token0 should produce > 2^96");
         assertLt(uint256(sqrtPriceWhenToken0IsCpt), TWO_POW_96, "CPT token0 should produce < 2^96");

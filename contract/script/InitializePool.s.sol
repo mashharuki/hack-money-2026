@@ -64,9 +64,13 @@ contract InitializePool is Script {
      * @param hook Hook アドレス
      * @param sqrtPriceX96 初期価格 (Q64.96)
      */
-    function initializePool(address poolManager, address cptToken, address usdcToken, address hook, uint160 sqrtPriceX96)
-        public
-    {
+    function initializePool(
+        address poolManager,
+        address cptToken,
+        address usdcToken,
+        address hook,
+        uint160 sqrtPriceX96
+    ) public {
         PoolKey memory key = _buildPoolKey(cptToken, usdcToken, hook);
         IPoolManager(poolManager).initialize(key, sqrtPriceX96);
     }
@@ -142,7 +146,11 @@ contract InitializePool is Script {
      * @param usdcToken USDC トークンアドレス
      * @param hook Hook アドレス
      */
-    function _buildPoolKey(address cptToken, address usdcToken, address hook) private pure returns (PoolKey memory key) {
+    function _buildPoolKey(address cptToken, address usdcToken, address hook)
+        private
+        pure
+        returns (PoolKey memory key)
+    {
         (address token0, address token1) = cptToken < usdcToken ? (cptToken, usdcToken) : (usdcToken, cptToken);
 
         key = PoolKey({
@@ -162,9 +170,10 @@ contract InitializePool is Script {
     ) private view returns (uint160) {
         uint8 cptDecimals = IERC20Metadata(cptToken).decimals();
         uint8 usdcDecimals = IERC20Metadata(usdcToken).decimals();
-        return calculateInitialSqrtPriceX96(
-            cptToken, usdcToken, cptDecimals, usdcDecimals, priceNumerator, priceDenominator
-        );
+        return
+            calculateInitialSqrtPriceX96(
+                cptToken, usdcToken, cptDecimals, usdcDecimals, priceNumerator, priceDenominator
+            );
     }
 
     function _readAddress(string memory path, string memory chainName) private view returns (address) {
@@ -172,7 +181,11 @@ contract InitializePool is Script {
         return vm.parseJsonAddress(json, string.concat(".", chainName));
     }
 
-    function _readAddress(string memory path, string memory chainName, string memory field) private view returns (address) {
+    function _readAddress(string memory path, string memory chainName, string memory field)
+        private
+        view
+        returns (address)
+    {
         string memory json = vm.readFile(path);
         return vm.parseJsonAddress(json, string.concat(".", chainName, ".", field));
     }

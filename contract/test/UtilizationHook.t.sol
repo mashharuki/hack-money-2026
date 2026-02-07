@@ -22,7 +22,11 @@ contract MetaOnlyOracle is IMockOracle {
 
     function setUtilization(uint256) external pure {}
 
-    function getUtilizationWithMeta() external pure returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source) {
+    function getUtilizationWithMeta()
+        external
+        pure
+        returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source)
+    {
         return (10, 0, false, 1);
     }
 
@@ -42,7 +46,11 @@ contract StaleMetaOracle is IMockOracle {
 
     function setUtilization(uint256) external pure {}
 
-    function getUtilizationWithMeta() external pure returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source) {
+    function getUtilizationWithMeta()
+        external
+        pure
+        returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source)
+    {
         return (10, 0, true, 1);
     }
 
@@ -70,7 +78,11 @@ contract ConfigurableMetaOracle is IMockOracle {
 
     function setUtilization(uint256) external pure {}
 
-    function getUtilizationWithMeta() external view returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source) {
+    function getUtilizationWithMeta()
+        external
+        view
+        returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source)
+    {
         return (_utilization, block.timestamp, _stale, 1);
     }
 
@@ -448,12 +460,7 @@ contract UtilizationHookTest is Test {
     function test_afterAddLiquidity_revertsNotImplemented() public {
         vm.expectRevert(bytes("not implemented"));
         hook.afterAddLiquidity(
-            address(this),
-            _makePoolKey(),
-            _makeModifyLiquidityParams(),
-            BalanceDelta.wrap(0),
-            BalanceDelta.wrap(0),
-            ""
+            address(this), _makePoolKey(), _makeModifyLiquidityParams(), BalanceDelta.wrap(0), BalanceDelta.wrap(0), ""
         );
     }
 
@@ -467,12 +474,7 @@ contract UtilizationHookTest is Test {
     function test_afterRemoveLiquidity_revertsNotImplemented() public {
         vm.expectRevert(bytes("not implemented"));
         hook.afterRemoveLiquidity(
-            address(this),
-            _makePoolKey(),
-            _makeModifyLiquidityParams(),
-            BalanceDelta.wrap(0),
-            BalanceDelta.wrap(0),
-            ""
+            address(this), _makePoolKey(), _makeModifyLiquidityParams(), BalanceDelta.wrap(0), BalanceDelta.wrap(0), ""
         );
     }
 

@@ -7,11 +7,14 @@ import {HookMiner} from "../src/lib/HookMiner.sol";
 
 /// @notice HookMiner の internal 関数を external で公開するラッパー
 contract HookMinerWrapper {
-    function find(address deployer, uint160 flags, bytes memory creationCode, bytes memory constructorArgs, uint256 seed, uint256 maxIterations)
-        external
-        pure
-        returns (address hookAddress, bytes32 salt)
-    {
+    function find(
+        address deployer,
+        uint160 flags,
+        bytes memory creationCode,
+        bytes memory constructorArgs,
+        uint256 seed,
+        uint256 maxIterations
+    ) external pure returns (address hookAddress, bytes32 salt) {
         return HookMiner.find(deployer, flags, creationCode, constructorArgs, seed, maxIterations);
     }
 }
@@ -98,7 +101,8 @@ contract HookMinerTest is Test {
 
         // 手動計算と比較
         bytes32 initCodeHash = keccak256(abi.encodePacked(creationCode, constructorArgs));
-        address expected = address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), DEPLOYER, salt, initCodeHash)))));
+        address expected =
+            address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), DEPLOYER, salt, initCodeHash)))));
 
         assertEq(computed, expected, "computeAddress should match manual calculation");
     }

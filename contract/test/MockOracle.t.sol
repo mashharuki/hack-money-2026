@@ -137,7 +137,7 @@ contract MockOracleTest is Test {
         oracle.setUtilizationFromBot(80, block.timestamp);
         oracle.setUtilizationFromFunctions(50, block.timestamp, bytes32("req-diverge"));
 
-        (uint256 utilization,, , uint8 source) = oracle.getUtilizationWithMeta();
+        (uint256 utilization,,, uint8 source) = oracle.getUtilizationWithMeta();
         assertEq(utilization, 50);
         assertEq(source, oracle.SOURCE_FUNCTIONS());
     }
@@ -146,7 +146,7 @@ contract MockOracleTest is Test {
         oracle.setUtilizationFromBot(80, block.timestamp);
         oracle.setUtilizationFromFunctions(70, block.timestamp, bytes32("req-within"));
 
-        (uint256 utilization,, , uint8 source) = oracle.getUtilizationWithMeta();
+        (uint256 utilization,,, uint8 source) = oracle.getUtilizationWithMeta();
         assertEq(utilization, 80);
         assertEq(source, oracle.SOURCE_BOT());
     }

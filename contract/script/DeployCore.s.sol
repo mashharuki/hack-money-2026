@@ -24,10 +24,8 @@ contract DeployCore is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         if (
-          _isBaseSepolia(chainName) ||
-          _isWorldChainSepolia(chainName) ||
-          _isSepolia(chainName) ||
-          _isUnchainSepolia(chainName)
+            _isBaseSepolia(chainName) || _isWorldChainSepolia(chainName) || _isSepolia(chainName)
+                || _isUnchainSepolia(chainName)
         ) {
             ComputeToken cpt = new ComputeToken("Compute Token", "CPT", deployer);
             console.log("CPT Token deployed at:", address(cpt));
@@ -74,9 +72,12 @@ contract DeployCore is Script {
     }
 
     function _ensureJsonFile(string memory path) private {
-        try vm.readFile(path) returns (string memory) {
-            // no-op
-        } catch {
+        try vm.readFile(path) returns (
+            string memory
+        ) {
+        // no-op
+        }
+        catch {
             vm.writeFile(path, "{}");
         }
     }
