@@ -14,7 +14,7 @@
 
 ### 1. Uniswap v4 依存関係とプロジェクト設定
 
-- [ ] 1.1 Uniswap v4 ライブラリをインストールし、Foundry プロジェクトを設定する
+- [x] 1.1 Uniswap v4 ライブラリをインストールし、Foundry プロジェクトを設定する
   - v4-core と v4-periphery をインストールする
   - remappings.txt を更新して v4 ライブラリへのパスを設定する
   - foundry.toml で Solidity バージョンを 0.8.26 に設定する
