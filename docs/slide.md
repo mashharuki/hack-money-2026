@@ -140,7 +140,7 @@ style: |
 
 <!-- _class: lead -->
 
-# Zombie L2 Clearinghouse
+# Ghost Yield 
 ## Turning "Dead" Compute into Revenue
 
 **ETH Global HackMoney 2026**
@@ -178,7 +178,7 @@ style: |
 
 # <!-- fit --> The Solution: **Financialize L2 Compute**
 
-## Zombie L2 Clearinghouse creates a market where:
+## Ghost Yield  creates a market where:
 
 1.  **L2s** mint idle capacity as **Compute Tokens (CPT)**.
 2.  **Uniswap v4** prices CPT dynamically based on utilization.
