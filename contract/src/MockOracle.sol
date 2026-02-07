@@ -51,6 +51,8 @@ contract MockOracle is IMockOracle {
     uint8 public constant SOURCE_FUNCTIONS = 2;
     uint256 public constant DEFAULT_STALE_TTL = 20 minutes;
     uint256 public constant DIVERGENCE_THRESHOLD = 15;
+    uint256 public constant MAX_TIMESTAMP_FUTURE_DRIFT = 60;
+    uint256 public constant MAX_TIMESTAMP_AGE = 1 hours;
 
     /// @notice 現在の稼働率（0-100%）
     uint256 private _utilization = 50;
@@ -59,6 +61,7 @@ contract MockOracle is IMockOracle {
     uint256 private _staleTtl = DEFAULT_STALE_TTL;
     uint256 private _lastBotUtilization;
     uint256 private _lastFunctionsUtilization;
+    bytes32 public lastFunctionsRequestId;
     mapping(address => bool) private _authorizedUpdaters;
 
     /// @notice 稼働率が変更されたときに発行されるイベント
@@ -75,9 +78,8 @@ contract MockOracle is IMockOracle {
     /// @param utilization 稼働率（0-100%）
     /// @dev 範囲外の値は拒否される
     function setUtilization(uint256 utilization) external {
-        require(utilization <= 100, "MockOracle: utilization out of range");
-        _utilization = utilization;
-        emit UtilizationUpdated(utilization);
+        _lastBotUtilization = utilization;
+        _setUtilization(utilization, block.timestamp, SOURCE_BOT);
     }
 
     function getUtilizationWithMeta() external view returns (uint256, uint256, bool, uint8) {
@@ -91,7 +93,7 @@ contract MockOracle is IMockOracle {
     }
 
     function setUtilizationFromFunctions(uint256 utilization, uint256 timestamp, bytes32 requestId) external {
-        requestId;
+        lastFunctionsRequestId = requestId;
         _lastFunctionsUtilization = utilization;
         _setUtilization(utilization, timestamp, SOURCE_FUNCTIONS);
     }
@@ -106,9 +108,16 @@ contract MockOracle is IMockOracle {
 
     function _setUtilization(uint256 utilization, uint256 timestamp, uint8 source) internal {
         require(utilization <= 100, "MockOracle: utilization out of range");
+        _validateTimestamp(timestamp);
         _utilization = utilization;
         _updatedAt = timestamp;
         _source = source;
         emit UtilizationUpdated(utilization);
+    }
+
+    function _validateTimestamp(uint256 timestamp) internal view {
+        require(timestamp <= block.timestamp + MAX_TIMESTAMP_FUTURE_DRIFT, "MockOracle: timestamp in future");
+        require(timestamp + MAX_TIMESTAMP_AGE >= block.timestamp, "MockOracle: timestamp too old");
+        require(timestamp + _staleTtl >= block.timestamp, "MockOracle: timestamp already stale");
     }
 }

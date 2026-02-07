@@ -26,19 +26,19 @@
   - `SOURCE_BOT=1`, `SOURCE_FUNCTIONS=2`, `DIVERGENCE_THRESHOLD=15` などを定義
   - _Requirements: 1.3, 1.4, 2.3, 4.1, 8.4_
 
-- [ ] 1.3 更新関数（legacy/bot/functions）を実装する
+- [x] 1.3 更新関数（legacy/bot/functions）を実装する
   - `setUtilization()` の後方互換維持
   - bot/functions更新で source と updatedAt を記録
   - requestId 記録を実装
   - _Requirements: 2.1, 2.2, 8.1, 10.1, 10.2_
 
-- [ ] 1.4 バリデーションを実装する
+- [x] 1.4 バリデーションを実装する
   - `utilization > 100` を revert
   - `timestamp > block.timestamp + drift` を revert
   - `timestamp` が古すぎる場合を revert
   - _Requirements: 1.2, 9.2, 9.3_
 
-- [ ] 1.5 stale判定を実装する
+- [x] 1.5 stale判定を実装する
   - 初期未更新 (`updatedAt == 0`) は stale=true
   - `block.timestamp - updatedAt > staleTtl` で stale=true
   - _Requirements: 4.2, 4.4, 4.5, 9.5_

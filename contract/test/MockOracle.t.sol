@@ -69,4 +69,53 @@ contract MockOracleTest is Test {
         (,,, uint8 functionsSource) = oracle.getUtilizationWithMeta();
         assertEq(functionsSource, oracle.SOURCE_FUNCTIONS());
     }
+
+    function test_SetUtilization_LegacyPathUpdatesSourceAndTimestamp() public {
+        vm.warp(12345);
+        oracle.setUtilization(88);
+
+        (uint256 utilization, uint256 updatedAt,, uint8 source) = oracle.getUtilizationWithMeta();
+        assertEq(utilization, 88);
+        assertEq(updatedAt, 12345);
+        assertEq(source, oracle.SOURCE_BOT());
+    }
+
+    function test_SetUtilizationFromFunctions_RecordsRequestId() public {
+        bytes32 requestId = keccak256("functions-request");
+        oracle.setUtilizationFromFunctions(70, block.timestamp, requestId);
+        assertEq(oracle.lastFunctionsRequestId(), requestId);
+    }
+
+    function test_SetUtilizationFromBot_RevertsIfTimestampInFuture() public {
+        uint256 futureDrift = oracle.MAX_TIMESTAMP_FUTURE_DRIFT();
+        vm.expectRevert(bytes("MockOracle: timestamp in future"));
+        oracle.setUtilizationFromBot(70, block.timestamp + futureDrift + 1);
+    }
+
+    function test_SetUtilizationFromFunctions_RevertsIfTimestampTooOld() public {
+        uint256 maxAge = oracle.MAX_TIMESTAMP_AGE();
+        vm.warp(maxAge + 100);
+        vm.expectRevert(bytes("MockOracle: timestamp too old"));
+        oracle.setUtilizationFromFunctions(70, block.timestamp - maxAge - 1, bytes32("req-old"));
+    }
+
+    function test_GetUtilizationWithMeta_InitialStateIsStale() public view {
+        (,, bool stale,) = oracle.getUtilizationWithMeta();
+        assertTrue(stale);
+    }
+
+    function test_GetUtilizationWithMeta_BecomesStaleAfterTtl() public {
+        oracle.setUtilization(50);
+        vm.warp(block.timestamp + oracle.DEFAULT_STALE_TTL() + 1);
+
+        (,, bool stale,) = oracle.getUtilizationWithMeta();
+        assertTrue(stale);
+    }
+
+    function test_SetUtilizationFromBot_RevertsIfTimestampAlreadyStaleAtWrite() public {
+        uint256 staleTtl = oracle.DEFAULT_STALE_TTL();
+        vm.warp(staleTtl + 100);
+        vm.expectRevert(bytes("MockOracle: timestamp already stale"));
+        oracle.setUtilizationFromBot(70, block.timestamp - staleTtl - 1);
+    }
 }
