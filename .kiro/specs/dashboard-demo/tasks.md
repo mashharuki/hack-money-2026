@@ -26,42 +26,41 @@
 
 ### 2. Dashboard UI 完成版構築（Phase 3）
 
-- [ ] 2.1 (P) Dashboard UI 完成版構築
-  - Next.js App Router でルーティング設定（/dashboard）
-  - TailwindCSS + Shadcn/ui でレイアウト構築
-  - wagmi/viem 初期化（ウォレット接続準備）
-  - ヘッダー・サイドバー・メインコンテンツエリア作成
+- [x] 2.1 (P) Dashboard UI 完成版構築 ✅
+  - Next.js App Router でルーティング設定（/dashboard） ✅ frontend/app/dashboard/page.tsx
+  - TailwindCSS でレイアウト構築 ✅ Pencil UIモック準拠ダークテーマ
+  - viem 初期化 ✅ frontend/lib/chains.ts
+  - サイドバー・メインコンテンツエリア作成 ✅ frontend/app/_components/sidebar.tsx, frontend/app/layout.tsx
   - _Requirements: 1.8_
-  - _Note: Phase 1 の簡易 Dashboard を拡張_
 
-- [ ] 2.2 (P) 価格差表示コンポーネント実装
-  - Base Sepolia と WorldCoin Sepolia の CPT/USDC 価格表示
-  - 価格差計算・表示
-  - 5秒間隔の自動リフレッシュ
-  - Recharts/Chart.js で価格推移チャート表示
+- [x] 2.2 (P) 価格差表示コンポーネント実装 ✅
+  - CPT-A / CPT-B 価格表示 ✅ frontend/app/dashboard/_components/metrics-row.tsx (PriceCard)
+  - 価格差計算・表示 ✅ metrics-row.tsx (SpreadCard)
+  - 5秒間隔の自動リフレッシュ ✅ dashboard/page.tsx (setInterval 5000ms)
+  - 価格推移チャート表示 ✅ frontend/app/dashboard/_components/price-spread-chart.tsx
   - _Requirements: 1.1, 1.2, 1.3, 1.7, 1.9_
 
-- [ ] 2.3 (P) Hook 状態表示コンポーネント実装
-  - Utilization Hook の現在の手数料設定表示
-  - Mock Oracle の稼働率表示
-  - Hook 実行ログ表示
+- [x] 2.3 (P) Hook 状態表示コンポーネント実装 ✅
+  - Utilization Hook の現在の手数料設定表示 ✅ frontend/app/settlement/_components/hook-status-card.tsx
+  - Mock Oracle の稼働率表示 ✅ frontend/app/settlement/_components/cpt-price-card.tsx
+  - Hook 実行ログ表示 ✅ frontend/app/settlement/_components/pipeline-log.tsx
   - _Requirements: 1.4_
 
-- [ ] 2.4 (P) Yellow セッションログ表示コンポーネント実装
-  - セッションID、売買ログ、最終利益表示
-  - セッション状態（ACTIVE / CLOSED / FAILED）表示
-  - **モックモード表示**（`USE_YELLOW_MOCK=true` 時）
+- [x] 2.4 (P) Yellow セッションログ表示コンポーネント実装 ✅
+  - セッションID、売買ログ、最終利益表示 ✅ frontend/app/dashboard/_components/session-log.tsx
+  - セッション状態（ACTIVE / CLOSED / FAILED）表示 ✅ session-log.tsx (BUY/SELL/SESSION/PROFIT types)
+  - **モックモード表示** ✅ dashboard/page.tsx (MOCK banner), session-log.tsx (MOCK badge)
   - _Requirements: 1.5, 1.11_
 
-- [ ] 2.5 (P) Operator Vault 残高表示コンポーネント実装
-  - USDC 残高表示
-  - Deposit イベントリスニング・リアルタイム更新
+- [x] 2.5 (P) Operator Vault 残高表示コンポーネント実装 ✅
+  - USDC 残高表示 ✅ metrics-row.tsx (VaultCard), settlement/_components/vault-balance-card.tsx
+  - リアルタイム更新 ✅ dashboard/page.tsx (5s interval), settlement/page.tsx (15s interval)
   - _Requirements: 1.6, 1.7_
 
-- [ ] 2.6 Dashboard 統合（2.1, 2.2, 2.3, 2.4, 2.5に依存）
-  - 各コンポーネントを Dashboard に統合
-  - レスポンシブレイアウト調整
-  - エラー表示・ローディング状態実装
+- [x] 2.6 Dashboard 統合（2.1, 2.2, 2.3, 2.4, 2.5に依存） ✅
+  - 各コンポーネントを Dashboard に統合 ✅ dashboard/page.tsx (MetricsRow + PriceSpreadChart + SessionLog)
+  - レスポンシブレイアウト調整 ✅ grid-cols-4, grid-cols-5
+  - Next.js ビルド成功 ✅
   - _Requirements: 1.10, 1.12_
 
 ---

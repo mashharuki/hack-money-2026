@@ -1,6 +1,6 @@
 "use client";
 
-import type { PriceDataPoint } from "../page";
+import type { PriceDataPoint } from "../_types";
 
 interface PriceSpreadChartProps {
   priceHistory: PriceDataPoint[];

@@ -5,24 +5,7 @@ import { RefreshCw, Play, X } from "lucide-react";
 import { MetricsRow } from "./_components/metrics-row";
 import { PriceSpreadChart } from "./_components/price-spread-chart";
 import { SessionLog } from "./_components/session-log";
-
-interface ChainPrice {
-  chain: string;
-  label: string;
-  price: number | null;
-  tick: number | null;
-  utilization: number | null;
-  fee: string | null;
-  feeBps: number | null;
-  error: string | null;
-}
-
-export interface PriceDataPoint {
-  timestamp: number;
-  priceA: number | null;
-  priceB: number | null;
-  spreadBps: number;
-}
+import type { ChainPrice, PriceDataPoint } from "./_types";
 
 export default function DashboardPage() {
   const [chainData, setChainData] = useState<ChainPrice[]>([]);

@@ -1,18 +1,7 @@
 "use client";
 
 import { TrendingUp, TrendingDown } from "lucide-react";
-import type { PriceDataPoint } from "../page";
-
-interface ChainPrice {
-  chain: string;
-  label: string;
-  price: number | null;
-  tick: number | null;
-  utilization: number | null;
-  fee: string | null;
-  feeBps: number | null;
-  error: string | null;
-}
+import type { ChainPrice, PriceDataPoint } from "../_types";
 
 interface MetricsRowProps {
   chainData: ChainPrice[];
