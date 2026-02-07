@@ -14,7 +14,7 @@
 
 ### 1. Uniswap v4 依存関係とプロジェクト設定
 
-- [ ] 1.1 Uniswap v4 ライブラリをインストールし、Foundry プロジェクトを設定する
+- [x] 1.1 Uniswap v4 ライブラリをインストールし、Foundry プロジェクトを設定する
   - v4-core と v4-periphery をインストールする
   - remappings.txt を更新して v4 ライブラリへのパスを設定する
   - foundry.toml で Solidity バージョンを 0.8.26 に設定する
@@ -25,8 +25,8 @@
 
 ### 2. Utilization Hook コアロジック実装
 
-- [ ] 2.1 UtilizationHook コントラクトを実装する
-  - BaseHook を継承した Hook コントラクトを作成する
+- [x] 2.1 UtilizationHook コントラクトを実装する
+  - IHooks インターフェースを直接実装した Hook コントラクトを作成する（BaseHook は v4-periphery 最新版で削除済み）
   - IMockOracle インターフェースを定義する（core-token-system との連携用）
   - 手数料定数を定義する（LOW_FEE: 0.05%, DEFAULT_FEE: 0.3%, HIGH_FEE: 1.0%）
   - 稼働率閾値を定義する（LOW_THRESHOLD: 30, HIGH_THRESHOLD: 70）
@@ -35,19 +35,19 @@
   - _Requirements: 2.8, 5.1_
   - _Note: core-token-system の Mock Oracle がデプロイされている前提_
 
-- [ ] 2.2 getHookPermissions 関数を実装する
+- [x] 2.2 getHookPermissions 関数を実装する
   - beforeSwap のみ true に設定する
   - 他のすべてのフックを false に設定する
   - _Requirements: 2.1, 2.8_
 
-- [ ] 2.3 calculateDynamicFee 関数を実装する
+- [x] 2.3 calculateDynamicFee 関数を実装する
   - 稼働率 0-29% の場合は LOW_FEE を返す
   - 稼働率 30-69% の場合は DEFAULT_FEE を返す
   - 稼働率 70-100% の場合は HIGH_FEE を返す
   - 稼働率が 100 を超える異常値の場合は DEFAULT_FEE にフォールバックする
   - _Requirements: 2.3, 2.4, 2.5, 2.6_
 
-- [ ] 2.4 beforeSwap フック関数を実装する
+- [x] 2.4 beforeSwap フック関数を実装する
   - Oracle から稼働率を取得する
   - calculateDynamicFee で手数料を計算する
   - FeeOverridden イベントを発行する
@@ -58,7 +58,7 @@
 
 ### 3. HookMiner ライブラリ実装
 
-- [ ] 3.1 (P) HookMiner ライブラリを実装する
+- [x] 3.1 (P) HookMiner ライブラリを実装する
   - CREATE2 アドレス計算ロジックを実装する
   - 目的のビットパターンを持つソルトを探索する find 関数を実装する
   - 探索範囲を指定可能なオーバーロード関数を実装する
@@ -71,7 +71,7 @@
 
 ### 4. デプロイスクリプト実装
 
-- [ ] 4.1 DeployHook スクリプトを作成する（Task 2, 3 に依存）
+- [x] 4.1 DeployHook スクリプトを作成する（Task 2, 3 に依存）
   - 環境変数から PoolManager と MockOracle アドレスを読み込む
   - BEFORE_SWAP_FLAG を設定する
   - HookMiner でソルトを探索する
@@ -80,7 +80,7 @@
   - デプロイ結果をコンソールに出力する
   - _Requirements: 3.1, 3.4, 3.5, 3.6, 5.2_
 
-- [ ] 4.2 InitializePool スクリプトを作成する（Task 4.1 に依存）
+- [x] 4.2 InitializePool スクリプトを作成する（Task 4.1 に依存）
   - 環境変数から CPT, USDC, Hook アドレスを読み込む
   - トークン順序を正規化する（currency0 < currency1）
   - PoolKey を構築する（DYNAMIC_FEE_FLAG 設定）
@@ -88,7 +88,7 @@
   - PoolManager.initialize を呼び出す
   - _Requirements: 3.2, 3.3, 3.4, 3.6_
 
-- [ ] 4.3 デプロイ結果を JSON ファイルに記録する機能を追加する
+- [x] 4.3 デプロイ結果を JSON ファイルに記録する機能を追加する
   - deployed-addresses.json を作成・更新する
   - チェーン別にアドレスを記録する
   - Hook アドレスと Pool ID を保存する
@@ -98,7 +98,7 @@
 
 ### 5. 単体テスト実装
 
-- [ ] 5.1 (P) calculateDynamicFee 関数のテストを作成する
+- [x] 5.1 (P) calculateDynamicFee 関数のテストを作成する
   - 低稼働時（utilization < 30）で LOW_FEE が返されることを検証する
   - 中稼働時（30 <= utilization < 70）で DEFAULT_FEE が返されることを検証する
   - 高稼働時（utilization >= 70）で HIGH_FEE が返されることを検証する
@@ -106,12 +106,12 @@
   - 境界値（0, 30, 70, 100）のテストを含める
   - _Requirements: 4.1_
 
-- [ ] 5.2 (P) getHookPermissions 関数のテストを作成する
+- [x] 5.2 (P) getHookPermissions 関数のテストを作成する
   - beforeSwap が true であることを検証する
   - 他のすべてのフックが false であることを検証する
   - _Requirements: 4.1_
 
-- [ ] 5.3 HookMiner のテストを作成する（Task 3.1 に依存）
+- [x] 5.3 HookMiner のテストを作成する（Task 3.1 に依存）
   - 有効なソルトが発見されることを検証する
   - 発見されたアドレスが正しいビットパターンを持つことを検証する
   - 最大反復回数を超えた場合に revert することを検証する
@@ -121,30 +121,30 @@
 
 ### 6. 統合テスト実装
 
-- [ ] 6.1 Pool + Hook 統合テストを作成する（Task 2, 4 に依存）
+- [x] 6.1 Pool + Hook 統合テストを作成する（Task 2, 4 に依存）
   - Mock Oracle をデプロイする
   - UtilizationHook を CREATE2 でデプロイする
   - CPT/USDC Pool を初期化する
   - _Requirements: 4.2_
 
-- [ ] 6.2 スワップ時の動的手数料適用をテストする（Task 6.1 に依存）
+- [x] 6.2 スワップ時の動的手数料適用をテストする（Task 6.1 に依存）
   - 低稼働時のスワップで低手数料が適用されることを検証する
   - 高稼働時のスワップで高手数料が適用されることを検証する
   - _Requirements: 4.2_
 
-- [ ] 6.3 beforeSwap コールバック呼び出しをテストする（Task 6.1 に依存）
+- [x] 6.3 beforeSwap コールバック呼び出しをテストする（Task 6.1 に依存）
   - スワップ時に beforeSwap が呼び出されることを検証する
   - FeeOverridden イベントが発行されることを検証する
   - 正しい稼働率と手数料がイベントに記録されることを検証する
   - _Requirements: 4.2, 4.4_
 
-- [ ] 6.4 CREATE2 + HookMiner パターンのエンドツーエンドテストを作成する（Task 6.1 に依存）
+- [x] 6.4 CREATE2 + HookMiner パターンのエンドツーエンドテストを作成する（Task 6.1 に依存）
   - HookMiner でソルトを探索する
   - CREATE2 でデプロイする
   - デプロイされた Hook が正しく動作することを検証する
   - _Requirements: 4.3_
 
-- [ ]* 6.5 テストカバレッジを 80% 以上に維持する
+- [x]* 6.5 テストカバレッジを 80% 以上に維持する
   - forge coverage でカバレッジレポートを生成する
   - beforeSwap, calculateDynamicFee のカバレッジが 100% であることを確認する
   - _Requirements: 4.5_

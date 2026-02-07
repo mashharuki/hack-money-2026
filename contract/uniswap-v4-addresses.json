@@ -1,0 +1,8 @@
+{
+  "unichain-sepolia": "0x00b036b58a818b1bc34d502d3fe730db729e62ac",
+  "sepolia": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+  "base-sepolia": "0x05E73354cFDd6745C338b50BcFDfA3Aa6fA03408",
+  "arbitrum-sepolia": "0xFB3e0C6F74eB1a21CC1Da29aeC80D2Dfe6C9a317",
+  "interop-alpha-0": "0x9131B9084E6017Be19c6a0ef23f73dbB1Bf41f96",
+  "interop-alpha-1": "0x9131B9084E6017Be19c6a0ef23f73dbB1Bf41f96"
+}

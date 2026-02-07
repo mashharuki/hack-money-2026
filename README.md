@@ -736,6 +736,8 @@ forge test
 
 # PRCエンドポイントを指定してテストする場合
 source .env
+forge test --fork-url $SEPOLIA_RPC_URL
+forge test --fork-url $UNICHAIN_SEPOLIA_RPC_URL
 forge test --fork-url $BASE_SEPOLIA_RPC_URL
 forge test --fork-url $WORLDCOIN_SEPOLIA_RPC_URL
 forge test --fork-url $ARC_RPC_URL
@@ -743,15 +745,183 @@ forge test --fork-url $ARC_RPC_URL
 
 #### デプロイ
 
+Core Token System のデプロイスクリプトを実行する場合
+
 ```bash
 source .env
 
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/DeployCore.s.sol \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/DeployCore.s.sol \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
 # base sepolia
-CHAIN_NAME=base-sepolia forge script script/DeployCore.s.sol --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast -vvv
+CHAIN_NAME=base-sepolia \
+forge script script/DeployCore.s.sol \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
 
 # world sepolia
-CHAIN_NAME=world-chain-sepolia forge script script/DeployCore.s.sol --rpc-url $WORLDCOIN_SEPOLIA_RPC_URL --broadcast -vvv
+CHAIN_NAME=world-chain-sepolia \
+forge script script/DeployCore.s.sol\
+--rpc-url $WORLDCOIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
 
 # Arc Testnet
-CHAIN_NAME=arc forge script script/DeployCore.s.sol --rpc-url $ARC_RPC_URL --broadcast -vvv
+CHAIN_NAME=arc \
+forge script script/DeployCore.s.sol \
+--rpc-url $ARC_RPC_URL \
+--broadcast -vvv
+```
+
+Hooksコントラクトをデプロイする場合(UniswapV4のテストネットに対応しているチェーンである必要あり)
+
+```bash
+source .env
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/DeployHook.s.sol:DeployHook \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/DeployHook.s.sol:DeployHook \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/DeployHook.s.sol:DeployHook \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
+CPTをmintする場合（deployerがCPT ownerである必要あり）
+
+```bash
+source .env
+
+# 必須
+MINT_CPT_AMOUNT=1000000000000000000000
+
+# 任意（未指定ならdeployerへmint）
+# MINT_CPT_TO=0xYourRecipientAddress
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/MintCpt.s.sol:MintCpt \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/MintCpt.s.sol:MintCpt \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/MintCpt.s.sol:MintCpt \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
+Poolを初期化する場合（`INITIAL_PRICE_NUMERATOR / INITIAL_PRICE_DENOMINATOR` は「1 CPT あたり USDC 価格」）
+
+```bash
+# 例: 1 CPT = 1 USDC(以下の値は .envでもセットすればOK!)
+INITIAL_PRICE_NUMERATOR=1
+INITIAL_PRICE_DENOMINATOR=1
+
+source .env
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/InitializePool.s.sol:InitializePool \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
+Poolへ流動性を追加する場合（Pool初期化後に実行）
+
+```bash
+source .env
+
+# optional: default values are used if omitted
+LIQUIDITY_DELTA=1000000000000000000
+LIQ_TICK_LOWER=-120
+LIQ_TICK_UPPER=120
+LIQ_SALT=0
+
+# optional: deployerがCPT ownerのときのみ利用（不足分をmint）
+MINT_CPT_FOR_LP=0
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/AddLiquidity.s.sol:AddLiquidity \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/AddLiquidity.s.sol:AddLiquidity \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/AddLiquidity.s.sol:AddLiquidity \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
+Hook動作を検証する場合（Pool初期化・流動性追加後に実行）
+
+```bash
+source .env
+
+# optional: default values are used if omitted
+SWAP_INPUT_AMOUNT=1000000000000000
+UTIL_LOW=10
+UTIL_MID=50
+UTIL_HIGH=90
+
+# sepolia
+CHAIN_NAME=sepolia \
+forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
+--rpc-url $SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+
+# unichain sepolia
+CHAIN_NAME=unichain-sepolia \
+forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
+--rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
 ```
