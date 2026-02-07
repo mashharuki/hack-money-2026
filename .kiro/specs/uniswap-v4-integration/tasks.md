@@ -80,7 +80,7 @@
   - デプロイ結果をコンソールに出力する
   - _Requirements: 3.1, 3.4, 3.5, 3.6, 5.2_
 
-- [ ] 4.2 InitializePool スクリプトを作成する（Task 4.1 に依存）
+- [x] 4.2 InitializePool スクリプトを作成する（Task 4.1 に依存）
   - 環境変数から CPT, USDC, Hook アドレスを読み込む
   - トークン順序を正規化する（currency0 < currency1）
   - PoolKey を構築する（DYNAMIC_FEE_FLAG 設定）
