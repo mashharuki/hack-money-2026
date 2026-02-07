@@ -71,7 +71,7 @@
 
 ### 4. デプロイスクリプト実装
 
-- [ ] 4.1 DeployHook スクリプトを作成する（Task 2, 3 に依存）
+- [x] 4.1 DeployHook スクリプトを作成する（Task 2, 3 に依存）
   - 環境変数から PoolManager と MockOracle アドレスを読み込む
   - BEFORE_SWAP_FLAG を設定する
   - HookMiner でソルトを探索する

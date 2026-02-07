@@ -1,198 +1,291 @@
 ---
 marp: true
-title: Zombie L2 Clearinghouse
-description: 低稼働L2の計算リソースを資産化し、ガスレス裁定でUSDC収益を生む財務レイヤー
-theme: default
+theme: gaia
 paginate: true
+backgroundColor: "#0f172a"
+color: "#f8fafc"
 size: 16:9
+style: |
+  /* Custom Palette */
+  :root {
+    --highlight: #38bdf8;
+    --accent: #a855f7;
+    --bg-dark: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.85);
+  }
+  
+  /* Global Resets */
+  section {
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    font-size: 28px; /* Slightly smaller base font to prevent overflow */
+    padding: 30px 50px; /* More padding */
+  }
+  
+  h1, h2, h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5em;
+  }
+  
+  h1 {
+    background: linear-gradient(135deg, var(--highlight), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.5em;
+  }
+  
+  strong {
+    color: var(--highlight);
+    font-weight: 700;
+  }
+  
+  /* Tables */
+  table {
+    width: 100%;
+    font-size: 0.8em; /* Prevent table overflow */
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Row spacing */
+  }
+  th, td {
+    padding: 12px 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  th {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--highlight);
+    text-align: left;
+    border-radius: 8px 8px 0 0;
+  }
+  tr td:first-child { border-radius: 8px 0 0 8px; }
+  tr td:last-child { border-radius: 0 8px 8px 0; }
+  
+  /* Layouts with safer gaps */
+  section.split {
+    display: grid;
+    grid-template-columns: 48% 48%; /* Explicit width to prevent overflow */
+    gap: 4%;
+    align-items: center;
+  }
+  section.split-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-content: center;
+  }
+  
+  /* Components */
+  div.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    height: 100%; /* Fill container */
+    box-sizing: border-box;
+  }
+  div.card h3 {
+    margin-top: 0;
+    color: var(--highlight);
+    font-size: 1.1em;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.5em;
+  }
+  
+  /* Utilities */
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+  .small { font-size: 0.7em; opacity: 0.8; }
+  .center-content { align-content: center; justify-items: center; }
+
+  /* Diagram fixes */
+  .mermaid svg { max-height: 400px; }
+
 ---
+
+<!-- _class: lead -->
 
 # Zombie L2 Clearinghouse
-## 「ユーザーがいなくても収益が回る」L2財務インフラ
+## Turning "Dead" Compute into Revenue
 
-**Uniswap v4 × Yellow × Arc+USDC**  
-ETH Global HackMoney 2026
+**ETH Global HackMoney 2026**
+*Uniswap v4 × Yellow × Arc*
 
----
-
-## 1行で
-**低稼働L2の“空き計算”をCPTとして資産化し、  
-ガスレス裁定でUSDC収益を生む財務レイヤー。**
+![bg opacity:0.3 blur:8px](https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1920&q=80)
 
 ---
 
-## 課題：L2運営は「需要依存」で詰む
-- ユーザー不足 → 収益ゼロ
-- それでも固定費（RPC/ノード/監視）は継続
-- 黒字化前に撤退・停止
+<!-- _class: split -->
 
-👉 **本質は「需要がないと何もできない運営モデル」**
+<div class="card">
 
----
+### 💀 The Crisis
+**"L2s are bleeding."**
 
-## Why L2s in 2026?
-### L2の役割は「スケーリング」から「付加価値」へ
-- L1自体がスケールし、ガスリミット増加も進行
-- L2は**独立した価値提供チェーンのスペクトラム**に
-- 低レイテンシ/特化VM/非金融ユースケースなどが重要
+*   **No Users** = Zero Revenue
+*   **Fixed Costs** (Sequencers, Nodes) remain monthly
+*   **Result**: Chains die before finding Product-Market Fit
 
----
+</div>
 
-## Zombie L2 Clearinghouseの立ち位置
-**L2は“安価で余っている計算資源”**
-- 低稼働L2のブロックスペースを資産化
-- 需要が戻るまで**経済的に生き延びる時間**を提供
-- 信用が必要な部分だけEthereumと接続
+<div class="card">
 
----
+### 💎 The Opportunity
+**"Idle Compute is an Asset."**
 
-## Why Tokenize Compute?
-### For Traders
-- 実行コストのボラティリティを取引可能に
-- 需要/混雑の予測を価格に反映
+*   Low activity chains offer **Record Low Fees**
+*   We tokenize this capacity into **Compute Tokens (CPT)**
+*   We arbitrage it for stable profit
 
-### For Developers
-- 複数L2の実行コストを事前購入・予算化
-- ガス高騰リスクを低減しUXを安定化
+</div>
 
 ---
 
-## Concrete Use Cases
-- **NFT / Launch**: 需要集中でも安定コストで実行
-- **Trading / Arbitrage Bots**: ガス高騰の自然ヘッジ
-- **AI / Batch Compute**: 最安L2へ動的ルーティング
-- **L2 Operators**: 余剰計算資源を収益化
+# <!-- fit --> The Solution: **Financialize L2 Compute**
+
+Zombie L2 Clearinghouse creates a market where:
+
+1.  **L2s** mint idle capacity as **Compute Tokens (CPT)**.
+2.  **Uniswap v4** prices CPT dynamically based on utilization.
+3.  **Bots** arbitrage price gaps across chains via **Yellow**.
+4.  **Profits** are settled in **USDC** via **Arc** to fund L2 ops.
+
+> "Don't just scale Ethereum. **Survive.**"
 
 ---
 
-## 参加者と役割
-- **L2 Operators**: CPT発行・供給
-- **Developers**: CPT購入・消費
-- **Traders / Bots**: 流動性提供・裁定
-- **Zombie L2 Clearinghouse**: 市場設計・裁定・USDC決済
+<!-- _class: split-3 -->
+
+<div class="card text-center">
+
+### 1. Price
+**Uniswap v4**
+<br>
+CPT / USDC Pools
+<br><br>
+<span class="small">Dynamic fees via Hooks adjust spread based on real-time chain utilization signaling.</span>
+
+</div>
+
+<div class="card text-center">
+
+### 2. Execute
+**Yellow Network**
+<br>
+State Channels
+<br><br>
+<span class="small">Gasless, high-frequency arbitrage sessions between liquidity pools.</span>
+
+</div>
+
+<div class="card text-center">
+
+### 3. Settle
+**Arc + Circle**
+<br>
+USDC Vaults
+<br><br>
+<span class="small">Real revenue settled in stablecoins to cover operational expenses.</span>
+
+</div>
 
 ---
 
-## 解決アプローチ（4ステップ）
-1. **CPTを発行**（計算リソースのERC20化）
-2. **CPT/USDC基準市場**をUniswap v4で形成
-3. **Yellowセッション**でガスレス裁定
-4. **Arc + USDC**で利益確定 → Vaultへ還元
+## Token Flow Architecture
 
----
-
-## 3技術の統合メッセージ
-> **Uniswap v4 が価格を決め、  
-> Yellow が速く動かし、  
-> Arc + USDC が価値を確定する。**
-
----
-
-## CPT Flow
 ```mermaid
 flowchart LR
-  OP[L2 Operator]
-  DEV[Developer / App]
-  TR[Trader / Bot]
-  CL[Zombie L2 Clearinghouse]
-  UNI[Uniswap v4\nCPT / USDC Pool]
-  YEL[Yellow Session]
-  ARC[Arc + USDC]
-  VAULT[Operator Vault]
-
-  OP -->|mint / supply CPT| UNI
-  DEV -->|buy CPT| UNI
-  TR -->|trade CPT| UNI
-  CL -->|price discrepancy| YEL
-  YEL -->|gasless arbitrage| UNI
-  YEL -->|net result| ARC
-  ARC -->|USDC profit| VAULT
+    L2[L2 Operator] -->|Mint CPT| UNI[Uniswap v4]
+    TRADER[Traders] -->|Speculate| UNI
+    
+    UNI -.->|Arb Signal| YELLOW[Yellow Session]
+    
+    YELLOW -->|Gasless Trade| UNI
+    YELLOW -->|Net Profit| ARC[Arc Settlement]
+    ARC -->|USDC| VAULT[Operator Vault]
+    
+    style UNI fill:#ff007a,stroke:#fff
+    style YELLOW fill:#facc15,stroke:#fff,color:#000
+    style ARC fill:#3b82f6,stroke:#fff
 ```
 
 ---
 
-## System Architecture Diagram
-```mermaid
-flowchart LR
-  subgraph L2A["Low-Activity L2 A (e.g. Base)"]
-    CPTA["CPT-A\n(Compute Token)"]
-  end
-  subgraph L2B["Low-Activity L2 B (e.g. WorldCoin)"]
-    CPTB["CPT-B\n(Compute Token)"]
-  end
-  subgraph UNI["Uniswap v4 Pricing Layer"]
-    POOLA["CPT-A / USDC Pool\n+ v4 Hook"]
-    POOLB["CPT-B / USDC Pool\n+ v4 Hook"]
-  end
-  WATCHER["Price Discrepancy Watcher"]
-  ENGINE["Ghost Arbitrage Engine"]
-  subgraph YELLOW["Yellow Network\n(State Channel Execution)"]
-    SESSION["Gasless Arbitrage Session"]
-  end
-  subgraph ARC["Arc + Circle Settlement Hub"]
-    USDC["USDC Settlement"]
-  end
-  VAULT["Operator Vault\n(USDC)"]
-  DASH["Dashboard / UI"]
+<div class="card">
 
-  CPTA --> POOLA
-  CPTB --> POOLB
-  POOLA --> WATCHER
-  POOLB --> WATCHER
-  WATCHER --> ENGINE
-  ENGINE --> SESSION
-  SESSION --> USDC
-  USDC --> VAULT
+### Why Tokenize Compute?
+**From "Cloud" to "Commodity"**
 
-  POOLA -. price .-> DASH
-  POOLB -. price .-> DASH
-  SESSION -. trades .-> DASH
-  VAULT -. balance .-> DASH
-```
+Just like oil or wheat, **blockspace** is a resource. <br/> Standardizing it as **CPT (1M Gas Units)** enables:
+
+*   **For Devs**: Pre-purchase budget (Hedging)
+*   **For Traders**: Short/Long congestion
+*   **For L2s**: Monetize empty blocks immediately
+
+</div>
 
 ---
 
-## デモシナリオ（審査員向け）
-1. Base Sepolia 高稼働 → CPT-A 価格上昇
-2. WorldCoin Sepolia 低稼働 → CPT-B 価格低下
-3. **価格乖離検知 → Yellow裁定開始**
-4. **USDC決済 → Vault残高増加**
-5. Dashboardでリアルタイム表示
+## The Tech Stack (HackMoney Stack)
+
+<div class="card">
+
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **Pricing** | **Uniswap v4 Hooks** | Adjusts spread/fees based on real-time chain utilization. |
+| **Execution** | **Yellow SDK** | Off-chain "Sessions" for 1000x faster, gas-free arbitrage. |
+| **Settlement** | **Arc + CCTP** | Cross-chain USDC finality to consolidate revenue. |
+| **Targets** | **Base / WorldCoin** | Deploying CPT contracts on sepola testnets. |
+
+</div>
 
 ---
 
-## 価値（インパクト）
-### L2運営
-- **ユーザーゼロでも収益発生**
-- 固定費を継続補填
-- ランウェイ延長
+<!-- _class: lead -->
 
-### Ethereumエコシステム
-- **L2の即死を防ぐ**
-- トラフィック集中を緩和
-- 多様なL2共存を促進
+## ⚡️ Demo Scenario
+
+1.  **Base Sepolia** gets busy (High Usage) → **CPT ↑ Price Up**
+2.  **WorldCoin** is empty (Low Usage) → **CPT ↓ Price Down**
+3.  **Yellow Bot** detects gap & executes arb cycle
+4.  **USDC Profit** lands in the Operator Vault
 
 ---
 
-## MVPスコープ（HackMoney 2026）
-- L2: **Base Sepolia / WorldCoin Sepolia**
-- 主要機能
-  - CPT発行・Vault
-  - v4 Hook（稼働率連動）
-  - Yellowセッション裁定
-  - Arc決済
-  - Dashboard可視化
+# Impact
+
+<div class="split">
+
+<div class="card">
+
+### For L2 Operators
+*   **Immediate Revenue** from idle hardware.
+*   Extends runway during "Zombie" phases.
+*   Turns fixed costs into variable assets.
+
+</div>
+
+<div class="card">
+
+### For Ethereum
+*   Prevents L2 centralization/death.
+*   Creates a decentralized compute market.
+*   **Values Diversity** over raw throughput.
+
+</div>
+
+</div>
 
 ---
 
-## 次の拡張
-- 実稼働率Oracle連携
-- 多L2対応
-- リスク管理ルール
-- 収益履歴の可視化
-
----
+<!-- _class: lead -->
+<!-- _footer: "ETH Global HackMoney 2026" -->
 
 # Thank You
-**Zombie L2 Clearinghouse**  
-「ユーザーがいなくても収益が回る」L2財務インフラ
+**Zombie L2 Clearinghouse**
+
+*Code & Demo Available on Github*
+
+![bg opacity:0.1](https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80)
