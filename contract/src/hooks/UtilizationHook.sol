@@ -133,8 +133,8 @@ contract UtilizationHook is IHooks {
         if (msg.sender != address(poolManager)) {
             revert UnauthorizedCaller(msg.sender);
         }
-        (uint256 utilization,,,) = oracle.getUtilizationWithMeta();
-        uint24 fee = calculateDynamicFee(utilization);
+        (uint256 utilization,, bool stale,) = oracle.getUtilizationWithMeta();
+        uint24 fee = stale ? DEFAULT_FEE : calculateDynamicFee(utilization);
         emit FeeOverridden(key.toId(), utilization, fee);
         return (IHooks.beforeSwap.selector, BeforeSwapDeltaLibrary.ZERO_DELTA, fee | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }

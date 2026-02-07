@@ -71,7 +71,7 @@
   - `getUtilizationWithMeta()` を利用
   - _Requirements: 5.1_
 
-- [ ] 2.2 stale時に `DEFAULT_FEE` を強制する
+- [x] 2.2 stale時に `DEFAULT_FEE` を強制する
   - stale=true の場合は利用率を無視
   - _Requirements: 5.2, 9.1_
 

@@ -35,6 +35,26 @@ contract MetaOnlyOracle is IMockOracle {
     function setAuthorizedUpdater(address, bool) external pure {}
 }
 
+contract StaleMetaOracle is IMockOracle {
+    function getUtilization() external pure returns (uint256) {
+        revert("legacy api disabled");
+    }
+
+    function setUtilization(uint256) external pure {}
+
+    function getUtilizationWithMeta() external pure returns (uint256 utilization, uint256 updatedAt, bool stale, uint8 source) {
+        return (10, 0, true, 1);
+    }
+
+    function setUtilizationFromBot(uint256, uint256) external pure {}
+
+    function setUtilizationFromFunctions(uint256, uint256, bytes32) external pure {}
+
+    function setStaleTtl(uint256) external pure {}
+
+    function setAuthorizedUpdater(address, bool) external pure {}
+}
+
 /// @title UtilizationHookTest
 /// @notice Task 2.1: UtilizationHook コントラクトスケルトンのテスト
 contract UtilizationHookTest is Test {
@@ -296,6 +316,23 @@ contract UtilizationHookTest is Test {
         vm.prank(address(poolManager));
         (,, uint24 feeWithFlag) = metaHook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(feeWithFlag, 500 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
+    }
+
+    function test_beforeSwap_staleOracleForcesDefaultFee() public {
+        StaleMetaOracle staleOracle = new StaleMetaOracle();
+        UtilizationHook staleHook = new UtilizationHook(poolManager, IMockOracle(address(staleOracle)));
+
+        PoolKey memory key = PoolKey({
+            currency0: Currency.wrap(address(1)),
+            currency1: Currency.wrap(address(2)),
+            fee: 3000,
+            tickSpacing: 60,
+            hooks: IHooks(address(staleHook))
+        });
+
+        vm.prank(address(poolManager));
+        (,, uint24 feeWithFlag) = staleHook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(feeWithFlag, 3000 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }
 
     /// @notice 未使用フック（beforeInitialize）が未実装として revert することを検証
