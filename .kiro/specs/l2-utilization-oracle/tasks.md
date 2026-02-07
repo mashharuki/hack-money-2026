@@ -87,7 +87,7 @@
 
 - [ ] 3. Chainlink Functions Receiver 実装（P1）
 
-- [ ] 3.1 `FunctionsReceiver.sol` を新規作成する
+- [x] 3.1 `FunctionsReceiver.sol` を新規作成する
   - Oracle本体とChainlink通信責務を分離
   - _Requirements: 7.3, 7.5_
 
