@@ -17,6 +17,7 @@
   },
   "base-sepolia": {
     "cpt": "0x5a61d594351d4754D6496b5B51237b3eCb8d1E34",
+    "functionsReceiver": "0x1834f28521319BAdf4B598Fa6A5E982e31C9F6d9",
     "hook": "0x7Fa22A4e100b1251209B89b93ec070fcA22A8080",
     "oracle": "0xD5568182c6D8Cb58B7F7A340d6566Bf3e10Af95B",
     "poolId": "0x517a1f06ffd0e4db7cb5829454725af944e211d95864fe211ffa858bfb5011ee"

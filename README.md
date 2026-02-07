@@ -805,6 +805,21 @@ forge script script/DeployHook.s.sol:DeployHook \
 --broadcast -vvv
 ```
 
+FunctionsReceiverをデプロイする場合
+
+事前に[ChainlinkFunction](https://functions.chain.link/)の管理画面からサブスクリプションIDを発行しておく必要がある。
+
+[今回作成したサブスクリプション](https://functions.chain.link/base-sepolia/569)
+
+```bash
+source .env
+
+CHAIN_NAME=base-sepolia \
+forge script script/DeployFunctionsReceiver.s.sol:DeployFunctionsReceiver \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
 #### CPTをmintする場合（deployerがCPT ownerである必要あり）
 
 ```bash
@@ -925,6 +940,18 @@ forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
 CHAIN_NAME=unichain-sepolia \
 forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
 --rpc-url $UNICHAIN_SEPOLIA_RPC_URL \
+--broadcast -vvv
+```
+
+#### Oracle の allowlist に FunctionsReceiver を登録/解除する場合
+
+```bash
+source .env
+
+# base sepolia
+CHAIN_NAME=base-sepolia \
+forge script script/AuthorizeFunctionsReceiver.s.sol:AuthorizeFunctionsReceiver \
+--rpc-url $BASE_SEPOLIA_RPC_URL \
 --broadcast -vvv
 ```
 
