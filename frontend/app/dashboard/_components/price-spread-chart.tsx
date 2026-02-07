@@ -40,7 +40,7 @@ export function PriceSpreadChart({ priceHistory }: PriceSpreadChartProps) {
       </div>
 
       {/* Chart Area */}
-      <div className="flex flex-1 items-end gap-2 border-t border-[#2f2f2f] px-6 pb-5 pt-4">
+      <div className="flex min-h-0 flex-1 items-end gap-2 overflow-hidden border-t border-[#2f2f2f] px-6 pb-5 pt-4">
         {displayData.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <span className="font-mono text-xs text-[#8a8a8a]">
@@ -49,17 +49,16 @@ export function PriceSpreadChart({ priceHistory }: PriceSpreadChartProps) {
           </div>
         ) : (
           displayData.map((point, i) => {
-            const heightA = point.priceA
-              ? Math.max((point.priceA / maxPrice) * 180, 8)
+            const pctA = point.priceA
+              ? Math.max((point.priceA / maxPrice) * 45, 4)
               : 0;
-            const heightB = point.priceB
-              ? Math.max((point.priceB / maxPrice) * 180, 8)
+            const pctB = point.priceB
+              ? Math.max((point.priceB / maxPrice) * 45, 4)
               : 0;
             const time = new Date(point.timestamp).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             });
-            // Increase opacity for more recent bars
             const opacity = 0.3 + (i / displayData.length) * 0.5;
 
             return (
@@ -70,18 +69,18 @@ export function PriceSpreadChart({ priceHistory }: PriceSpreadChartProps) {
                 <div
                   className="w-full"
                   style={{
-                    height: `${heightA}px`,
+                    height: `${pctA}%`,
                     backgroundColor: `rgba(0, 255, 136, ${opacity})`,
                   }}
                 />
                 <div
                   className="w-full"
                   style={{
-                    height: `${heightB}px`,
+                    height: `${pctB}%`,
                     backgroundColor: `rgba(255, 136, 0, ${opacity})`,
                   }}
                 />
-                <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+                <span className="shrink-0 font-mono text-[10px] font-medium text-[#8a8a8a]">
                   {time}
                 </span>
               </div>
