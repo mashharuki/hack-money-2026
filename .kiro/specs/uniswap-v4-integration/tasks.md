@@ -144,7 +144,7 @@
   - デプロイされた Hook が正しく動作することを検証する
   - _Requirements: 4.3_
 
-- [ ]* 6.5 テストカバレッジを 80% 以上に維持する
+- [x]* 6.5 テストカバレッジを 80% 以上に維持する
   - forge coverage でカバレッジレポートを生成する
   - beforeSwap, calculateDynamicFee のカバレッジが 100% であることを確認する
   - _Requirements: 4.5_

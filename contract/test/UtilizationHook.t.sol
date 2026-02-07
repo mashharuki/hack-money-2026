@@ -9,6 +9,7 @@ import {PoolKey} from "v4-core/types/PoolKey.sol";
 import {PoolId, PoolIdLibrary} from "v4-core/types/PoolId.sol";
 import {Currency} from "v4-core/types/Currency.sol";
 import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "v4-core/types/BeforeSwapDelta.sol";
+import {BalanceDelta} from "v4-core/types/BalanceDelta.sol";
 import {LPFeeLibrary} from "v4-core/libraries/LPFeeLibrary.sol";
 import {PoolManager} from "v4-core/PoolManager.sol";
 import {UtilizationHook} from "../src/hooks/UtilizationHook.sol";
@@ -177,6 +178,10 @@ contract UtilizationHookTest is Test {
         return IPoolManager.SwapParams({zeroForOne: true, amountSpecified: 1e18, sqrtPriceLimitX96: 0});
     }
 
+    function _makeModifyLiquidityParams() internal pure returns (IPoolManager.ModifyLiquidityParams memory) {
+        return IPoolManager.ModifyLiquidityParams({tickLower: -120, tickUpper: 120, liquidityDelta: 1e18, salt: 0});
+    }
+
     /// @notice beforeSwap が正しいセレクタを返すことを検証
     function test_beforeSwap_returnsCorrectSelector() public {
         oracle.setUtilization(50);
@@ -239,5 +244,73 @@ contract UtilizationHookTest is Test {
         emit UtilizationHook.FeeOverridden(poolId, 90, 10000);
 
         hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+    }
+
+    /// @notice 未使用フック（beforeInitialize）が未実装として revert することを検証
+    function test_beforeInitialize_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.beforeInitialize(address(this), _makePoolKey(), 0);
+    }
+
+    /// @notice 未使用フック（afterInitialize）が未実装として revert することを検証
+    function test_afterInitialize_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.afterInitialize(address(this), _makePoolKey(), 0, 0);
+    }
+
+    /// @notice 未使用フック（beforeAddLiquidity）が未実装として revert することを検証
+    function test_beforeAddLiquidity_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.beforeAddLiquidity(address(this), _makePoolKey(), _makeModifyLiquidityParams(), "");
+    }
+
+    /// @notice 未使用フック（afterAddLiquidity）が未実装として revert することを検証
+    function test_afterAddLiquidity_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.afterAddLiquidity(
+            address(this),
+            _makePoolKey(),
+            _makeModifyLiquidityParams(),
+            BalanceDelta.wrap(0),
+            BalanceDelta.wrap(0),
+            ""
+        );
+    }
+
+    /// @notice 未使用フック（beforeRemoveLiquidity）が未実装として revert することを検証
+    function test_beforeRemoveLiquidity_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.beforeRemoveLiquidity(address(this), _makePoolKey(), _makeModifyLiquidityParams(), "");
+    }
+
+    /// @notice 未使用フック（afterRemoveLiquidity）が未実装として revert することを検証
+    function test_afterRemoveLiquidity_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.afterRemoveLiquidity(
+            address(this),
+            _makePoolKey(),
+            _makeModifyLiquidityParams(),
+            BalanceDelta.wrap(0),
+            BalanceDelta.wrap(0),
+            ""
+        );
+    }
+
+    /// @notice 未使用フック（afterSwap）が未実装として revert することを検証
+    function test_afterSwap_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.afterSwap(address(this), _makePoolKey(), _makeSwapParams(), BalanceDelta.wrap(0), "");
+    }
+
+    /// @notice 未使用フック（beforeDonate）が未実装として revert することを検証
+    function test_beforeDonate_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.beforeDonate(address(this), _makePoolKey(), 1, 1, "");
+    }
+
+    /// @notice 未使用フック（afterDonate）が未実装として revert することを検証
+    function test_afterDonate_revertsNotImplemented() public {
+        vm.expectRevert(bytes("not implemented"));
+        hook.afterDonate(address(this), _makePoolKey(), 1, 1, "");
     }
 }
