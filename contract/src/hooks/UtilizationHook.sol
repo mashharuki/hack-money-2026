@@ -57,6 +57,22 @@ contract UtilizationHook is IHooks {
         });
     }
 
+    /// @notice 稼働率に応じた手数料を計算
+    /// @param utilization 稼働率（0-100）
+    /// @return fee 手数料（bps）
+    function calculateDynamicFee(uint256 utilization) public pure returns (uint24) {
+        if (utilization > 100) {
+            return DEFAULT_FEE;
+        }
+        if (utilization < LOW_THRESHOLD) {
+            return LOW_FEE;
+        } else if (utilization >= HIGH_THRESHOLD) {
+            return HIGH_FEE;
+        } else {
+            return DEFAULT_FEE;
+        }
+    }
+
     // ─── IHooks implementation (only beforeSwap is active) ───
 
     function beforeInitialize(address, PoolKey calldata, uint160) external pure returns (bytes4) {

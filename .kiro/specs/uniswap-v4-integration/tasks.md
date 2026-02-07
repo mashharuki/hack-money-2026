@@ -40,7 +40,7 @@
   - 他のすべてのフックを false に設定する
   - _Requirements: 2.1, 2.8_
 
-- [ ] 2.3 calculateDynamicFee 関数を実装する
+- [x] 2.3 calculateDynamicFee 関数を実装する
   - 稼働率 0-29% の場合は LOW_FEE を返す
   - 稼働率 30-69% の場合は DEFAULT_FEE を返す
   - 稼働率 70-100% の場合は HIGH_FEE を返す

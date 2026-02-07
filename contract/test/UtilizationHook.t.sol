@@ -95,4 +95,61 @@ contract UtilizationHookTest is Test {
         assertFalse(perms.afterAddLiquidityReturnDelta, "afterAddLiquidityReturnDelta should be false");
         assertFalse(perms.afterRemoveLiquidityReturnDelta, "afterRemoveLiquidityReturnDelta should be false");
     }
+
+    // ─── Task 2.3: calculateDynamicFee テスト ───
+
+    /// @notice 稼働率 0 で LOW_FEE を返す（境界値: 最小）
+    function test_calculateDynamicFee_utilization0_returnsLowFee() public view {
+        assertEq(hook.calculateDynamicFee(0), 500);
+    }
+
+    /// @notice 稼働率 15 で LOW_FEE を返す（低稼働率の中間値）
+    function test_calculateDynamicFee_utilization15_returnsLowFee() public view {
+        assertEq(hook.calculateDynamicFee(15), 500);
+    }
+
+    /// @notice 稼働率 29 で LOW_FEE を返す（境界値: LOW_THRESHOLD - 1）
+    function test_calculateDynamicFee_utilization29_returnsLowFee() public view {
+        assertEq(hook.calculateDynamicFee(29), 500);
+    }
+
+    /// @notice 稼働率 30 で DEFAULT_FEE を返す（境界値: LOW_THRESHOLD）
+    function test_calculateDynamicFee_utilization30_returnsDefaultFee() public view {
+        assertEq(hook.calculateDynamicFee(30), 3000);
+    }
+
+    /// @notice 稼働率 50 で DEFAULT_FEE を返す（中稼働率の中間値）
+    function test_calculateDynamicFee_utilization50_returnsDefaultFee() public view {
+        assertEq(hook.calculateDynamicFee(50), 3000);
+    }
+
+    /// @notice 稼働率 69 で DEFAULT_FEE を返す（境界値: HIGH_THRESHOLD - 1）
+    function test_calculateDynamicFee_utilization69_returnsDefaultFee() public view {
+        assertEq(hook.calculateDynamicFee(69), 3000);
+    }
+
+    /// @notice 稼働率 70 で HIGH_FEE を返す（境界値: HIGH_THRESHOLD）
+    function test_calculateDynamicFee_utilization70_returnsHighFee() public view {
+        assertEq(hook.calculateDynamicFee(70), 10000);
+    }
+
+    /// @notice 稼働率 85 で HIGH_FEE を返す（高稼働率の中間値）
+    function test_calculateDynamicFee_utilization85_returnsHighFee() public view {
+        assertEq(hook.calculateDynamicFee(85), 10000);
+    }
+
+    /// @notice 稼働率 100 で HIGH_FEE を返す（境界値: 最大有効値）
+    function test_calculateDynamicFee_utilization100_returnsHighFee() public view {
+        assertEq(hook.calculateDynamicFee(100), 10000);
+    }
+
+    /// @notice 稼働率 101 で DEFAULT_FEE を返す（異常値フォールバック）
+    function test_calculateDynamicFee_utilization101_returnsDefaultFee() public view {
+        assertEq(hook.calculateDynamicFee(101), 3000);
+    }
+
+    /// @notice 稼働率 type(uint256).max で DEFAULT_FEE を返す（極端な異常値）
+    function test_calculateDynamicFee_maxUint_returnsDefaultFee() public view {
+        assertEq(hook.calculateDynamicFee(type(uint256).max), 3000);
+    }
 }
