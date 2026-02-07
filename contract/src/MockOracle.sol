@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title IMockOracle
 /// @notice Mock Oracle インターフェース
@@ -46,7 +47,7 @@ interface IMockOracle {
 /// @title MockOracle
 /// @notice L2稼働率をモック実装で供給するOracle
 /// @dev デモ・テスト用の簡易実装
-contract MockOracle is IMockOracle {
+contract MockOracle is IMockOracle, Ownable {
     uint8 public constant SOURCE_BOT = 1;
     uint8 public constant SOURCE_FUNCTIONS = 2;
     uint256 public constant DEFAULT_STALE_TTL = 20 minutes;
@@ -66,7 +67,20 @@ contract MockOracle is IMockOracle {
 
     /// @notice 稼働率が変更されたときに発行されるイベント
     /// @param utilization 新しい稼働率
-    event UtilizationUpdated(uint256 utilization);
+    /// @param source 更新ソース（1=bot, 2=functions）
+    /// @param updatedAt 更新時刻
+    event UtilizationUpdated(uint256 utilization, uint8 source, uint256 updatedAt);
+    event UpdaterAuthorizationChanged(address indexed updater, bool allowed);
+    event TtlUpdated(uint256 ttlSeconds);
+
+    modifier onlyAuthorizedUpdater() {
+        require(_authorizedUpdaters[msg.sender], "MockOracle: unauthorized updater");
+        _;
+    }
+
+    constructor() Ownable(msg.sender) {
+        _authorizedUpdaters[msg.sender] = true;
+    }
 
     /// @notice 現在の稼働率を返す
     /// @return 稼働率（0-100%）
@@ -77,7 +91,7 @@ contract MockOracle is IMockOracle {
     /// @notice 稼働率を設定する（デモ用）
     /// @param utilization 稼働率（0-100%）
     /// @dev 範囲外の値は拒否される
-    function setUtilization(uint256 utilization) external {
+    function setUtilization(uint256 utilization) external onlyAuthorizedUpdater {
         _lastBotUtilization = utilization;
         _setUtilization(utilization, block.timestamp, SOURCE_BOT);
     }
@@ -87,23 +101,28 @@ contract MockOracle is IMockOracle {
         return (_utilization, _updatedAt, stale, _source);
     }
 
-    function setUtilizationFromBot(uint256 utilization, uint256 timestamp) external {
+    function setUtilizationFromBot(uint256 utilization, uint256 timestamp) external onlyAuthorizedUpdater {
         _lastBotUtilization = utilization;
         _setUtilization(utilization, timestamp, SOURCE_BOT);
     }
 
-    function setUtilizationFromFunctions(uint256 utilization, uint256 timestamp, bytes32 requestId) external {
+    function setUtilizationFromFunctions(uint256 utilization, uint256 timestamp, bytes32 requestId)
+        external
+        onlyAuthorizedUpdater
+    {
         lastFunctionsRequestId = requestId;
         _lastFunctionsUtilization = utilization;
         _setUtilization(utilization, timestamp, SOURCE_FUNCTIONS);
     }
 
-    function setStaleTtl(uint256 ttlSeconds) external {
+    function setStaleTtl(uint256 ttlSeconds) external onlyOwner {
         _staleTtl = ttlSeconds;
+        emit TtlUpdated(ttlSeconds);
     }
 
-    function setAuthorizedUpdater(address updater, bool allowed) external {
+    function setAuthorizedUpdater(address updater, bool allowed) external onlyOwner {
         _authorizedUpdaters[updater] = allowed;
+        emit UpdaterAuthorizationChanged(updater, allowed);
     }
 
     function _setUtilization(uint256 utilization, uint256 timestamp, uint8 source) internal {
@@ -112,7 +131,7 @@ contract MockOracle is IMockOracle {
         _utilization = utilization;
         _updatedAt = timestamp;
         _source = source;
-        emit UtilizationUpdated(utilization);
+        emit UtilizationUpdated(utilization, source, timestamp);
     }
 
     function _validateTimestamp(uint256 timestamp) internal view {

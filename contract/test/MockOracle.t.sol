@@ -3,9 +3,11 @@ pragma solidity ^0.8.26;
 
 import {Test} from "forge-std/Test.sol";
 import {MockOracle} from "../src/MockOracle.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MockOracleTest is Test {
     MockOracle private oracle;
+    address private attacker = makeAddr("attacker");
 
     function setUp() public {
         oracle = new MockOracle();
@@ -30,7 +32,7 @@ contract MockOracleTest is Test {
 
     function test_SetUtilization_EmitsEvent() public {
         vm.expectEmit(true, false, false, true);
-        emit MockOracle.UtilizationUpdated(77);
+        emit MockOracle.UtilizationUpdated(77, oracle.SOURCE_BOT(), block.timestamp);
         oracle.setUtilization(77);
     }
 
@@ -50,6 +52,18 @@ contract MockOracleTest is Test {
 
     function test_NewAdminMethods_AreCallable() public {
         oracle.setStaleTtl(1200);
+        oracle.setAuthorizedUpdater(address(this), true);
+    }
+
+    function test_SetStaleTtl_EmitsEvent() public {
+        vm.expectEmit(true, false, false, true);
+        emit MockOracle.TtlUpdated(777);
+        oracle.setStaleTtl(777);
+    }
+
+    function test_SetAuthorizedUpdater_EmitsEvent() public {
+        vm.expectEmit(true, true, false, true);
+        emit MockOracle.UpdaterAuthorizationChanged(address(this), true);
         oracle.setAuthorizedUpdater(address(this), true);
     }
 
@@ -117,5 +131,29 @@ contract MockOracleTest is Test {
         vm.warp(staleTtl + 100);
         vm.expectRevert(bytes("MockOracle: timestamp already stale"));
         oracle.setUtilizationFromBot(70, block.timestamp - staleTtl - 1);
+    }
+
+    function test_SetAuthorizedUpdater_RevertsForNonOwner() public {
+        vm.prank(attacker);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, attacker));
+        oracle.setAuthorizedUpdater(attacker, true);
+    }
+
+    function test_SetUtilization_Legacy_RevertsForUnauthorizedUpdater() public {
+        vm.prank(attacker);
+        vm.expectRevert(bytes("MockOracle: unauthorized updater"));
+        oracle.setUtilization(55);
+    }
+
+    function test_SetUtilizationFromBot_RevertsForUnauthorizedUpdater() public {
+        vm.prank(attacker);
+        vm.expectRevert(bytes("MockOracle: unauthorized updater"));
+        oracle.setUtilizationFromBot(55, block.timestamp);
+    }
+
+    function test_SetUtilizationFromFunctions_RevertsForUnauthorizedUpdater() public {
+        vm.prank(attacker);
+        vm.expectRevert(bytes("MockOracle: unauthorized updater"));
+        oracle.setUtilizationFromFunctions(55, block.timestamp, bytes32("req-unauth"));
     }
 }

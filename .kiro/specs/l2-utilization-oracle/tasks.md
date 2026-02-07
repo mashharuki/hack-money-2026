@@ -43,13 +43,13 @@
   - `block.timestamp - updatedAt > staleTtl` で stale=true
   - _Requirements: 4.2, 4.4, 4.5, 9.5_
 
-- [ ] 1.6 イベントを拡張する
+- [x] 1.6 イベントを拡張する
   - `UtilizationUpdated(utilization, source, updatedAt)`
   - `UpdaterAuthorizationChanged(updater, allowed)`
   - `TtlUpdated(ttlSeconds)`
   - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 1.7 allowlistアクセス制御を実装する
+- [x] 1.7 allowlistアクセス制御を実装する
   - owner限定で updater 管理
   - 非認可アドレスの更新を拒否
   - _Requirements: 3.1, 3.2, 3.4, 3.5_
