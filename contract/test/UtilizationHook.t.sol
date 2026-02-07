@@ -5,6 +5,11 @@ import {Test} from "forge-std/Test.sol";
 import {IPoolManager} from "v4-core/interfaces/IPoolManager.sol";
 import {IHooks} from "v4-core/interfaces/IHooks.sol";
 import {Hooks} from "v4-core/libraries/Hooks.sol";
+import {PoolKey} from "v4-core/types/PoolKey.sol";
+import {PoolId, PoolIdLibrary} from "v4-core/types/PoolId.sol";
+import {Currency} from "v4-core/types/Currency.sol";
+import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "v4-core/types/BeforeSwapDelta.sol";
+import {LPFeeLibrary} from "v4-core/libraries/LPFeeLibrary.sol";
 import {PoolManager} from "v4-core/PoolManager.sol";
 import {UtilizationHook} from "../src/hooks/UtilizationHook.sol";
 import {IMockOracle, MockOracle} from "../src/MockOracle.sol";
@@ -12,6 +17,8 @@ import {IMockOracle, MockOracle} from "../src/MockOracle.sol";
 /// @title UtilizationHookTest
 /// @notice Task 2.1: UtilizationHook コントラクトスケルトンのテスト
 contract UtilizationHookTest is Test {
+    using PoolIdLibrary for PoolKey;
+
     UtilizationHook public hook;
     MockOracle public oracle;
     IPoolManager public poolManager;
@@ -151,5 +158,86 @@ contract UtilizationHookTest is Test {
     /// @notice 稼働率 type(uint256).max で DEFAULT_FEE を返す（極端な異常値）
     function test_calculateDynamicFee_maxUint_returnsDefaultFee() public view {
         assertEq(hook.calculateDynamicFee(type(uint256).max), 3000);
+    }
+
+    // ─── Task 2.4: beforeSwap テスト ───
+
+    /// @dev テスト用の PoolKey と SwapParams を生成するヘルパー
+    function _makePoolKey() internal view returns (PoolKey memory) {
+        return PoolKey({
+            currency0: Currency.wrap(address(1)),
+            currency1: Currency.wrap(address(2)),
+            fee: 3000,
+            tickSpacing: 60,
+            hooks: IHooks(address(hook))
+        });
+    }
+
+    function _makeSwapParams() internal pure returns (IPoolManager.SwapParams memory) {
+        return IPoolManager.SwapParams({zeroForOne: true, amountSpecified: 1e18, sqrtPriceLimitX96: 0});
+    }
+
+    /// @notice beforeSwap が正しいセレクタを返すことを検証
+    function test_beforeSwap_returnsCorrectSelector() public {
+        oracle.setUtilization(50);
+        PoolKey memory key = _makePoolKey();
+        (bytes4 selector,,) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(selector, IHooks.beforeSwap.selector);
+    }
+
+    /// @notice beforeSwap が ZERO_DELTA を返すことを検証
+    function test_beforeSwap_returnsZeroDelta() public {
+        oracle.setUtilization(50);
+        PoolKey memory key = _makePoolKey();
+        (, BeforeSwapDelta delta,) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(BeforeSwapDelta.unwrap(delta), 0, "delta should be zero");
+    }
+
+    /// @notice 低稼働時に beforeSwap が LOW_FEE | OVERRIDE_FEE_FLAG を返すことを検証
+    function test_beforeSwap_lowUtilization_returnsLowFeeWithOverride() public {
+        oracle.setUtilization(10);
+        PoolKey memory key = _makePoolKey();
+        (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(feeWithFlag, 500 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
+    }
+
+    /// @notice 中稼働時に beforeSwap が DEFAULT_FEE | OVERRIDE_FEE_FLAG を返すことを検証
+    function test_beforeSwap_midUtilization_returnsDefaultFeeWithOverride() public {
+        oracle.setUtilization(50);
+        PoolKey memory key = _makePoolKey();
+        (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(feeWithFlag, 3000 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
+    }
+
+    /// @notice 高稼働時に beforeSwap が HIGH_FEE | OVERRIDE_FEE_FLAG を返すことを検証
+    function test_beforeSwap_highUtilization_returnsHighFeeWithOverride() public {
+        oracle.setUtilization(85);
+        PoolKey memory key = _makePoolKey();
+        (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+        assertEq(feeWithFlag, 10000 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
+    }
+
+    /// @notice beforeSwap が FeeOverridden イベントを発行することを検証
+    function test_beforeSwap_emitsFeeOverriddenEvent() public {
+        oracle.setUtilization(50);
+        PoolKey memory key = _makePoolKey();
+        PoolId poolId = key.toId();
+
+        vm.expectEmit(true, false, false, true);
+        emit UtilizationHook.FeeOverridden(poolId, 50, 3000);
+
+        hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+    }
+
+    /// @notice 高稼働時の FeeOverridden イベントの稼働率と手数料が正しいことを検証
+    function test_beforeSwap_highUtilization_emitsCorrectEvent() public {
+        oracle.setUtilization(90);
+        PoolKey memory key = _makePoolKey();
+        PoolId poolId = key.toId();
+
+        vm.expectEmit(true, false, false, true);
+        emit UtilizationHook.FeeOverridden(poolId, 90, 10000);
+
+        hook.beforeSwap(address(this), key, _makeSwapParams(), "");
     }
 }

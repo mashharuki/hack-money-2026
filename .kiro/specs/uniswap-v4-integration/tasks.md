@@ -47,7 +47,7 @@
   - 稼働率が 100 を超える異常値の場合は DEFAULT_FEE にフォールバックする
   - _Requirements: 2.3, 2.4, 2.5, 2.6_
 
-- [ ] 2.4 beforeSwap フック関数を実装する
+- [x] 2.4 beforeSwap フック関数を実装する
   - Oracle から稼働率を取得する
   - calculateDynamicFee で手数料を計算する
   - FeeOverridden イベントを発行する

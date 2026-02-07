@@ -4,16 +4,18 @@ pragma solidity 0.8.26;
 import {IHooks} from "v4-core/interfaces/IHooks.sol";
 import {IPoolManager} from "v4-core/interfaces/IPoolManager.sol";
 import {Hooks} from "v4-core/libraries/Hooks.sol";
+import {LPFeeLibrary} from "v4-core/libraries/LPFeeLibrary.sol";
 import {PoolKey} from "v4-core/types/PoolKey.sol";
 import {BalanceDelta} from "v4-core/types/BalanceDelta.sol";
-import {BeforeSwapDelta} from "v4-core/types/BeforeSwapDelta.sol";
-import {PoolId} from "v4-core/types/PoolId.sol";
+import {BeforeSwapDelta, BeforeSwapDeltaLibrary} from "v4-core/types/BeforeSwapDelta.sol";
+import {PoolId, PoolIdLibrary} from "v4-core/types/PoolId.sol";
 import {IMockOracle} from "../MockOracle.sol";
 
 /// @title UtilizationHook
 /// @notice Uniswap v4 Hook that adjusts swap fees based on L2 utilization rate
 /// @dev Implements IHooks interface; only beforeSwap is active
 contract UtilizationHook is IHooks {
+    using PoolIdLibrary for PoolKey;
     /// @notice Fee tier for low utilization (0.05%)
     uint24 public constant LOW_FEE = 500;
     /// @notice Fee tier for normal utilization (0.3%)
@@ -122,12 +124,15 @@ contract UtilizationHook is IHooks {
         revert("not implemented");
     }
 
-    function beforeSwap(address, PoolKey calldata, IPoolManager.SwapParams calldata, bytes calldata)
+    function beforeSwap(address, PoolKey calldata key, IPoolManager.SwapParams calldata, bytes calldata)
         external
         virtual
         returns (bytes4, BeforeSwapDelta, uint24)
     {
-        revert("not implemented");
+        uint256 utilization = oracle.getUtilization();
+        uint24 fee = calculateDynamicFee(utilization);
+        emit FeeOverridden(key.toId(), utilization, fee);
+        return (IHooks.beforeSwap.selector, BeforeSwapDeltaLibrary.ZERO_DELTA, fee | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }
 
     function afterSwap(address, PoolKey calldata, IPoolManager.SwapParams calldata, BalanceDelta, bytes calldata)
