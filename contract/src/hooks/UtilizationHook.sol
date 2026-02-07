@@ -30,6 +30,7 @@ contract UtilizationHook is IHooks {
 
     /// @notice Emitted when dynamic fee is applied during a swap
     event FeeOverridden(PoolId indexed poolId, uint256 utilization, uint24 fee);
+    error UnauthorizedCaller(address caller);
 
     IPoolManager public immutable poolManager;
     IMockOracle public immutable oracle;
@@ -129,6 +130,9 @@ contract UtilizationHook is IHooks {
         virtual
         returns (bytes4, BeforeSwapDelta, uint24)
     {
+        if (msg.sender != address(poolManager)) {
+            revert UnauthorizedCaller(msg.sender);
+        }
         uint256 utilization = oracle.getUtilization();
         uint24 fee = calculateDynamicFee(utilization);
         emit FeeOverridden(key.toId(), utilization, fee);

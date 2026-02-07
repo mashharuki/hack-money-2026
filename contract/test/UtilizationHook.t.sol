@@ -186,6 +186,7 @@ contract UtilizationHookTest is Test {
     function test_beforeSwap_returnsCorrectSelector() public {
         oracle.setUtilization(50);
         PoolKey memory key = _makePoolKey();
+        vm.prank(address(poolManager));
         (bytes4 selector,,) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(selector, IHooks.beforeSwap.selector);
     }
@@ -194,6 +195,7 @@ contract UtilizationHookTest is Test {
     function test_beforeSwap_returnsZeroDelta() public {
         oracle.setUtilization(50);
         PoolKey memory key = _makePoolKey();
+        vm.prank(address(poolManager));
         (, BeforeSwapDelta delta,) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(BeforeSwapDelta.unwrap(delta), 0, "delta should be zero");
     }
@@ -202,6 +204,7 @@ contract UtilizationHookTest is Test {
     function test_beforeSwap_lowUtilization_returnsLowFeeWithOverride() public {
         oracle.setUtilization(10);
         PoolKey memory key = _makePoolKey();
+        vm.prank(address(poolManager));
         (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(feeWithFlag, 500 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }
@@ -210,6 +213,7 @@ contract UtilizationHookTest is Test {
     function test_beforeSwap_midUtilization_returnsDefaultFeeWithOverride() public {
         oracle.setUtilization(50);
         PoolKey memory key = _makePoolKey();
+        vm.prank(address(poolManager));
         (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(feeWithFlag, 3000 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }
@@ -218,6 +222,7 @@ contract UtilizationHookTest is Test {
     function test_beforeSwap_highUtilization_returnsHighFeeWithOverride() public {
         oracle.setUtilization(85);
         PoolKey memory key = _makePoolKey();
+        vm.prank(address(poolManager));
         (,, uint24 feeWithFlag) = hook.beforeSwap(address(this), key, _makeSwapParams(), "");
         assertEq(feeWithFlag, 10000 | LPFeeLibrary.OVERRIDE_FEE_FLAG);
     }
@@ -231,6 +236,7 @@ contract UtilizationHookTest is Test {
         vm.expectEmit(true, false, false, true);
         emit UtilizationHook.FeeOverridden(poolId, 50, 3000);
 
+        vm.prank(address(poolManager));
         hook.beforeSwap(address(this), key, _makeSwapParams(), "");
     }
 
@@ -243,6 +249,15 @@ contract UtilizationHookTest is Test {
         vm.expectEmit(true, false, false, true);
         emit UtilizationHook.FeeOverridden(poolId, 90, 10000);
 
+        vm.prank(address(poolManager));
+        hook.beforeSwap(address(this), key, _makeSwapParams(), "");
+    }
+
+    function test_beforeSwap_revertsWhenCallerIsNotPoolManager() public {
+        oracle.setUtilization(50);
+        PoolKey memory key = _makePoolKey();
+
+        vm.expectRevert(abi.encodeWithSelector(UtilizationHook.UnauthorizedCaller.selector, address(this)));
         hook.beforeSwap(address(this), key, _makeSwapParams(), "");
     }
 
