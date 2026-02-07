@@ -7,6 +7,8 @@ import {
   createCloseAppSessionMessage,
   createGetChannelsMessage,
   createGetLedgerBalancesMessage,
+  createCreateChannelMessage,
+  createResizeChannelMessage,
   createECDSAMessageSigner,
   createEIP712AuthMessageSigner,
 } from '@erc7824/nitrolite';
@@ -162,6 +164,12 @@ export class YellowClient extends EventEmitter {
             case 'get_ledger_balances':
               this.emit('balances', response.res[2]);
               break;
+            case 'create_channel':
+              this.emit('create-channel', response.res[2]);
+              break;
+            case 'resize_channel':
+              this.emit('resize-channel', response.res[2]);
+              break;
             case 'app_session':
               this.emit('session-created', response.res[2]);
               break;
@@ -231,6 +239,32 @@ export class YellowClient extends EventEmitter {
     return this.sendAndWait<LedgerBalance[]>('balances', message);
   }
 
+  // ---- channel create (off-chain request) --------------------------------
+
+  async requestCreateChannel(chainId: number, token: Address): Promise<any> {
+    this.ensureReady();
+    const message = await createCreateChannelMessage(
+      this.sessionSigner,
+      { chain_id: chainId, token },
+    );
+    return this.sendAndWait<any>('create-channel', message, 30_000);
+  }
+
+  // ---- channel resize (off-chain request) ---------------------------------
+
+  async requestResize(channelId: Hex, allocateAmount: bigint, fundsDestination: Address): Promise<any> {
+    this.ensureReady();
+    const message = await createResizeChannelMessage(
+      this.sessionSigner,
+      {
+        channel_id: channelId,
+        allocate_amount: allocateAmount,
+        funds_destination: fundsDestination,
+      } as any,
+    );
+    return this.sendAndWait<any>('resize-channel', message, 30_000);
+  }
+
   // ---- session create ----------------------------------------------------
 
   async createSession(
@@ -284,6 +318,10 @@ export class YellowClient extends EventEmitter {
 
   getAddress(): Address {
     return this.address;
+  }
+
+  getPrivateKey(): Hex {
+    return this.privateKey;
   }
 
   isReady(): boolean {

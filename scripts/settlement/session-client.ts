@@ -65,9 +65,10 @@ export class SessionClient {
       const assetBalance = balances.find(
         (b: any) => b.asset.toLowerCase() === targetAsset.toLowerCase(),
       );
-      const netProfitUsdc = assetBalance?.amount ?? '0';
+      const rawAmount = assetBalance?.amount ?? '0';
+      const netProfitUsdc = (Number(rawAmount) / 1e6).toString();
 
-      console.log(`[SessionClient] ${targetAsset} balance on ledger: ${netProfitUsdc}`);
+      console.log(`[SessionClient] ${targetAsset} balance on ledger: ${rawAmount} (${netProfitUsdc} USDC)`);
 
       console.log(`[SessionClient] Fetching channels...`);
       const channelsResult = await yellow.getChannels();

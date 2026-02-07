@@ -990,3 +990,66 @@ pnpm settle:auto -- --session <sessionId>
 - `--dry-run` : 送金せずに確認のみ
 
 冪等性キーはセッションIDから決定論的に生成されるため、同じセッションIDで再実行しても二重送金は発生しません。
+
+### 2-8. Yellow SDK 統合（ClearNode Sandbox）
+
+Yellow Protocol の ClearNode Sandbox に接続し、State Channel 経由のオフチェーン決済残高を取得します。
+
+#### 前提条件
+
+- ルートの `.env` に以下が設定されていること
+
+```
+YELLOW_PRIVATE_KEY=0x...   # メインウォレットの秘密鍵
+YELLOW_ASSET=ytest.usd     # Sandbox用テストアセット
+SEPOLIA_RPC_URL=https://rpc.sepolia.org  # チャネル開設時のみ必要
+```
+
+#### Faucet（テストトークン取得）
+
+```bash
+curl -XPOST https://clearnet-sandbox.yellow.com/faucet/requestTokens \
+  -H "Content-Type: application/json" \
+  -d '{"userAddress":"<your-wallet-address>"}'
+```
+
+#### 接続テスト
+
+```bash
+source .env
+pnpm test:yellow
+```
+
+認証・チャネル取得・残高取得の3ステップを検証します。
+
+#### チャネル開設（Sepolia オンチェーン）
+
+```bash
+source .env
+pnpm yellow:open-channel
+```
+
+Sepolia ETH（ガス代）が必要です。ClearNode にチャネル作成をリクエストし、オンチェーンTxを送信後、Unified Balance から資金を投入します。
+
+#### アーキテクチャ
+
+```
+┌─────────────┐    WebSocket     ┌──────────────┐
+│ YellowClient├──────────────────┤ ClearNode    │
+│ (off-chain) │  EIP-712 Auth    │ Sandbox      │
+└──────┬──────┘                  └──────┬───────┘
+       │                                │
+       │  get_ledger_balances           │
+       │  → ytest.usd: 10000000        │
+       │                                │
+┌──────┴──────┐                  ┌──────┴───────┐
+│SessionClient│                  │ Custody.sol  │
+│ → netProfit │                  │ (Sepolia)    │
+└──────┬──────┘                  └──────────────┘
+       │
+       ▼
+┌─────────────┐    Arc API       ┌──────────────┐
+│ auto-settle │──────────────────┤ Operator     │
+│ pipeline    │  USDC transfer   │ Vault        │
+└─────────────┘                  └──────────────┘
+```
