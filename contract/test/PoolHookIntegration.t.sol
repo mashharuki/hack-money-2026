@@ -120,6 +120,41 @@ contract PoolHookIntegrationTest is Test {
         assertEq(feeFromSwap, feeFromEvent, "Swap fee should equal FeeOverridden fee");
     }
 
+    function test_create2HookMiner_endToEnd_deployedHookWorks() public {
+        (PoolManager poolManager, MockOracle oracle, PoolKey memory key, PoolSwapTest swapRouter, ComputeToken cpt) =
+            _deployAndInitPoolWithLiquidity();
+
+        bytes memory creationCode = type(UtilizationHook).creationCode;
+        bytes memory constructorArgs = abi.encode(IPoolManager(address(poolManager)), IMockOracle(address(oracle)));
+        (address minedAddress, bytes32 minedSalt) =
+            HookMiner.find(address(this), Hooks.BEFORE_SWAP_FLAG, creationCode, constructorArgs);
+
+        assertEq(address(key.hooks), minedAddress, "hook should be deployed to mined address");
+        assertEq(
+            HookMiner.computeAddress(address(this), minedSalt, creationCode, constructorArgs),
+            address(key.hooks),
+            "computed CREATE2 address should match deployed hook"
+        );
+        assertEq(uint160(address(key.hooks)) & ALL_HOOK_MASK, Hooks.BEFORE_SWAP_FLAG, "hook address flags should match");
+        assertTrue(cpt.balanceOf(address(this)) > 0, "sanity: CPT minted");
+
+        oracle.setUtilization(50);
+        vm.recordLogs();
+        swapRouter.swap(
+            key,
+            IPoolManager.SwapParams({
+                zeroForOne: true,
+                amountSpecified: -1e15,
+                sqrtPriceLimitX96: TickMath.MIN_SQRT_PRICE + 1
+            }),
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false}),
+            ""
+        );
+
+        uint24 fee = _extractLastSwapFee(vm.getRecordedLogs(), address(poolManager));
+        assertEq(fee, 3000, "deployed hook should apply default fee at utilization 50");
+    }
+
     function _deployAndInitPoolWithLiquidity()
         internal
         returns (PoolManager poolManager, MockOracle oracle, PoolKey memory key, PoolSwapTest swapRouter, ComputeToken cpt)
@@ -133,11 +168,8 @@ contract PoolHookIntegrationTest is Test {
 
         (address expectedHookAddress, bytes32 salt) = HookMiner.find(address(this), flags, creationCode, constructorArgs);
         bytes memory initCode = abi.encodePacked(creationCode, constructorArgs);
-
         address hookAddress;
-        assembly ("memory-safe") {
-            hookAddress := create2(0, add(initCode, 0x20), mload(initCode), salt)
-        }
+        assembly ("memory-safe") { hookAddress := create2(0, add(initCode, 0x20), mload(initCode), salt) }
         assertEq(hookAddress, expectedHookAddress, "CREATE2 deployed address should match mined address");
         assertEq(uint160(hookAddress) & ALL_HOOK_MASK, flags, "hook address should contain BEFORE_SWAP flag only");
 
