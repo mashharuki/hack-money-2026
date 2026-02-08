@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { execSync } from "child_process";
+import { readFileSync } from "fs";
 import path from "path";
 
 const ROOT = path.resolve(process.cwd(), "..");
@@ -9,6 +10,22 @@ const RPC_ENV_MAP: Record<string, string> = {
   "base-sepolia": "BASE_SEPOLIA_RPC_URL",
   "unichain-sepolia": "UNICHAIN_SEPOLIA_RPC_URL",
 };
+
+const CHAIN_ID: Record<string, number> = {
+  "base-sepolia": 84532,
+  "unichain-sepolia": 1301,
+};
+
+function readBroadcastTxHash(script: string, chainId: number): string | null {
+  try {
+    const p = path.resolve(CONTRACT_DIR, `broadcast/${script}/${chainId}/run-latest.json`);
+    const data = JSON.parse(readFileSync(p, "utf-8"));
+    const txs = data.transactions ?? [];
+    return txs[txs.length - 1]?.hash ?? null;
+  } catch {
+    return null;
+  }
+}
 
 type AddLiquidityRequest = {
   chain: string;
@@ -58,7 +75,7 @@ export async function POST(req: Request) {
     });
 
     const success = out.includes("AddLiquidity: success");
-    const txMatch = out.match(/Transaction:\s*(0x[\da-fA-F]+)/);
+    const txHash = readBroadcastTxHash("AddLiquidity.s.sol", CHAIN_ID[chain]);
 
     return NextResponse.json({
       ok: true,
@@ -67,7 +84,7 @@ export async function POST(req: Request) {
       liquidityDelta,
       tickLower,
       tickUpper,
-      txHash: txMatch?.[1] ?? null,
+      txHash,
       raw: out.slice(-1500),
     });
   } catch (err: unknown) {

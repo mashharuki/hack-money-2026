@@ -41,8 +41,14 @@ export function LiquidityPanel({ chain, label, onSuccess, onLog }: LiquidityPane
       });
       const data = await res.json();
       if (data.ok && data.success) {
-        setResult(`Added liquidity (tx: ${data.txHash?.slice(0, 14) ?? "confirmed"}...)`);
-        onLog?.({ type: "LIQUIDITY", chain, message: `Liquidity added successfully`, txHash: data.txHash ?? undefined });
+        const txLabel = data.txHash ? ` (tx: ${data.txHash.slice(0, 14)}...)` : "";
+        setResult(`✅ Liquidity added${txLabel}`);
+        onLog?.({
+          type: "LIQUIDITY",
+          chain,
+          message: `[${label}] Added liquidity — delta: ${liquidityDelta}, ticks: ${tickLower}-${tickUpper}`,
+          txHash: data.txHash ?? undefined,
+        });
         onSuccess();
       } else {
         const errMsg = data.error ?? "Unknown error";

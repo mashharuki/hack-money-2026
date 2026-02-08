@@ -44,8 +44,14 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
           data.beforeTick != null && data.afterTick != null
             ? ` tick: ${data.beforeTick} → ${data.afterTick}`
             : "";
-        setResult(`Swap executed${tickInfo} (tx: ${data.txHash?.slice(0, 14) ?? "confirmed"}...)`);
-        onLog?.({ type: "SWAP", chain, message: `Swap ${directionLabel} executed${tickInfo}`, txHash: data.txHash ?? undefined });
+        const txLabel = data.txHash ? ` (tx: ${data.txHash.slice(0, 14)}...)` : "";
+        setResult(`✅ Swap executed${tickInfo}${txLabel}`);
+        onLog?.({
+          type: "SWAP",
+          chain,
+          message: `[${label}] ${directionLabel} — amount: ${swapAmount}${tickInfo}`,
+          txHash: data.txHash ?? undefined,
+        });
         onSuccess();
       } else {
         const errMsg = data.error ?? "Unknown error";
