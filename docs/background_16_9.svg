@@ -1,0 +1,97 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradient: Deep Dark Space -->
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="80%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1a2333"/>
+      <stop offset="100%" stop-color="#05080f"/>
+    </radialGradient>
+
+    <!-- Ghostly Glow Gradient (Cyan/Teal) -->
+    <radialGradient id="ghostGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Secondary Glow (Blue/Indigo) -->
+    <radialGradient id="deepGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Cube Gradient -->
+    <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.4"/>
+    </linearGradient>
+
+    <!-- Filters for Softness -->
+    <filter id="blurFilter">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
+    </filter>
+    <filter id="softBlur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+    </filter>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="1920" height="1080" fill="url(#bgGradient)"/>
+
+  <!-- Ambient Light / Ghostly Presence -->
+  <!-- Left Top Glow -->
+  <circle cx="200" cy="200" r="600" fill="url(#ghostGlow)" filter="url(#blurFilter)" opacity="0.6"/>
+  <!-- Right Bottom Glow -->
+  <circle cx="1700" cy="900" r="700" fill="url(#deepGlow)" filter="url(#blurFilter)" opacity="0.5"/>
+  <!-- Center Hint -->
+  <circle cx="960" cy="540" r="400" fill="#ffffff" filter="url(#blurFilter)" opacity="0.05"/>
+
+  <!-- Abstract Grid Network (Floor) -->
+  <g transform="translate(960, 1200) scale(1, 0.5)" opacity="0.1">
+    <circle cx="0" cy="0" r="800" stroke="#22d3ee" stroke-width="2" fill="none" opacity="0.3"/>
+    <circle cx="0" cy="0" r="600" stroke="#22d3ee" stroke-width="1" fill="none" opacity="0.2"/>
+    <circle cx="0" cy="0" r="400" stroke="#22d3ee" stroke-width="1" fill="none" opacity="0.1"/>
+    <line x1="-1000" y1="0" x2="1000" y2="0" stroke="#22d3ee" stroke-width="1"/>
+    <line x1="0" y1="-1000" x2="0" y2="1000" stroke="#22d3ee" stroke-width="1"/>
+  </g>
+
+  <!-- Floating Cubes (Representing Compute Blocks/L2) -->
+  <!-- Isometric Cube Helper: M x,y L ... -->
+
+  <!-- Cube 1 (Large, Right) -->
+  <g transform="translate(1400, 500)" opacity="0.8">
+    <path d="M0,-60 L52,-30 L0,0 L-52,-30 Z" fill="#22d3ee" opacity="0.3"/> <!-- Top -->
+    <path d="M-52,-30 L0,0 L0,60 L-52,30 Z" fill="#1e40af" opacity="0.4"/> <!-- Left -->
+    <path d="M0,0 L52,-30 L52,30 L0,60 Z" fill="#0891b2" opacity="0.6"/> <!-- Right -->
+    <!-- Glow effect underneath -->
+    <circle cx="0" cy="40" r="40" fill="#22d3ee" filter="url(#blurFilter)" opacity="0.4"/>
+  </g>
+
+  <!-- Cube 2 (Medium, Left) -->
+  <g transform="translate(400, 700)" opacity="0.6">
+    <path d="M0,-40 L35,-20 L0,0 L-35,-20 Z" fill="url(#cubeGrad)" opacity="0.4"/>
+    <path d="M-35,-20 L0,0 L0,40 L-35,20 Z" fill="#1e40af" opacity="0.3"/>
+    <path d="M0,0 L35,-20 L35,20 L0,40 Z" fill="#0891b2" opacity="0.5"/>
+  </g>
+
+  <!-- Cube 3 (Small, Distant Top) -->
+  <g transform="translate(1000, 300)" opacity="0.4">
+    <path d="M0,-20 L17,-10 L0,0 L-17,-10 Z" fill="#ffffff" opacity="0.2"/>
+    <path d="M-17,-10 L0,0 L0,20 L-17,10 Z" fill="#ffffff" opacity="0.1"/>
+    <path d="M0,0 L17,-10 L17,10 L0,20 Z" fill="#ffffff" opacity="0.1"/>
+  </g>
+
+  <!-- Cube 4 (Tiny, Floating particles) -->
+  <rect x="500" y="300" width="4" height="4" fill="#22d3ee" opacity="0.6"/>
+  <rect x="1200" y="800" width="6" height="6" fill="#22d3ee" opacity="0.4"/>
+  <rect x="1600" y="200" width="3" height="3" fill="#22d3ee" opacity="0.7"/>
+
+  <!-- Subtle Data Stream Lines -->
+  <path d="M 0 900 Q 400 800 960 1080" stroke="#22d3ee" stroke-width="2" fill="none" opacity="0.1" stroke-dasharray="10 20"/>
+  <path d="M 1920 200 Q 1500 300 1200 0" stroke="#3b82f6" stroke-width="2" fill="none" opacity="0.1" stroke-dasharray="5 15"/>
+
+  <!-- Product Title -->
+  <!-- Glow Effect Layer -->
+  <text x="960" y="560" font-family="sans-serif" font-weight="bold" font-size="140" fill="#22d3ee" text-anchor="middle" dominant-baseline="middle" letter-spacing="12" opacity="0.5" filter="url(#blurFilter)">GHOST YIELD</text>
+  <!-- Main Text Layer -->
+  <text x="960" y="560" font-family="sans-serif" font-weight="bold" font-size="140" fill="#ffffff" text-anchor="middle" dominant-baseline="middle" letter-spacing="12" opacity="0.95" style="text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);">GHOST YIELD</text>
+
+</svg>

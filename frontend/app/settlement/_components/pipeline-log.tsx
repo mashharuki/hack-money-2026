@@ -49,7 +49,7 @@ export function PipelineLog({ logs, onClear }: Props) {
         ) : (
           <div className="max-h-64 overflow-y-auto">
             {logs.map((log, i) => (
-              <div key={i} className="py-0.5 font-mono text-[11px] text-[#a0a0a0]">
+              <div key={i} className="rounded px-1.5 py-0.5 font-mono text-[11px] text-[#a0a0a0] transition-colors hover:bg-[#ffffff06] hover:text-white">
                 {log}
               </div>
             ))}

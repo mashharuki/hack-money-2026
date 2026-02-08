@@ -125,22 +125,20 @@ export function MetricsRow({ chainData, priceHistory, thresholdBps, vaultBalance
   const spreadValue = priceA && priceB ? Math.abs(priceA - priceB) : 0;
   const spreadBps = avg > 0 ? (spreadValue / avg) * 10000 : 0;
 
+  const cards = [
+    <PriceCard key="a" label="CPT-A / USDC" chainBadge="BASE SEPOLIA" price={priceA} changePercent={calcChange(0)} />,
+    <PriceCard key="b" label="CPT-B / USDC" chainBadge="UNICHAIN SEPOLIA" price={priceB} changePercent={calcChange(1)} />,
+    <SpreadCard key="spread" spreadValue={spreadValue} spreadBps={spreadBps / 100} thresholdBps={thresholdBps} />,
+    <VaultCard key="vault" balance={vaultBalance} />,
+  ];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <PriceCard
-        label="CPT-A / USDC"
-        chainBadge="BASE SEPOLIA"
-        price={priceA}
-        changePercent={calcChange(0)}
-      />
-      <PriceCard
-        label="CPT-B / USDC"
-        chainBadge="UNICHAIN SEPOLIA"
-        price={priceB}
-        changePercent={calcChange(1)}
-      />
-      <SpreadCard spreadValue={spreadValue} spreadBps={spreadBps / 100} thresholdBps={thresholdBps} />
-      <VaultCard balance={vaultBalance} />
+      {cards.map((card, i) => (
+        <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.05}s` }}>
+          {card}
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # Ghost Yield (hack-money-2026)
 
-![](./docs/image.png)
+![](./docs/background_16_9.svg)
 
 ## Short Description
 

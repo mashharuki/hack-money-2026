@@ -137,10 +137,19 @@ export default function AnalyticsPage() {
         </div>
         <div className="border-t border-[#2f2f2f]">
           {demoHistory.length === 0 ? (
-            <div className="flex h-[120px] items-center justify-center">
-              <span className="font-mono text-xs text-[#a0a0a0]">
+            <div className="px-6 py-4">
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-6">
+                    <div className="skeleton h-3 w-32" style={{ animationDelay: `${i * 0.1}s` }} />
+                    <div className="skeleton h-3 w-20" style={{ animationDelay: `${i * 0.1 + 0.05}s` }} />
+                    <div className="skeleton ml-auto h-3 w-16" style={{ animationDelay: `${i * 0.1 + 0.1}s` }} />
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-center font-mono text-[10px] text-[#a0a0a0]">
                 No demo history yet — run a demo from the Demo page
-              </span>
+              </p>
             </div>
           ) : (
             <table className="w-full">
@@ -164,7 +173,7 @@ export default function AnalyticsPage() {
                 {[...demoHistory].reverse().map((entry, i) => (
                   <tr
                     key={i}
-                    className="border-b border-[#2f2f2f] last:border-b-0"
+                    className="border-b border-[#2f2f2f] transition-colors hover:bg-[#ffffff06] last:border-b-0"
                   >
                     <td className="px-6 py-3 font-mono text-[11px] text-white">
                       {new Date(entry.timestamp).toLocaleString()}

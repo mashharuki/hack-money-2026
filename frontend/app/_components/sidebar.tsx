@@ -89,7 +89,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
               <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                 NETWORK
               </span>
-              <span className="font-mono text-[11px] font-semibold text-[#00FF88]">
+              <span className="animate-pulse-glow font-mono text-[11px] font-semibold text-[#00FF88]">
                 [CONNECTED]
               </span>
             </div>
@@ -97,7 +97,7 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
               <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                 YELLOW_SDK
               </span>
-              <span className="font-mono text-[11px] font-semibold text-[#00FF88]">
+              <span className="animate-pulse-glow font-mono text-[11px] font-semibold text-[#00FF88]">
                 [LIVE]
               </span>
             </div>

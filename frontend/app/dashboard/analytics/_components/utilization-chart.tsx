@@ -56,10 +56,14 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
 
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length === 0 ? (
-          <div className="flex h-[180px] items-center justify-center">
-            <span className="font-mono text-xs text-[#a0a0a0]">
-              Waiting for chain data...
-            </span>
+          <div className="flex h-[180px] items-end gap-6 px-8 pb-4">
+            {[60, 75, 45].map((h, i) => (
+              <div
+                key={i}
+                className="skeleton flex-1 rounded-t-sm"
+                style={{ height: `${h}%`, animationDelay: `${i * 0.1}s` }}
+              />
+            ))}
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={180}>

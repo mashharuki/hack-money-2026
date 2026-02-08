@@ -59,13 +59,14 @@ export function StatsSummary({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      {CARDS.map((card) => {
+      {CARDS.map((card, i) => {
         const Icon = card.icon;
         const value = values[card.key] ?? 0;
         return (
           <div
             key={card.key}
-            className="rounded-xl border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4"
+            className="animate-fade-in-up rounded-xl border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4"
+            style={{ animationDelay: `${i * 0.05}s` }}
           >
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">

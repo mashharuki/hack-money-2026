@@ -64,10 +64,17 @@ export function PriceSpreadChart({ priceHistory, thresholdBps }: PriceSpreadChar
       {/* Chart */}
       <div className="min-h-0 flex-1 px-2 pb-2">
         {displayData.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
-            <span className="font-mono text-xs text-[#a0a0a0]">
-              Waiting for price data...
-            </span>
+          <div className="flex h-full flex-col justify-end gap-2 px-4 pb-4">
+            <div className="flex items-end gap-3">
+              {[40, 65, 50, 80, 55, 70, 45, 60, 75, 50, 85, 65].map((h, i) => (
+                <div
+                  key={i}
+                  className="skeleton flex-1"
+                  style={{ height: `${h}%`, animationDelay: `${i * 0.05}s` }}
+                />
+              ))}
+            </div>
+            <div className="skeleton h-px w-full opacity-30" />
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">

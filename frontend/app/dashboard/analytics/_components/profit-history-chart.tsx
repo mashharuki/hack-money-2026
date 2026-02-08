@@ -59,10 +59,19 @@ export function ProfitHistoryChart({ priceHistory }: ProfitHistoryChartProps) {
 
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length < 2 ? (
-          <div className="flex h-[220px] items-center justify-center">
-            <span className="font-mono text-xs text-[#a0a0a0]">
+          <div className="flex h-[220px] flex-col justify-end gap-2 px-2 pb-2">
+            <div className="flex items-end gap-2">
+              {[30, 55, 45, 70, 50, 65, 40, 75, 55, 60].map((h, i) => (
+                <div
+                  key={i}
+                  className="skeleton flex-1 rounded-sm"
+                  style={{ height: `${h}%`, animationDelay: `${i * 0.06}s` }}
+                />
+              ))}
+            </div>
+            <p className="text-center font-mono text-[10px] text-[#a0a0a0]">
               Collecting data points... ({data.length}/2 minimum)
-            </span>
+            </p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={220}>

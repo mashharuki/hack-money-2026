@@ -61,7 +61,7 @@ export function SettlementActivityLog({ logs }: Props) {
         ) : (
           <div className="space-y-2">
             {logs.map((log) => (
-              <div key={log.id} className="flex items-start gap-3">
+              <div key={log.id} className="flex items-start gap-3 rounded-lg px-2 py-1 -mx-2 transition-colors hover:bg-[#ffffff06]">
                 <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[#a0a0a0]">
                   {log.timestamp}
                 </span>
