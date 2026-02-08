@@ -280,7 +280,7 @@ export class YellowClient extends EventEmitter {
       weights: [50, 50] as [number, number],
       quorum: 100,
       challenge: 0,
-      nonce: BigInt(Date.now()),
+      nonce: Date.now(),
     };
 
     const allocations: SessionAllocation[] = [

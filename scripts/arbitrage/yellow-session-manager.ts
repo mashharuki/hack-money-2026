@@ -106,15 +106,10 @@ export class YellowSessionManager implements IYellowSessionManager {
   }
 
   private estimateBuyPrice(strategy: ArbitrageStrategy): number {
-    // Use the spread to estimate: the buy side is the cheaper chain
-    const basePrice = 1.0;
-    const spreadFraction = strategy.spreadBps / 10000;
-    return basePrice * (1 - spreadFraction / 2);
+    return strategy.buyPriceUsdc;
   }
 
   private estimateSellPrice(strategy: ArbitrageStrategy): number {
-    const basePrice = 1.0;
-    const spreadFraction = strategy.spreadBps / 10000;
-    return basePrice * (1 + spreadFraction / 2);
+    return strategy.sellPriceUsdc;
   }
 }
