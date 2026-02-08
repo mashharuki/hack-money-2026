@@ -42,6 +42,10 @@ interface IMockOracle {
     /// @param updater 対象アドレス
     /// @param allowed 認可状態
     function setAuthorizedUpdater(address updater, bool allowed) external;
+
+    /// @notice 乖離閾値を設定する
+    /// @param threshold 乖離閾値（0-100）
+    function setDivergenceThreshold(uint256 threshold) external;
 }
 
 /// @title MockOracle
@@ -60,8 +64,10 @@ contract MockOracle is IMockOracle, Ownable {
     uint256 private _updatedAt;
     uint8 private _source;
     uint256 private _staleTtl = DEFAULT_STALE_TTL;
+    uint256 public divergenceThreshold = DIVERGENCE_THRESHOLD;
     uint256 private _lastBotUtilization;
-    uint256 private _lastFunctionsUtilization;
+    uint256 public lastFunctionsUtilization;
+    uint256 public lastFunctionsUpdatedAt;
     bytes32 public lastFunctionsRequestId;
     mapping(address => bool) private _authorizedUpdaters;
 
@@ -72,6 +78,7 @@ contract MockOracle is IMockOracle, Ownable {
     event UtilizationUpdated(uint256 utilization, uint8 source, uint256 updatedAt);
     event UpdaterAuthorizationChanged(address indexed updater, bool allowed);
     event TtlUpdated(uint256 ttlSeconds);
+    event DivergenceThresholdUpdated(uint256 threshold);
 
     error UnauthorizedUpdater();
     error UtilizationOutOfRange();
@@ -118,15 +125,17 @@ contract MockOracle is IMockOracle, Ownable {
         external
         onlyAuthorizedUpdater
     {
+        _validateTimestamp(timestamp);
         lastFunctionsRequestId = requestId;
-        _lastFunctionsUtilization = utilization;
+        lastFunctionsUtilization = utilization;
+        lastFunctionsUpdatedAt = timestamp;
 
         bool shouldApplyFunctionsValue = _lastBotUtilization == 0;
         if (!shouldApplyFunctionsValue) {
             uint256 divergence = _lastBotUtilization > utilization
                 ? _lastBotUtilization - utilization
                 : utilization - _lastBotUtilization;
-            shouldApplyFunctionsValue = divergence > DIVERGENCE_THRESHOLD;
+            shouldApplyFunctionsValue = divergence > divergenceThreshold;
         }
 
         if (shouldApplyFunctionsValue) {
@@ -142,6 +151,14 @@ contract MockOracle is IMockOracle, Ownable {
     function setAuthorizedUpdater(address updater, bool allowed) external onlyOwner {
         _authorizedUpdaters[updater] = allowed;
         emit UpdaterAuthorizationChanged(updater, allowed);
+    }
+
+    function setDivergenceThreshold(uint256 threshold) external onlyOwner {
+        if (threshold > 100) {
+            revert UtilizationOutOfRange();
+        }
+        divergenceThreshold = threshold;
+        emit DivergenceThresholdUpdated(threshold);
     }
 
     function _setUtilization(uint256 utilization, uint256 timestamp, uint8 source) internal {

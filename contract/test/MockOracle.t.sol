@@ -53,6 +53,7 @@ contract MockOracleTest is Test {
     function test_NewAdminMethods_AreCallable() public {
         oracle.setStaleTtl(1200);
         oracle.setAuthorizedUpdater(address(this), true);
+        oracle.setDivergenceThreshold(20);
     }
 
     function test_SetStaleTtl_EmitsEvent() public {
@@ -71,7 +72,15 @@ contract MockOracleTest is Test {
         assertEq(oracle.SOURCE_BOT(), 1);
         assertEq(oracle.SOURCE_FUNCTIONS(), 2);
         assertEq(oracle.DIVERGENCE_THRESHOLD(), 15);
+        assertEq(oracle.divergenceThreshold(), 15);
         assertEq(oracle.DEFAULT_STALE_TTL(), 20 minutes);
+    }
+
+    function test_SetDivergenceThreshold_EmitsEvent() public {
+        vm.expectEmit(true, false, false, true);
+        emit MockOracle.DivergenceThresholdUpdated(25);
+        oracle.setDivergenceThreshold(25);
+        assertEq(oracle.divergenceThreshold(), 25);
     }
 
     function test_SourceMeta_UsesDefinedConstants() public {
@@ -155,6 +164,12 @@ contract MockOracleTest is Test {
         vm.prank(attacker);
         vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, attacker));
         oracle.setAuthorizedUpdater(attacker, true);
+    }
+
+    function test_SetDivergenceThreshold_RevertsForNonOwner() public {
+        vm.prank(attacker);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, attacker));
+        oracle.setDivergenceThreshold(20);
     }
 
     function test_SetUtilization_Legacy_RevertsForUnauthorizedUpdater() public {

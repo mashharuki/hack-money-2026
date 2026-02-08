@@ -53,7 +53,7 @@ contract FunctionsReceiverTest is Test {
         assertEq(receiver.donId(), DON_ID);
         assertEq(receiver.subscriptionId(), SUBSCRIPTION_ID);
         assertEq(receiver.callbackGasLimit(), CALLBACK_GAS_LIMIT);
-        assertEq(receiver.minUpkeepInterval(), 600);
+        assertEq(receiver.minUpkeepInterval(), 900);
         assertEq(receiver.owner(), address(this));
     }
 
