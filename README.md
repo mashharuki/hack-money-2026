@@ -272,6 +272,136 @@ Iterative trading is performed off-chain, and only the final result is confirmed
 Arbitration profits are **settled and aggregated in USDC** via Arc and directly deposited into the L2 operator's Vault.
 This allows arbitrage revenue to function as **funds to pay actual infrastructure operation costs**.
 
+## L2 Admin: The Compute Central Bank Model
+
+In Ghost Yield, the **L2 Operator functions as a "Compute Central Bank"** — the issuer of CPT (the currency of computation), whose value is backed by real L2 infrastructure capacity.
+
+Just as a central bank manages monetary policy through supply control, interest rates, and open market operations, the L2 Admin manages the CPT economy through **three interconnected levers**, all governed by a single input signal: **L2 Utilization Rate**.
+
+```mermaid
+flowchart TD
+  subgraph Oracle["Oracle Layer (Single Signal)"]
+    BOT["Bot (EMA every 1 min)"]
+    CL["Chainlink Functions (verify every 15 min)"]
+    ORACLE["L2 Utilization Oracle"]
+    BOT -->|fast update| ORACLE
+    CL -->|secure verify| ORACLE
+  end
+
+  subgraph Admin["L2 Admin — 3 Levers"]
+    MINT["Lever 1: CPT Supply\n(capacity-backed mint)"]
+    LIQ["Lever 2: Liquidity Depth\n(surplus-proportional)"]
+    FEE["Lever 3: Dynamic Fee\n(utilization-scaled)"]
+  end
+
+  subgraph Market["Uniswap v4 CPT/USDC Pool"]
+    POOL["Market Price Formation"]
+  end
+
+  ORACLE -->|utilization u| MINT
+  ORACLE -->|utilization u| LIQ
+  ORACLE -->|utilization u| FEE
+
+  MINT -->|"supply = capacity × (1 − u)"| POOL
+  LIQ -->|"depth = base × (1 − u)²"| POOL
+  FEE -->|"fee = min + (max − min) × u²"| POOL
+```
+
+### Lever 1: CPT Supply — Capacity-Backed Minting
+
+CPT issuance is not arbitrary. It is **bounded by the real computational capacity** of the L2 chain that the operator controls.
+
+**Formula:**
+```
+MaxMintPerEpoch = (BlockGasLimit × BlocksPerEpoch) / GSU_PER_CPT
+
+ActualMint = MaxMintPerEpoch × (1 − CurrentUtilization)
+```
+
+**Example (Base Sepolia):**
+```
+BlockGasLimit  = 30,000,000 gas
+BlocksPerEpoch = 300 blocks (~1 hour)
+GSU_PER_CPT    = 1,000,000
+
+MaxMintPerEpoch = (30M × 300) / 1M = 9,000 CPT
+
+At 10% utilization → Mint up to 8,100 CPT (90% idle capacity)
+At 50% utilization → Mint up to 4,500 CPT (50% idle capacity)
+At 90% utilization → Mint up to   900 CPT (10% idle capacity)
+```
+
+**Why this matters:** The operator can only mint CPT proportional to **actually idle** computational capacity. This prevents supply inflation and ensures every CPT is backed by real blockspace that exists and can be consumed.
+
+### Lever 2: Liquidity Provisioning — Surplus-Proportional Depth
+
+The L2 Operator provides liquidity to the Uniswap v4 CPT/USDC pool in proportion to idle capacity.
+
+**Formula:**
+```
+TargetLiquidity = BaseLiquidity × (1 − Utilization)²
+```
+
+| Utilization | Multiplier | Market Effect |
+|:-----------:|:----------:|:-------------|
+| 10% | × 0.81 | Deep liquidity → low slippage → easy to buy CPT |
+| 30% | × 0.49 | Moderate depth → normal trading |
+| 50% | × 0.25 | Thinner liquidity → noticeable price impact |
+| 70% | × 0.09 | Shallow → large trades move price significantly |
+| 90% | × 0.01 | Minimal → CPT becomes scarce and expensive |
+
+**Why quadratic (²)?** A linear function would remove liquidity too gradually. The squared term creates a **non-linear scarcity curve**: at low utilization, the pool offers abundant liquidity (inviting traders), while at high utilization, liquidity disappears rapidly (reflecting genuine resource scarcity). This mirrors how real commodity markets behave — surplus goods are cheap and plentiful; scarce goods have thin order books.
+
+### Lever 3: Dynamic Fee — Continuous Utilization-Scaled Pricing
+
+The Uniswap v4 Hook applies a **continuous fee function** that smoothly scales with utilization, rather than discrete tiers.
+
+**Formula:**
+```
+Fee(u) = FeeMin + (FeeMax − FeeMin) × u²
+
+where:
+  u      = utilization (0.0 to 1.0)
+  FeeMin = 0.05% (500 bps)  — minimum friction for idle chains
+  FeeMax = 1.00% (10000 bps) — maximum friction for congested chains
+```
+
+| Utilization | Fee | Interpretation |
+|:-----------:|:---:|:---------------|
+| 10% | 0.06% | Nearly free — encourages trading on idle L2 |
+| 30% | 0.14% | Low cost — attracts arbitrageurs |
+| 50% | 0.29% | Moderate — balanced market |
+| 70% | 0.52% | Elevated — discourages excessive consumption |
+| 90% | 0.82% | High — protects scarce resources |
+
+**Why quadratic (u²)?** This design is inspired by **TCP congestion control**:
+- At low utilization, the fee is nearly flat → maximizes trading volume and arbitrage opportunity.
+- At high utilization, the fee rises steeply → naturally throttles demand and protects the L2 from overcommitment.
+
+### How the Three Levers Work Together
+
+The three levers create a **self-reinforcing market mechanism**:
+
+```
+When L2 is idle (low utilization):
+  → More CPT minted (abundant supply)
+  → Deep liquidity (easy to trade)
+  → Low fees (cheap to buy)
+  → Result: CPT is cheap → attracts buyers → generates revenue for operator
+
+When L2 is busy (high utilization):
+  → Less CPT minted (restricted supply)
+  → Thin liquidity (price impact)
+  → High fees (expensive to trade)
+  → Result: CPT is expensive → reflects real scarcity → operator earns more per unit
+```
+
+> **In both cases, the L2 operator earns revenue. The mechanism ensures that "idle compute is monetized" while "busy compute is priced at a premium." The market always functions.**
+
+### One-Liner for Pitch
+
+> **"The L2 Admin operates as a Compute Central Bank: from a single utilization signal, CPT supply, liquidity depth, and trading fees are jointly and automatically calibrated — making idle blockspace a revenue-generating asset."**
+
 ## Impact
 
 ### Impact for L2 Operators
