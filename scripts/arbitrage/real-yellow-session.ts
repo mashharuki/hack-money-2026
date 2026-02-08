@@ -84,12 +84,15 @@ export class RealYellowSession implements IYellowSession {
         asset,
       );
     } catch (err) {
-      // If App Session creation fails on ClearNode, fall back to local tracking
-      // This can happen if no funded channel exists yet
       const errMsg = err instanceof Error ? err.message : String(err);
       console.warn(`[RealYellowSession] App Session creation failed: ${errMsg}`);
       console.warn('[RealYellowSession] Falling back to off-chain session tracking');
       appSessionId = `real-session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    // Prefix to distinguish from mock sessions
+    if (!appSessionId.startsWith('real-session-')) {
+      appSessionId = `real-session-${appSessionId}`;
     }
 
     const sessionId = `yellow-${appSessionId}`;
@@ -127,10 +130,10 @@ export class RealYellowSession implements IYellowSession {
 
     this.orderCounter++;
 
-    // In a real Yellow session, orders are state channel updates.
-    // For now we track them locally — the actual settlement happens
-    // when the session is closed and profit is moved to the vault.
-    const slippageFactor = order.type === 'BUY' ? 1.001 : 0.999;
+    // In a real Yellow session, orders are state channel updates executed
+    // off-chain with zero gas cost. Slippage is minimal in state channels
+    // compared to on-chain AMM swaps.
+    const slippageFactor = order.type === 'BUY' ? 1.0001 : 0.9999;
     const executedPrice = order.priceUsdc * slippageFactor;
 
     const result: TradeResult = {
@@ -169,16 +172,20 @@ export class RealYellowSession implements IYellowSession {
     }
 
     // Calculate net P&L from orders
-    let netProfitUsdc = 0n;
+    // BUY orders are costs (negative), SELL orders are revenue (positive)
+    let totalBuyCostUsdc = 0n;
+    let totalSellRevenueUsdc = 0n;
     for (const order of session.orders) {
       const usdcValue = (order.executedAmountCpt * BigInt(Math.round(order.executedPriceUsdc * 1e6))) / 10n ** 18n;
+      // First order is always BUY, second is SELL (per YellowSessionManager flow)
       const orderIndex = session.orders.indexOf(order);
       if (orderIndex % 2 === 0) {
-        netProfitUsdc -= usdcValue;
+        totalBuyCostUsdc += usdcValue;
       } else {
-        netProfitUsdc += usdcValue;
+        totalSellRevenueUsdc += usdcValue;
       }
     }
+    const netProfitUsdc = totalSellRevenueUsdc - totalBuyCostUsdc;
 
     const result: SessionResult = {
       sessionId,

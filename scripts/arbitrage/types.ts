@@ -97,6 +97,8 @@ export interface ArbitrageStrategy {
   amountCpt: bigint;
   expectedProfitUsdc: bigint;
   spreadBps: number;
+  buyPriceUsdc: number;
+  sellPriceUsdc: number;
   timestamp: number;
 }
 

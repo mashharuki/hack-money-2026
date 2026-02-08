@@ -216,11 +216,11 @@ contract VerifyHookBehavior is Script {
 
         if (zeroForOne) {
             require(currentSqrtPriceX96 > TickMath.MIN_SQRT_PRICE + 1, "VerifyHookBehavior: price near min boundary");
-            return currentSqrtPriceX96 - 1;
+            return TickMath.MIN_SQRT_PRICE + 1;
         }
 
         require(currentSqrtPriceX96 < TickMath.MAX_SQRT_PRICE - 1, "VerifyHookBehavior: price near max boundary");
-        return currentSqrtPriceX96 + 1;
+        return TickMath.MAX_SQRT_PRICE - 1;
     }
 
     function _readAddress(string memory path, string memory chainName) internal view returns (address) {

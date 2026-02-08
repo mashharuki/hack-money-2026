@@ -156,6 +156,8 @@ export class ArbitrageEngine implements IArbitrageEngine {
       amountCpt,
       expectedProfitUsdc,
       spreadBps,
+      buyPriceUsdc: buyPrice,
+      sellPriceUsdc: sellPrice,
       timestamp: Date.now(),
     };
   }
