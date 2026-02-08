@@ -17,9 +17,14 @@ interface SwapPanelProps {
   onLog?: (event: SwapLogEvent) => void;
 }
 
+const DEFAULTS = {
+  usdc: { raw: "5000000", label: "5 USDC (6 dec)" },
+  cpt: { raw: "5000000000000000000", label: "5 CPT (18 dec)" },
+};
+
 export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
   const [zeroForOne, setZeroForOne] = useState(true);
-  const [swapAmount, setSwapAmount] = useState("100000");
+  const [swapAmount, setSwapAmount] = useState(DEFAULTS.usdc.raw);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState("");
 
@@ -73,7 +78,13 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
             DIRECTION
           </label>
           <button
-            onClick={() => setZeroForOne((p) => !p)}
+            onClick={() => {
+              setZeroForOne((p) => {
+                const next = !p;
+                setSwapAmount(next ? DEFAULTS.usdc.raw : DEFAULTS.cpt.raw);
+                return next;
+              });
+            }}
             className="w-full border border-[#2f2f2f] bg-[#0C0C0C] px-2 py-1.5 font-mono text-[11px] font-bold text-white transition-colors hover:border-[#00FF88]"
           >
             {directionLabel}
@@ -81,13 +92,14 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
         </div>
         <div>
           <label className="mb-1 block font-mono text-[10px] text-[#8a8a8a]">
-            AMOUNT (raw)
+            AMOUNT (raw) — {zeroForOne ? "USDC 6dec" : "CPT 18dec"}
           </label>
           <input
             type="text"
             value={swapAmount}
             onChange={(e) => setSwapAmount(e.target.value)}
             className="w-full border border-[#2f2f2f] bg-[#0C0C0C] px-2 py-1.5 font-mono text-[11px] text-white focus:border-[#00FF88] focus:outline-none"
+            placeholder={zeroForOne ? DEFAULTS.usdc.label : DEFAULTS.cpt.label}
           />
         </div>
       </div>
