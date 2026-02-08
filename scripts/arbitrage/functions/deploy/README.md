@@ -37,6 +37,13 @@ const cfg = buildBaseSepoliaFunctionsDeployConfig({
 3. `FunctionsReceiver.setSource()` / `setArgs()` を owner で更新
 4. `performUpkeep` 実行ログと `FunctionsResponseReceived` イベントを確認
 
+### 一気通貫チェックリスト（最短）
+1. Functions ソース登録（新しい `source.js`）
+2. `FunctionsReceiver.setSource()` を owner で実行
+3. `FunctionsReceiver.setArgs()` で `buildFunctionsRequestArgs()` の結果を反映
+4. `performUpkeep()` を実行し、`FunctionsResponseReceived` を確認
+5. Oracle の `lastFunctionsRequestId` / `lastFunctionsUpdatedAt` を確認
+
 ## 障害時対応
 - Functions 実行失敗:
   - `FunctionsError` を確認
@@ -45,3 +52,8 @@ const cfg = buildBaseSepoliaFunctionsDeployConfig({
   - `rpcPrimary` が失敗しても `rpcFallback` にフォールバックする
 - LINK不足:
   - Subscription 残高を補充し再実行
+
+## 設定反映（運用メモ）
+- `staleTtl` はデプロイ後に `setStaleTtl()` で反映する
+- `FunctionsReceiver` を allowlist 登録してから `performUpkeep` を実行する
+- 乖離閾値は `setDivergenceThreshold()` で変更できる（0-100）

@@ -37,6 +37,8 @@ contract MetaOnlyOracle is IMockOracle {
     function setStaleTtl(uint256) external pure {}
 
     function setAuthorizedUpdater(address, bool) external pure {}
+
+    function setDivergenceThreshold(uint256) external pure {}
 }
 
 contract StaleMetaOracle is IMockOracle {
@@ -61,6 +63,8 @@ contract StaleMetaOracle is IMockOracle {
     function setStaleTtl(uint256) external pure {}
 
     function setAuthorizedUpdater(address, bool) external pure {}
+
+    function setDivergenceThreshold(uint256) external pure {}
 }
 
 contract ConfigurableMetaOracle is IMockOracle {
@@ -93,6 +97,8 @@ contract ConfigurableMetaOracle is IMockOracle {
     function setStaleTtl(uint256) external pure {}
 
     function setAuthorizedUpdater(address, bool) external pure {}
+
+    function setDivergenceThreshold(uint256) external pure {}
 }
 
 /// @title UtilizationHookTest

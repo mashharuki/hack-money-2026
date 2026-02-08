@@ -14,7 +14,7 @@ interface IFunctionsRouter {
 /// @notice Chainlink Functions 応答を受け取り Oracle 更新につなぐ受信コンポーネント
 /// @dev 3.1 では責務分離のためのスケルトンを提供し、request/fulfill の本実装は後続タスクで追加する
 contract FunctionsReceiver is Ownable {
-    uint256 public constant DEFAULT_MIN_UPKEEP_INTERVAL = 600;
+    uint256 public constant DEFAULT_MIN_UPKEEP_INTERVAL = 900;
     uint256 public constant BASE_SEPOLIA_CHAIN_ID = 84532;
     address public constant BASE_SEPOLIA_FUNCTIONS_ROUTER = 0xf9B8fc078197181C841c296C876945aaa425B278;
     bytes32 public constant BASE_SEPOLIA_DON_ID = bytes32("fun-base-sepolia-1");
