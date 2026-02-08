@@ -961,6 +961,60 @@ forge script script/AuthorizeFunctionsReceiver.s.sol:AuthorizeFunctionsReceiver 
 
 - `/Users/harukikondo/git/hack-money-2026/docs/l2-oracle-ops-runbook.md`
 
+### Oracle系
+
+#### オラクルの更新
+
+```bash
+pnpm oracle:updater
+```
+
+```bash
+{"timestamp":"2026-02-08T02:22:16.356Z","level":"INFO","component":"OracleUpdater","message":"Oracle utilization updated from bot","context":{"chain":"base-sepolia","source":"bot","utilization":11,"txHash":"0xc61960a35ecd3184e895703f1ee1f03164112c6a48c197b170f266547305576d","usedFallback":false}}
+{"timestamp":"2026-02-08T02:22:31.554Z","level":"INFO","component":"OracleUpdater","message":"Oracle utilization updated from bot","context":{"chain":"unichain-sepolia","source":"bot","utilization":1,"txHash":"0x904ee45171e7c61603f0375c6e153696087068139465b36e33b885603622af0b","usedFallback":false}}
+{"timestamp":"2026-02-08T02:23:30.730Z","level":"INFO","component":"OracleUpdater","message":"Oracle utilization updated from bot","context":{"chain":"base-sepolia","source":"bot","utilization":11,"txHash":"0x1f1bcd84452c737de744853095c463fcc260646b313a52dfdfedfd95e8cee5dc","usedFallback":false}}
+{"timestamp":"2026-02-08T02:23:46.586Z","level":"INFO","component":"OracleUpdater","message":"Oracle utilization updated from bot","context":{"chain":"unichain-sepolia","source":"bot","utilization":1,"txHash":"0x4792655bae106194ade942ddbbb6b7f8dba90b73b0f1021726869ea31497637c","usedFallback":false}}
+```
+
+#### アービトラージの実行
+
+```bash
+# Yellow Protocolをモックにする場合
+USE_YELLOW_MOCK=true pnpm run arbitrage
+# Yellow Protocolをモックにしない場合
+USE_YELLOW_MOCK=false pnpm run arbitrage
+```
+
+#### デモコードを一括で実行
+
+```bash
+# Yellow Protocolをモックにする場合
+USE_YELLOW_MOCK=true pnpm run demo
+# Yellow Protocolをモックにしない場合
+USE_YELLOW_MOCK=false pnpm run demo
+```
+
+#### 意図的に乖離を発生させてアービトラージさせる方法
+
+1つ目のターミナルで以下を起動する
+
+```bash
+USE_YELLOW_MOCK=true THRESHOLD_BPS=10 MIN_PROFIT_USDC=10000 pnpm run arbitrage
+```
+
+2つ目のターミナルで以下を起動する
+
+`contract`フォルダ配下で実行する
+
+```bash
+# swapを発生させる(ここで USDC swapさせる)
+CHAIN_NAME=base-sepolia \
+SWAP_INPUT_AMOUNT=5000000000000000000 \
+forge script script/VerifyHookBehavior.s.sol:VerifyHookBehavior \
+--rpc-url $CHAIN_A_RPC_URL \
+--broadcast -vvv
+```
+
 ### 2-7. 最終決済（Arc + USDC → Operator Vault）
 
 裁定利益を Arc 経由で USDC として Operator Vault へ送金するフローです。
@@ -1064,7 +1118,8 @@ source .env
 pnpm yellow:open-channel
 ```
 
-Sepolia ETH（ガス代）が必要です。ClearNode にチャネル作成をリクエストし、オンチェーンTxを送信後、Unified Balance から資金を投入します。
+Sepolia ETH（ガス代）が必要です。  
+ClearNode にチャネル作成をリクエストし、オンチェーンTxを送信後、Unified Balance から資金を投入します。
 
 #### アーキテクチャ
 
