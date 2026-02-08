@@ -29,7 +29,7 @@ interface SettleResult {
 }
 
 export function SettlePanel({ onLog, onVaultUpdate }: Props) {
-  const [profitUsdc, setProfitUsdc] = useState("1.5");
+  const [profitUsdc, setProfitUsdc] = useState("1");
   const [result, setResult] = useState<SettleResult | null>(null);
   const [loading, setLoading] = useState(false);
 
