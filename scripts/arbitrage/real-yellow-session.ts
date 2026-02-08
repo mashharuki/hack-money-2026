@@ -191,10 +191,6 @@ export class RealYellowSession implements IYellowSession {
     return result;
   }
 
-  isUsingMock(): boolean {
-    return false;
-  }
-
   async disconnect(): Promise<void> {
     if (this.yellow) {
       this.yellow.disconnect();
