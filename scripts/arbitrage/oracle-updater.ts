@@ -1,8 +1,9 @@
+import "dotenv/config";
 import { createPublicClient, createWalletClient, http, parseAbi, type Address, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { loadOracleConfig, type ChainOracleConfig, type OracleConfig } from './config.js';
 import { Logger } from '../lib/logger.js';
 import { withRetry } from '../lib/retry.js';
+import { loadOracleConfig, type ChainOracleConfig, type OracleConfig } from './config.js';
 import type { ILogger } from './types.js';
 
 type BlockData = { gasUsed: bigint; gasLimit: bigint };

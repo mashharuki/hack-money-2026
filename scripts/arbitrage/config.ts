@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ArbitrageConfig, ChainConfig, LogLevel } from './types.js';
 import { BASE_SEPOLIA_FUNCTIONS_DEFAULTS } from './functions/config.js';
+import type { ArbitrageConfig, ChainConfig, LogLevel } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONTRACT_DIR = resolve(__dirname, '../../contract');
@@ -75,9 +76,9 @@ export interface OracleConfig {
 
 // StateView addresses per chain (from Uniswap v4 periphery deployments)
 const STATE_VIEW_ADDRESSES: Record<string, `0x${string}`> = {
-  'base-sepolia': '0x571291B572ED32Ce6751A2cb2F1CFeeD1E09a81D',
-  'unichain-sepolia': '0x75f7Ab88D2f27386c1e5C304eBBBA84D3BfF0adF',
-  'sepolia': '0x75f7Ab88D2f27386c1e5C304eBBBA84D3BfF0adF',
+  'base-sepolia': '0x571291b572ed32ce6751a2cb2486ebee8defb9b4',
+  'unichain-sepolia': '0xc199f1072a74d4e905aba1a84d9a45e2546b6222',
+  'sepolia': '0xe1dd9c3fa50edb962e442f60dfbc432e24537e4c',
 };
 
 function buildChainConfig(

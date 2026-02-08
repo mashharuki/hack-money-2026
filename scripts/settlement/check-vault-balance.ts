@@ -1,5 +1,10 @@
+import 'dotenv/config';
 import { ArcClient } from './arc-client.js';
 
+/**
+ * メイン関数
+ * @returns
+ */
 async function main() {
   const vaultWalletId =
     process.argv[2] ?? process.env.ARC_WALLET_ID_OPERATOR_VAULT ?? '';
@@ -20,7 +25,7 @@ async function main() {
 
   const address = await arc.getWalletAddress(vaultWalletId);
   console.log(`Vault Address  : ${address}\n`);
-
+  // 残高取得
   const balances = await arc.getBalance(vaultWalletId);
 
   if (balances.length === 0) {

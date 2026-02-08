@@ -9,12 +9,13 @@
  * 5. Display summary
  */
 
-import { Logger } from '../lib/logger.js';
-import { PriceWatcher } from '../arbitrage/price-watcher.js';
+import "dotenv/config";
 import { ArbitrageEngine } from '../arbitrage/arbitrage-engine.js';
-import { YellowSessionManager } from '../arbitrage/yellow-session-manager.js';
 import { loadConfig } from '../arbitrage/config.js';
+import { PriceWatcher } from '../arbitrage/price-watcher.js';
 import type { ArbitrageResult, PriceDiscrepancy } from '../arbitrage/types.js';
+import { YellowSessionManager } from '../arbitrage/yellow-session-manager.js';
+import { Logger } from '../lib/logger.js';
 
 const COMPONENT = 'DemoScript';
 
@@ -66,6 +67,10 @@ class DemoRunner {
     console.log(`${'─'.repeat(56)}`);
   }
 
+  /**
+   * デモコード
+   * @returns
+   */
   async run() {
     this.printBanner();
     this.startTime = Date.now();
@@ -76,6 +81,7 @@ class DemoRunner {
     this.markStep(s1, 'running');
 
     let config;
+
     try {
       config = loadConfig();
       this.logger.info(COMPONENT, 'Configuration loaded', {
@@ -160,7 +166,9 @@ class DemoRunner {
     this.markStep(s4, 'running');
 
     try {
+      // Execute arbitrage based on detected discrepancy
       const result = await engine.handleDiscrepancy(discrepancy);
+
       if (result) {
         this.results.push(result);
         if (result.success) {
@@ -230,6 +238,10 @@ class DemoRunner {
     });
   }
 
+  /**
+   * デモ用の価格乖離をシミュレートします
+   * @returns
+   */
   private simulateDiscrepancy(): PriceDiscrepancy {
     const priceA = 0.9847;
     const priceB = 1.0213;
@@ -257,6 +269,9 @@ class DemoRunner {
     };
   }
 
+  /**
+   * デモのサマリーを表示します
+   */
   private printSummary() {
     const elapsed = Date.now() - this.startTime;
 

@@ -1,11 +1,14 @@
+import { Logger } from '../lib/logger.js';
+import { ArbitrageEngine } from './arbitrage-engine.js';
 import { loadConfig } from './config.js';
 import { PriceWatcher } from './price-watcher.js';
-import { ArbitrageEngine } from './arbitrage-engine.js';
 import { YellowSessionManager } from './yellow-session-manager.js';
-import { Logger } from '../lib/logger.js';
 
 const COMPONENT = 'Orchestrator';
 
+/**
+ * メイン関数
+ */
 async function main(): Promise<void> {
   // 1. Load config
   const config = loadConfig();
