@@ -98,14 +98,14 @@ export default function DemoPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
             DEMO
           </h1>
-          <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+          <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
             Execute simulated cross-chain arbitrage
           </p>
         </div>
@@ -124,8 +124,8 @@ export default function DemoPage() {
       </div>
 
       {/* Config + Timeline */}
-      <div className="grid grid-cols-5 gap-3">
-        <div className="col-span-2 flex flex-col gap-3">
+      <div className="grid grid-cols-5 gap-5">
+        <div className="col-span-2 flex flex-col gap-5">
           <DemoConfig />
           {result && (
             <DemoResult
@@ -148,12 +148,12 @@ export default function DemoPage() {
       {/* History */}
       <div className="border border-[#2f2f2f] bg-[#0A0A0A]">
         <div className="flex items-center gap-2 px-6 py-4">
-          <History size={14} className="text-[#8a8a8a]" />
+          <History size={14} className="text-[#a0a0a0]" />
           <div>
             <span className="font-sans text-base font-semibold text-white">
               EXECUTION HISTORY
             </span>
-            <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+            <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
               Past demo runs (stored in browser)
             </p>
           </div>
@@ -161,7 +161,7 @@ export default function DemoPage() {
         <div className="border-t border-[#2f2f2f]">
           {history.length === 0 ? (
             <div className="flex h-[80px] items-center justify-center">
-              <span className="font-mono text-xs text-[#8a8a8a]">
+              <span className="font-mono text-xs text-[#a0a0a0]">
                 No runs yet — click RUN DEMO to start
               </span>
             </div>
@@ -169,19 +169,19 @@ export default function DemoPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#2f2f2f]">
-                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     #
                   </th>
-                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     TIMESTAMP
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     PROFIT
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     SESSIONS
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     DURATION
                   </th>
                 </tr>
@@ -192,7 +192,7 @@ export default function DemoPage() {
                     key={i}
                     className="border-b border-[#2f2f2f] last:border-b-0"
                   >
-                    <td className="px-6 py-3 font-mono text-[11px] text-[#8a8a8a]">
+                    <td className="px-6 py-3 font-mono text-[11px] text-[#a0a0a0]">
                       {history.length - i}
                     </td>
                     <td className="px-6 py-3 font-mono text-[11px] text-white">
@@ -204,7 +204,7 @@ export default function DemoPage() {
                     <td className="px-6 py-3 text-right font-mono text-[11px] text-white">
                       {entry.sessions}
                     </td>
-                    <td className="px-6 py-3 text-right font-mono text-[11px] text-[#8a8a8a]">
+                    <td className="px-6 py-3 text-right font-mono text-[11px] text-[#a0a0a0]">
                       {entry.durationMs}ms
                     </td>
                   </tr>

@@ -47,7 +47,7 @@ export function VaultBalanceCard({ onLog }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             ARC VAULT
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Operator vault balance
           </p>
         </div>
@@ -63,7 +63,7 @@ export function VaultBalanceCard({ onLog }: Props) {
       {/* Content */}
       <div className="flex-1 border-t border-[#2f2f2f] px-6 py-5">
         {!status ? (
-          <span className="font-mono text-xs text-[#8a8a8a]">
+          <span className="font-mono text-xs text-[#a0a0a0]">
             Click refresh to check balance
           </span>
         ) : status.ok && status.balance ? (

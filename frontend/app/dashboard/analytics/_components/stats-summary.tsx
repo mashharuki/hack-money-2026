@@ -58,7 +58,7 @@ export function StatsSummary({
   };
 
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-4 gap-5">
       {CARDS.map((card) => {
         const Icon = card.icon;
         const value = values[card.key] ?? 0;
@@ -68,7 +68,7 @@ export function StatsSummary({
             className="border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4"
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+              <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
                 {card.label}
               </span>
               <Icon size={14} style={{ color: card.color }} />
@@ -80,7 +80,7 @@ export function StatsSummary({
               >
                 {card.format(value)}
               </span>
-              <span className="font-mono text-[10px] text-[#8a8a8a]">
+              <span className="font-mono text-[10px] text-[#a0a0a0]">
                 {card.unit}
               </span>
             </div>

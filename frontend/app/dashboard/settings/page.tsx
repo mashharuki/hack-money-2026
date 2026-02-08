@@ -33,7 +33,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[#8a8a8a] transition-colors hover:text-white"
+      className="text-[#a0a0a0] transition-colors hover:text-white"
     >
       {copied ? <Check size={12} className="text-[#00FF88]" /> : <Copy size={12} />}
     </button>
@@ -53,23 +53,23 @@ export default function SettingsPage() {
   const chains = Object.keys(DEPLOYED) as ChainKey[];
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Header */}
       <div>
         <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
           SETTINGS
         </h1>
-        <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+        <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
           Deployment configuration and system information
         </p>
       </div>
 
       {/* System Status */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-5">
         <div className="border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4">
           <div className="flex items-center gap-2">
-            <Wifi size={14} className="text-[#8a8a8a]" />
-            <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+            <Wifi size={14} className="text-[#a0a0a0]" />
+            <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
               NETWORK
             </span>
           </div>
@@ -77,7 +77,7 @@ export default function SettingsPage() {
             <span
               className={`h-2 w-2 rounded-full ${
                 networkOk === null
-                  ? "animate-pulse bg-[#8a8a8a]"
+                  ? "animate-pulse bg-[#a0a0a0]"
                   : networkOk
                     ? "bg-[#00FF88]"
                     : "bg-[#FF4444]"
@@ -86,7 +86,7 @@ export default function SettingsPage() {
             <span
               className={`font-mono text-[13px] font-semibold ${
                 networkOk === null
-                  ? "text-[#8a8a8a]"
+                  ? "text-[#a0a0a0]"
                   : networkOk
                     ? "text-[#00FF88]"
                     : "text-[#FF4444]"
@@ -103,8 +103,8 @@ export default function SettingsPage() {
 
         <div className="border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4">
           <div className="flex items-center gap-2">
-            <Cpu size={14} className="text-[#8a8a8a]" />
-            <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+            <Cpu size={14} className="text-[#a0a0a0]" />
+            <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
               YELLOW SDK
             </span>
           </div>
@@ -118,8 +118,8 @@ export default function SettingsPage() {
 
         <div className="border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-4">
           <div className="flex items-center gap-2">
-            <Link2 size={14} className="text-[#8a8a8a]" />
-            <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+            <Link2 size={14} className="text-[#a0a0a0]" />
+            <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
               ACTIVE CHAINS
             </span>
           </div>
@@ -127,7 +127,7 @@ export default function SettingsPage() {
             <span className="font-sans text-2xl font-bold text-white">
               {chains.length}
             </span>
-            <span className="ml-2 font-mono text-[11px] text-[#8a8a8a]">
+            <span className="ml-2 font-mono text-[11px] text-[#a0a0a0]">
               TESTNETS
             </span>
           </div>
@@ -137,19 +137,19 @@ export default function SettingsPage() {
       {/* Environment */}
       <div className="border border-[#2f2f2f] bg-[#0A0A0A]">
         <div className="flex items-center gap-2 px-6 py-4">
-          <Shield size={14} className="text-[#8a8a8a]" />
+          <Shield size={14} className="text-[#a0a0a0]" />
           <div>
             <span className="font-sans text-base font-semibold text-white">
               ENVIRONMENT
             </span>
-            <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+            <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
               Runtime configuration (read-only)
             </p>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-px border-t border-[#2f2f2f] bg-[#2f2f2f]">
           <div className="bg-[#0A0A0A] px-6 py-4">
-            <span className="font-mono text-[10px] text-[#8a8a8a]">
+            <span className="font-mono text-[10px] text-[#a0a0a0]">
               USE_YELLOW_MOCK
             </span>
             <p className="mt-1 font-mono text-[13px] font-semibold text-[#FF8800]">
@@ -157,7 +157,7 @@ export default function SettingsPage() {
             </p>
           </div>
           <div className="bg-[#0A0A0A] px-6 py-4">
-            <span className="font-mono text-[10px] text-[#8a8a8a]">
+            <span className="font-mono text-[10px] text-[#a0a0a0]">
               REFRESH INTERVAL
             </span>
             <p className="mt-1 font-mono text-[13px] font-semibold text-white">
@@ -165,7 +165,7 @@ export default function SettingsPage() {
             </p>
           </div>
           <div className="bg-[#0A0A0A] px-6 py-4">
-            <span className="font-mono text-[10px] text-[#8a8a8a]">
+            <span className="font-mono text-[10px] text-[#a0a0a0]">
               PROJECT
             </span>
             <p className="mt-1 font-mono text-[13px] font-semibold text-white">
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                     key={name}
                     className="flex items-center justify-between border-b border-[#2f2f2f] px-6 py-3 last:border-b-0"
                   >
-                    <span className="font-mono text-[11px] font-medium text-[#8a8a8a]">
+                    <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                       {CONTRACT_LABELS[name] ?? name}
                     </span>
                     <div className="flex items-center gap-2">

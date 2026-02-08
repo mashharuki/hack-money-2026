@@ -73,14 +73,14 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
     <div className="border border-[#1f1f1f] bg-[#080808] p-4">
       <div className="mb-3 flex items-center gap-2">
         <ArrowLeftRight size={14} className="text-[#FF8800]" />
-        <span className="font-mono text-[11px] font-semibold tracking-wider text-[#8a8a8a]">
+        <span className="font-mono text-[11px] font-semibold tracking-wider text-[#a0a0a0]">
           SWAP
         </span>
       </div>
 
       <div className="mb-3 grid grid-cols-2 gap-2">
         <div>
-          <label className="mb-1 block font-mono text-[10px] text-[#8a8a8a]">
+          <label className="mb-1 block font-mono text-[10px] text-[#a0a0a0]">
             DIRECTION
           </label>
           <button
@@ -97,7 +97,7 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
           </button>
         </div>
         <div>
-          <label className="mb-1 block font-mono text-[10px] text-[#8a8a8a]">
+          <label className="mb-1 block font-mono text-[10px] text-[#a0a0a0]">
             AMOUNT (raw) — {zeroForOne ? "USDC 6dec" : "CPT 18dec"}
           </label>
           <input

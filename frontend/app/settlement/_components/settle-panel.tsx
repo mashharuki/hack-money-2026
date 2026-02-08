@@ -77,17 +77,17 @@ export function SettlePanel({ onLog, onVaultUpdate }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             SETTLE PROFIT
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Transfer arbitrage profit to Arc operator vault
           </p>
         </div>
-        <ArrowRightLeft size={16} className="text-[#8a8a8a]" />
+        <ArrowRightLeft size={16} className="text-[#a0a0a0]" />
       </div>
 
       <div className="space-y-4 border-t border-[#2f2f2f] px-6 py-5">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-5">
           <div className="space-y-1">
-            <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+            <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
               PROFIT (USDC)
             </span>
             <input
@@ -128,7 +128,7 @@ export function SettlePanel({ onLog, onVaultUpdate }: Props) {
 
               {result.transferAmount && (
                 <div>
-                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                     TRANSFERRED
                   </span>
                   <p className="mt-1 font-mono text-lg font-bold text-white">
@@ -139,7 +139,7 @@ export function SettlePanel({ onLog, onVaultUpdate }: Props) {
 
               {result.transactionId && (
                 <div>
-                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                     TRANSACTION
                   </span>
                   <a

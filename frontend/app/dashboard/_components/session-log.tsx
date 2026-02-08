@@ -17,7 +17,7 @@ export interface LogEntry {
 const TYPE_COLORS: Record<string, string> = {
   BUY: "text-[#00FF88]",
   SELL: "text-[#FF8800]",
-  SESSION: "text-[#8a8a8a]",
+  SESSION: "text-[#a0a0a0]",
   PROFIT: "text-[#00FF88]",
   INFO: "text-[#6a9fff]",
   STEP: "text-white",
@@ -62,7 +62,7 @@ export function SessionLog({ logs, isRunning }: SessionLogProps) {
           <span className="inline-block bg-[#00FF8820] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#00FF88]">
             LIVE
           </span>
-          <span className="font-mono text-[10px] text-[#8a8a8a]">
+          <span className="font-mono text-[10px] text-[#a0a0a0]">
             {logs.length} entries
           </span>
         </div>
@@ -72,7 +72,7 @@ export function SessionLog({ logs, isRunning }: SessionLogProps) {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-3">
         {logs.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Click EXECUTE ARBITRAGE to start...
             </span>
           </div>
@@ -80,7 +80,7 @@ export function SessionLog({ logs, isRunning }: SessionLogProps) {
           <div className="space-y-2">
             {logs.map((log) => (
               <div key={log.id} className="flex items-start gap-3">
-                <span className="mt-0.5 font-mono text-[10px] text-[#8a8a8a]">
+                <span className="mt-0.5 font-mono text-[10px] text-[#a0a0a0]">
                   {log.timestamp}
                 </span>
                 <span
@@ -93,7 +93,7 @@ export function SessionLog({ logs, isRunning }: SessionLogProps) {
                     {log.message}
                   </p>
                   {log.detail && (
-                    <p className="font-mono text-[10px] text-[#8a8a8a]">
+                    <p className="font-mono text-[10px] text-[#a0a0a0]">
                       {log.detail}
                     </p>
                   )}

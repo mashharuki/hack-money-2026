@@ -23,8 +23,8 @@ function PriceCard({
 }) {
   const isPositive = changePercent >= 0;
   return (
-    <div className="flex flex-col gap-3 border border-[#2f2f2f] bg-[#0A0A0A] p-5">
-      <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+    <div className="flex flex-col gap-3 border border-[#2f2f2f] bg-[#0A0A0A] p-6">
+      <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
         {label}
       </span>
       <span className="inline-block w-fit bg-[#00FF8820] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#00FF88]">
@@ -64,11 +64,11 @@ function SpreadCard({
   const isOpportunity = spreadBps >= thresholdBps / 100;
   return (
     <div
-      className={`flex flex-col gap-3 border bg-[#0A0A0A] p-5 ${
+      className={`flex flex-col gap-3 border bg-[#0A0A0A] p-6 ${
         isOpportunity ? "border-[#00FF8840]" : "border-[#2f2f2f]"
       }`}
     >
-      <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+      <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
         PRICE SPREAD
       </span>
       {isOpportunity && (
@@ -91,8 +91,8 @@ function VaultCard({ balance }: { balance: string | null }) {
     ? `$${parseFloat(balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`
     : "—";
   return (
-    <div className="flex flex-col gap-3 border border-[#2f2f2f] bg-[#0A0A0A] p-5">
-      <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+    <div className="flex flex-col gap-3 border border-[#2f2f2f] bg-[#0A0A0A] p-6">
+      <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
         VAULT BALANCE
       </span>
       <span className="inline-block w-fit bg-[#00FF8820] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#00FF88]">
@@ -101,7 +101,7 @@ function VaultCard({ balance }: { balance: string | null }) {
       <span className="font-sans text-[28px] font-bold tracking-tight text-white">
         {displayBalance}
       </span>
-      <span className="font-mono text-[10px] text-[#8a8a8a]">
+      <span className="font-mono text-[10px] text-[#a0a0a0]">
         {balance ? "USDC (ARC-TESTNET)" : "Loading..."}
       </span>
     </div>
@@ -126,7 +126,7 @@ export function MetricsRow({ chainData, priceHistory, thresholdBps, vaultBalance
   const spreadBps = avg > 0 ? (spreadValue / avg) * 10000 : 0;
 
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-4 gap-5">
       <PriceCard
         label="CPT-A / USDC"
         chainBadge="BASE SEPOLIA"

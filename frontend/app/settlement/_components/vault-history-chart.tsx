@@ -38,11 +38,11 @@ export function VaultHistoryChart({ history }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             VAULT BALANCE HISTORY
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Operator vault USDC balance over time
           </p>
         </div>
-        <span className="font-mono text-[10px] text-[#8a8a8a]">
+        <span className="font-mono text-[10px] text-[#a0a0a0]">
           {history.length} snapshots
         </span>
       </div>
@@ -50,7 +50,7 @@ export function VaultHistoryChart({ history }: Props) {
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length === 0 ? (
           <div className="flex h-[180px] items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Waiting for first vault snapshot...
             </span>
           </div>
@@ -66,11 +66,11 @@ export function VaultHistoryChart({ history }: Props) {
               <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
               <XAxis
                 dataKey="time"
-                tick={{ fontSize: 10, fill: "#8a8a8a", fontFamily: "monospace" }}
+                tick={{ fontSize: 10, fill: "#a0a0a0", fontFamily: "monospace" }}
                 stroke="#2f2f2f"
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "#8a8a8a", fontFamily: "monospace" }}
+                tick={{ fontSize: 10, fill: "#a0a0a0", fontFamily: "monospace" }}
                 stroke="#2f2f2f"
                 tickFormatter={(v: number) => `$${v.toFixed(2)}`}
               />

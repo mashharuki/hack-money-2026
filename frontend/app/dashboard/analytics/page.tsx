@@ -83,14 +83,14 @@ export default function AnalyticsPage() {
       : 0;
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
             ANALYTICS
           </h1>
-          <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+          <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
             Cross-chain arbitrage performance metrics
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function AnalyticsPage() {
       />
 
       {/* Charts */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-5 gap-5">
         <div className="col-span-3">
           <ProfitHistoryChart priceHistory={priceHistory} />
         </div>
@@ -131,14 +131,14 @@ export default function AnalyticsPage() {
           <span className="font-sans text-base font-semibold text-white">
             DEMO EXECUTION HISTORY
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Past demo run results (stored locally)
           </p>
         </div>
         <div className="border-t border-[#2f2f2f]">
           {demoHistory.length === 0 ? (
             <div className="flex h-[120px] items-center justify-center">
-              <span className="font-mono text-xs text-[#8a8a8a]">
+              <span className="font-mono text-xs text-[#a0a0a0]">
                 No demo history yet — run a demo from the Demo page
               </span>
             </div>
@@ -146,16 +146,16 @@ export default function AnalyticsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#2f2f2f]">
-                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-left font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     TIMESTAMP
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     PROFIT (USDC)
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     SESSIONS
                   </th>
-                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#8a8a8a]">
+                  <th className="px-6 py-3 text-right font-mono text-[10px] font-medium tracking-wider text-[#a0a0a0]">
                     DURATION
                   </th>
                 </tr>
@@ -175,7 +175,7 @@ export default function AnalyticsPage() {
                     <td className="px-6 py-3 text-right font-mono text-[11px] text-white">
                       {entry.sessions}
                     </td>
-                    <td className="px-6 py-3 text-right font-mono text-[11px] text-[#8a8a8a]">
+                    <td className="px-6 py-3 text-right font-mono text-[11px] text-[#a0a0a0]">
                       {entry.durationMs}ms
                     </td>
                   </tr>

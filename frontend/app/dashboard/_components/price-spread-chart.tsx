@@ -48,13 +48,13 @@ export function PriceSpreadChart({ priceHistory, thresholdBps }: PriceSpreadChar
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 bg-[#00FF88]" />
-            <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+            <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
               SPREAD (bps)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-0.5 w-4 bg-[#FF8800]" />
-            <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+            <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
               THRESHOLD ({thresholdBps} bps)
             </span>
           </div>
@@ -65,7 +65,7 @@ export function PriceSpreadChart({ priceHistory, thresholdBps }: PriceSpreadChar
       <div className="min-h-0 flex-1 px-2 pb-2">
         {displayData.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Waiting for price data...
             </span>
           </div>
@@ -81,14 +81,14 @@ export function PriceSpreadChart({ priceHistory, thresholdBps }: PriceSpreadChar
               <CartesianGrid strokeDasharray="3 3" stroke="#1f1f1f" vertical={false} />
               <XAxis
                 dataKey="time"
-                tick={{ fill: "#8a8a8a", fontSize: 10, fontFamily: "monospace" }}
+                tick={{ fill: "#a0a0a0", fontSize: 10, fontFamily: "monospace" }}
                 axisLine={{ stroke: "#2f2f2f" }}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
                 domain={[0, Math.ceil(maxSpread / 10) * 10]}
-                tick={{ fill: "#8a8a8a", fontSize: 10, fontFamily: "monospace" }}
+                tick={{ fill: "#a0a0a0", fontSize: 10, fontFamily: "monospace" }}
                 axisLine={false}
                 tickLine={false}
                 width={40}
@@ -102,7 +102,7 @@ export function PriceSpreadChart({ priceHistory, thresholdBps }: PriceSpreadChar
                   fontFamily: "monospace",
                   fontSize: 11,
                 }}
-                labelStyle={{ color: "#8a8a8a" }}
+                labelStyle={{ color: "#a0a0a0" }}
                 itemStyle={{ color: "#00FF88" }}
                 formatter={(value: number | undefined) => [
                   value != null ? `${value.toFixed(2)} bps` : "—",

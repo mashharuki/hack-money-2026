@@ -123,14 +123,14 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
             L2 ADMIN
           </h1>
-          <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+          <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
             Manage CPT pools, oracle utilization, and chain configuration
           </p>
         </div>
@@ -156,7 +156,7 @@ export default function AdminPage() {
             <h2 className="font-mono text-lg font-bold text-white">
               {c.label}
             </h2>
-            <span className="font-mono text-[11px] text-[#8a8a8a]">
+            <span className="font-mono text-[11px] text-[#a0a0a0]">
               {c.chain}
             </span>
           </div>
@@ -198,25 +198,25 @@ export default function AdminPage() {
             <div className="border border-[#1f1f1f] bg-[#080808] p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Gauge size={14} className="text-[#00FF88]" />
-                <span className="font-mono text-[11px] font-semibold tracking-wider text-[#8a8a8a]">
+                <span className="font-mono text-[11px] font-semibold tracking-wider text-[#a0a0a0]">
                   ORACLE STATUS
                 </span>
               </div>
               <div className="space-y-1.5 font-mono text-[12px]">
                 <div className="flex justify-between">
-                  <span className="text-[#8a8a8a]">Source</span>
+                  <span className="text-[#a0a0a0]">Source</span>
                   <span className="text-white">
                     {sourceLabel(c.oracleSource)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8a8a8a]">Updated At</span>
+                  <span className="text-[#a0a0a0]">Updated At</span>
                   <span className="text-white">
                     {formatTime(c.oracleUpdatedAt)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8a8a8a]">Stale</span>
+                  <span className="text-[#a0a0a0]">Stale</span>
                   <span
                     className={
                       c.oracleStale ? "text-[#FF4444]" : "text-[#00FF88]"
@@ -232,13 +232,13 @@ export default function AdminPage() {
             <div className="border border-[#1f1f1f] bg-[#080808] p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Send size={14} className="text-[#00FF88]" />
-                <span className="font-mono text-[11px] font-semibold tracking-wider text-[#8a8a8a]">
+                <span className="font-mono text-[11px] font-semibold tracking-wider text-[#a0a0a0]">
                   SET UTILIZATION
                 </span>
               </div>
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <label className="mb-1 block font-mono text-[10px] text-[#8a8a8a]">
+                  <label className="mb-1 block font-mono text-[10px] text-[#a0a0a0]">
                     VALUE (0-100%)
                   </label>
                   <input
@@ -296,7 +296,7 @@ export default function AdminPage() {
 
           {/* Contract Addresses */}
           <details className="group">
-            <summary className="cursor-pointer font-mono text-[11px] font-semibold tracking-wider text-[#8a8a8a] transition-colors hover:text-white">
+            <summary className="cursor-pointer font-mono text-[11px] font-semibold tracking-wider text-[#a0a0a0] transition-colors hover:text-white">
               <Droplets size={12} className="mr-1.5 inline" />
               CONTRACT ADDRESSES
             </summary>
@@ -310,7 +310,7 @@ export default function AdminPage() {
                 ["Pool ID", c.poolId],
               ].map(([label, addr]) => (
                 <div key={label} className="flex justify-between">
-                  <span className="text-[#8a8a8a]">{label}</span>
+                  <span className="text-[#a0a0a0]">{label}</span>
                   <span className="text-[#666]">{addr}</span>
                 </div>
               ))}
@@ -324,7 +324,7 @@ export default function AdminPage() {
 
       {chains.length === 0 && (
         <div className="border border-[#2f2f2f] bg-[#0A0A0A] p-12 text-center">
-          <p className="font-mono text-[13px] text-[#8a8a8a]">
+          <p className="font-mono text-[13px] text-[#a0a0a0]">
             Loading pool state...
           </p>
         </div>
@@ -346,14 +346,14 @@ function MetricBox({
 }) {
   return (
     <div className="border border-[#1f1f1f] bg-[#080808] p-3">
-      <p className="font-mono text-[10px] font-semibold tracking-wider text-[#8a8a8a]">
+      <p className="font-mono text-[10px] font-semibold tracking-wider text-[#a0a0a0]">
         {label}
       </p>
       <p className="mt-1 font-mono text-lg font-bold text-white">{value}</p>
       {sub && (
         <p
           className={`font-mono text-[10px] ${
-            alert ? "text-[#FF4444]" : "text-[#8a8a8a]"
+            alert ? "text-[#FF4444]" : "text-[#a0a0a0]"
           }`}
         >
           {sub}

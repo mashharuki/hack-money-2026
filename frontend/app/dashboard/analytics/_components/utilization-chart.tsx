@@ -35,7 +35,7 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
           <span className="font-sans text-base font-semibold text-white">
             CHAIN UTILIZATION
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Pool utilization rate per chain
           </p>
         </div>
@@ -46,7 +46,7 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
                 className="h-2 w-2"
                 style={{ backgroundColor: COLORS[i % COLORS.length] }}
               />
-              <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+              <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
                 {d.name.toUpperCase()}
               </span>
             </div>
@@ -57,7 +57,7 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length === 0 ? (
           <div className="flex h-[180px] items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Waiting for chain data...
             </span>
           </div>
@@ -69,7 +69,7 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
                 dataKey="name"
                 tick={{
                   fontSize: 10,
-                  fill: "#8a8a8a",
+                  fill: "#a0a0a0",
                   fontFamily: "monospace",
                 }}
                 stroke="#2f2f2f"
@@ -77,7 +77,7 @@ export function UtilizationChart({ chainData }: UtilizationChartProps) {
               <YAxis
                 tick={{
                   fontSize: 10,
-                  fill: "#8a8a8a",
+                  fill: "#a0a0a0",
                   fontFamily: "monospace",
                 }}
                 stroke="#2f2f2f"

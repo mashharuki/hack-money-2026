@@ -27,7 +27,7 @@ export function DemoResult({ profit, sessions, durationMs, mode }: DemoResultPro
           <span className="mt-2 font-sans text-xl font-bold text-[#00FF88]">
             +${profit.toFixed(4)}
           </span>
-          <span className="mt-0.5 font-mono text-[10px] text-[#8a8a8a]">
+          <span className="mt-0.5 font-mono text-[10px] text-[#a0a0a0]">
             PROFIT (USDC)
           </span>
         </div>
@@ -36,7 +36,7 @@ export function DemoResult({ profit, sessions, durationMs, mode }: DemoResultPro
           <span className="mt-2 font-sans text-xl font-bold text-white">
             {sessions}
           </span>
-          <span className="mt-0.5 font-mono text-[10px] text-[#8a8a8a]">
+          <span className="mt-0.5 font-mono text-[10px] text-[#a0a0a0]">
             SESSIONS
           </span>
         </div>
@@ -45,7 +45,7 @@ export function DemoResult({ profit, sessions, durationMs, mode }: DemoResultPro
           <span className="mt-2 font-sans text-xl font-bold text-white">
             {durationMs}ms
           </span>
-          <span className="mt-0.5 font-mono text-[10px] text-[#8a8a8a]">
+          <span className="mt-0.5 font-mono text-[10px] text-[#a0a0a0]">
             DURATION
           </span>
         </div>

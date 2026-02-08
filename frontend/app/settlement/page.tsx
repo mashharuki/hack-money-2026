@@ -73,14 +73,14 @@ export default function SettlementPage() {
 
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
             SETTLEMENT
           </h1>
-          <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+          <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
             Settle arbitrage profit to Arc operator vault via Yellow ClearNode
           </p>
         </div>
@@ -98,13 +98,13 @@ export default function SettlementPage() {
       <div className="flex items-center gap-4 border border-[#2f2f2f] bg-[#0A0A0A] px-6 py-5">
         <Vault size={24} className="text-[#6a9fff]" />
         <div>
-          <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+          <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
             VAULT BALANCE
           </span>
           <p className="font-mono text-2xl font-bold tabular-nums text-white">
             {vaultBalance ? `$${vaultBalance}` : "—"}
           </p>
-          <span className="font-mono text-[10px] text-[#8a8a8a]">USDC (Arc Operator Vault)</span>
+          <span className="font-mono text-[10px] text-[#a0a0a0]">USDC (Arc Operator Vault)</span>
         </div>
       </div>
 

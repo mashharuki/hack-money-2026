@@ -20,12 +20,12 @@ export function PipelineLog({ logs, onClear }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2">
-          <ScrollText size={14} className="text-[#8a8a8a]" />
+          <ScrollText size={14} className="text-[#a0a0a0]" />
           <div>
             <span className="font-sans text-base font-semibold text-white">
               ACTIVITY LOG
             </span>
-            <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+            <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
               Pipeline execution history
             </p>
           </div>
@@ -33,7 +33,7 @@ export function PipelineLog({ logs, onClear }: Props) {
         {logs.length > 0 && (
           <button
             onClick={onClear}
-            className="flex items-center justify-center p-2 text-[#8a8a8a] transition-colors hover:text-white"
+            className="flex items-center justify-center p-2 text-[#a0a0a0] transition-colors hover:text-white"
           >
             <Trash2 size={14} />
           </button>
@@ -43,13 +43,13 @@ export function PipelineLog({ logs, onClear }: Props) {
       {/* Content */}
       <div className="border-t border-[#2f2f2f] px-6 py-4">
         {logs.length === 0 ? (
-          <span className="font-mono text-xs text-[#8a8a8a]">
+          <span className="font-mono text-xs text-[#a0a0a0]">
             No activity yet. Use the controls above to get started.
           </span>
         ) : (
           <div className="max-h-64 overflow-y-auto">
             {logs.map((log, i) => (
-              <div key={i} className="py-0.5 font-mono text-[11px] text-[#8a8a8a]">
+              <div key={i} className="py-0.5 font-mono text-[11px] text-[#a0a0a0]">
                 {log}
               </div>
             ))}

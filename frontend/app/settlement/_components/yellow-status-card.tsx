@@ -51,7 +51,7 @@ export function YellowStatusCard({ onLog }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             YELLOW CLEARNODE
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             State channel connection
           </p>
         </div>
@@ -67,7 +67,7 @@ export function YellowStatusCard({ onLog }: Props) {
       {/* Content */}
       <div className="flex-1 border-t border-[#2f2f2f] px-6 py-5">
         {!status ? (
-          <span className="font-mono text-xs text-[#8a8a8a]">
+          <span className="font-mono text-xs text-[#a0a0a0]">
             Click refresh to check status
           </span>
         ) : (
@@ -94,19 +94,19 @@ export function YellowStatusCard({ onLog }: Props) {
               )}
             </div>
 
-            <div className="font-mono text-[11px] text-[#8a8a8a]">
+            <div className="font-mono text-[11px] text-[#a0a0a0]">
               Channels:{" "}
               <span className="font-bold text-white">{status.channelCount}</span>
             </div>
 
             {Object.keys(status.balances).length > 0 && (
               <div className="space-y-1">
-                <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                   BALANCES
                 </span>
                 {Object.entries(status.balances).map(([asset, amount]) => (
                   <div key={asset} className="flex justify-between font-mono text-[11px]">
-                    <span className="text-[#8a8a8a]">{asset}</span>
+                    <span className="text-[#a0a0a0]">{asset}</span>
                     <span className="font-bold text-white">{amount}</span>
                   </div>
                 ))}

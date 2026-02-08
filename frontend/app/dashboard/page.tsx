@@ -175,14 +175,14 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-8 px-10">
+    <div className="flex flex-col gap-8 px-12 py-10">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-sans text-4xl font-bold tracking-tight text-white">
             OVERVIEW
           </h1>
-          <p className="mt-1.5 font-mono text-[13px] text-[#8a8a8a]">
+          <p className="mt-1.5 font-mono text-[13px] text-[#a0a0a0]">
             Monitor cross-chain CPT arbitrage in real-time
           </p>
         </div>
@@ -200,7 +200,7 @@ export default function DashboardPage() {
       <div className="flex items-center gap-3 border border-[#2f2f2f] bg-[#0A0A0A] px-5 py-3">
         {/* Threshold */}
         <div className="flex items-center gap-1.5">
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#8a8a8a]">THRESHOLD</span>
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#a0a0a0]">THRESHOLD</span>
           <input
             type="number"
             min={1}
@@ -209,14 +209,14 @@ export default function DashboardPage() {
             onChange={(e) => setThresholdBps(Math.max(1, Math.min(500, parseInt(e.target.value) || 10)))}
             className="w-14 border border-[#2f2f2f] bg-[#0C0C0C] px-2 py-1 text-center font-mono text-[12px] font-bold text-white focus:border-[#00FF88] focus:outline-none"
           />
-          <span className="font-mono text-[10px] text-[#8a8a8a]">bps</span>
+          <span className="font-mono text-[10px] text-[#a0a0a0]">bps</span>
         </div>
 
         <div className="h-6 w-px bg-[#2f2f2f]" />
 
         {/* Trade Amount */}
         <div className="flex items-center gap-1.5">
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#8a8a8a]">AMOUNT</span>
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#a0a0a0]">AMOUNT</span>
           <input
             type="number"
             min={1}
@@ -225,15 +225,15 @@ export default function DashboardPage() {
             onChange={(e) => setTradeAmountUsdc(Math.max(1, Math.min(100000, parseInt(e.target.value) || 1000)))}
             className="w-20 border border-[#2f2f2f] bg-[#0C0C0C] px-2 py-1 text-center font-mono text-[12px] font-bold text-white focus:border-[#00FF88] focus:outline-none"
           />
-          <span className="font-mono text-[10px] text-[#8a8a8a]">USDC</span>
+          <span className="font-mono text-[10px] text-[#a0a0a0]">USDC</span>
         </div>
 
         <div className="h-6 w-px bg-[#2f2f2f]" />
 
         {/* Spread indicator */}
         <div className="flex items-center gap-1.5">
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#8a8a8a]">SPREAD</span>
-          <span className={`font-mono text-[12px] font-bold ${hasOpportunity ? "text-[#00FF88]" : "text-[#8a8a8a]"}`}>
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#a0a0a0]">SPREAD</span>
+          <span className={`font-mono text-[12px] font-bold ${hasOpportunity ? "text-[#00FF88]" : "text-[#a0a0a0]"}`}>
             {currentSpreadBps.toFixed(1)} bps
           </span>
           {hasOpportunity && (
@@ -267,7 +267,7 @@ export default function DashboardPage() {
       <MetricsRow chainData={chainData} priceHistory={priceHistory} thresholdBps={thresholdBps} vaultBalance={vaultBalance} />
 
       {/* Middle Row: Chart + Session Log */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-5 gap-5">
         <div className="col-span-3">
           <PriceSpreadChart priceHistory={priceHistory} thresholdBps={thresholdBps} />
         </div>

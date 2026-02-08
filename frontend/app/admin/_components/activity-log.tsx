@@ -17,7 +17,7 @@ const TYPE_COLORS: Record<string, string> = {
   ORACLE: "text-[#6a9fff]",
   LIQUIDITY: "text-[#00FF88]",
   SWAP: "text-[#FF8800]",
-  INFO: "text-[#8a8a8a]",
+  INFO: "text-[#a0a0a0]",
   ERROR: "text-[#FF4444]",
 };
 
@@ -48,7 +48,7 @@ export function ActivityLog({ logs }: ActivityLogProps) {
         <span className="font-sans text-base font-semibold text-white">
           ACTIVITY LOG
         </span>
-        <span className="font-mono text-[10px] text-[#8a8a8a]">
+        <span className="font-mono text-[10px] text-[#a0a0a0]">
           {logs.length} entries
         </span>
       </div>
@@ -56,7 +56,7 @@ export function ActivityLog({ logs }: ActivityLogProps) {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-3">
         {logs.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               No activity yet...
             </span>
           </div>
@@ -64,7 +64,7 @@ export function ActivityLog({ logs }: ActivityLogProps) {
           <div className="space-y-2">
             {logs.map((log) => (
               <div key={log.id} className="flex items-start gap-3">
-                <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[#8a8a8a]">
+                <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[#a0a0a0]">
                   {log.timestamp}
                 </span>
                 <span

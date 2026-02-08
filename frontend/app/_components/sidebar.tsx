@@ -58,12 +58,12 @@ export function Sidebar() {
                 className={`flex items-center gap-3 px-5 py-3 font-mono text-xs font-medium tracking-wider transition-colors ${
                   isActive
                     ? "border-l-2 border-[#00FF88] bg-[#00FF8810] text-white"
-                    : "border-l-2 border-transparent text-[#8a8a8a] hover:bg-[#ffffff08] hover:text-white"
+                    : "border-l-2 border-transparent text-[#a0a0a0] hover:bg-[#ffffff08] hover:text-white"
                 }`}
               >
                 <Icon
                   size={16}
-                  className={isActive ? "text-[#00FF88]" : "text-[#8a8a8a]"}
+                  className={isActive ? "text-[#00FF88]" : "text-[#a0a0a0]"}
                 />
                 {item.label}
               </Link>
@@ -76,12 +76,12 @@ export function Sidebar() {
       <div>
         {/* System Status */}
         <div className="border-t border-[#2f2f2f] bg-[#0A0A0A] px-5 py-5">
-          <p className="mb-2.5 font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+          <p className="mb-2.5 font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
             {"// SYSTEM STATUS"}
           </p>
           <div className="space-y-2.5">
             <div className="flex justify-between">
-              <span className="font-mono text-[11px] font-medium text-[#8a8a8a]">
+              <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                 NETWORK
               </span>
               <span className="font-mono text-[11px] font-semibold text-[#00FF88]">
@@ -89,7 +89,7 @@ export function Sidebar() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="font-mono text-[11px] font-medium text-[#8a8a8a]">
+              <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                 YELLOW_SDK
               </span>
               <span className="font-mono text-[11px] font-semibold text-[#00FF88]">
@@ -97,7 +97,7 @@ export function Sidebar() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="font-mono text-[11px] font-medium text-[#8a8a8a]">
+              <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                 CHAINS
               </span>
               <span className="font-mono text-[11px] font-semibold text-white">

@@ -59,7 +59,7 @@ function StatusBadge({ status }: { status: DemoStep["status"] | "pending" | "run
       );
     default:
       return (
-        <span className="bg-[#ffffff10] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#8a8a8a]">
+        <span className="bg-[#ffffff10] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#a0a0a0]">
           PENDING
         </span>
       );
@@ -82,7 +82,7 @@ export function StepTimeline({ steps, isRunning, currentStep }: StepTimelineProp
           <span className="font-sans text-base font-semibold text-white">
             EXECUTION PIPELINE
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             5-step arbitrage pipeline
           </p>
         </div>
@@ -130,7 +130,7 @@ export function StepTimeline({ steps, isRunning, currentStep }: StepTimelineProp
                           ? "text-[#00FF88]"
                           : status === "running"
                             ? "text-[#6a9fff]"
-                            : "text-[#8a8a8a]"
+                            : "text-[#a0a0a0]"
                       }
                     />
                   </div>
@@ -146,12 +146,12 @@ export function StepTimeline({ steps, isRunning, currentStep }: StepTimelineProp
                 {/* Content */}
                 <div className="flex-1 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[11px] font-medium text-[#8a8a8a]">
+                    <span className="font-mono text-[11px] font-medium text-[#a0a0a0]">
                       STEP {stepNum}
                     </span>
                     <StatusBadge status={status} />
                     {completed && (
-                      <span className="font-mono text-[9px] text-[#8a8a8a]">
+                      <span className="font-mono text-[9px] text-[#a0a0a0]">
                         {completed.durationMs}ms
                       </span>
                     )}
@@ -160,7 +160,7 @@ export function StepTimeline({ steps, isRunning, currentStep }: StepTimelineProp
                     {label}
                   </p>
                   {completed?.detail && (
-                    <p className="mt-0.5 font-mono text-[10px] text-[#8a8a8a]">
+                    <p className="mt-0.5 font-mono text-[10px] text-[#a0a0a0]">
                       {completed.detail}
                     </p>
                   )}

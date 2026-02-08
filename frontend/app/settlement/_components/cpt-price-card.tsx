@@ -59,7 +59,7 @@ export function CptPriceCard({ onLog }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             CPT / USDC PRICES
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Cross-chain price comparison from Uniswap v4 pools
           </p>
         </div>
@@ -75,7 +75,7 @@ export function CptPriceCard({ onLog }: Props) {
       {/* Content */}
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {chains.length === 0 ? (
-          <span className="font-mono text-xs text-[#8a8a8a]">
+          <span className="font-mono text-xs text-[#a0a0a0]">
             Click refresh to load prices
           </span>
         ) : (
@@ -89,7 +89,7 @@ export function CptPriceCard({ onLog }: Props) {
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-5">
               {chains.map((c) => {
                 const isMax = c.price === maxPrice && prices.length > 1;
                 const isMin = c.price === minPrice && prices.length > 1;
@@ -101,7 +101,7 @@ export function CptPriceCard({ onLog }: Props) {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[11px] font-medium tracking-wider text-[#8a8a8a]">
+                      <span className="font-mono text-[11px] font-medium tracking-wider text-[#a0a0a0]">
                         {c.label.toUpperCase()}
                       </span>
                       {isMax && (
@@ -125,7 +125,7 @@ export function CptPriceCard({ onLog }: Props) {
                       </p>
                     )}
                     {c.tick !== null && (
-                      <p className="mt-1 font-mono text-[10px] text-[#8a8a8a]">
+                      <p className="mt-1 font-mono text-[10px] text-[#a0a0a0]">
                         tick: {c.tick}
                       </p>
                     )}

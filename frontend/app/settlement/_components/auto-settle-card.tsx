@@ -61,11 +61,11 @@ export function AutoSettleCard({ onLog }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             AUTO-SETTLE PIPELINE
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Fetch Yellow profit → transfer to Arc vault
           </p>
         </div>
-        <ArrowRightLeft size={16} className="text-[#8a8a8a]" />
+        <ArrowRightLeft size={16} className="text-[#a0a0a0]" />
       </div>
 
       {/* Content */}
@@ -73,18 +73,18 @@ export function AutoSettleCard({ onLog }: Props) {
         {/* Controls */}
         <div className="flex items-end gap-3">
           <div className="flex-1 space-y-1">
-            <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+            <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
               SESSION ID
             </span>
             <input
               type="text"
               value={sessionId}
               onChange={(e) => setSessionId(e.target.value)}
-              className="w-full border border-[#2f2f2f] bg-[#0C0C0C] px-3 py-2 font-mono text-[11px] text-white outline-none transition-colors focus:border-[#00FF8860] placeholder:text-[#8a8a8a]"
+              className="w-full border border-[#2f2f2f] bg-[#0C0C0C] px-3 py-2 font-mono text-[11px] text-white outline-none transition-colors focus:border-[#00FF8860] placeholder:text-[#a0a0a0]"
               placeholder="e.g. demo-session-001"
             />
           </div>
-          <label className="flex items-center gap-2 pb-2 font-mono text-[11px] text-[#8a8a8a]">
+          <label className="flex items-center gap-2 pb-2 font-mono text-[11px] text-[#a0a0a0]">
             <input
               type="checkbox"
               checked={dryRun}
@@ -130,9 +130,9 @@ export function AutoSettleCard({ onLog }: Props) {
               </div>
 
               {result.profit && (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-5">
                   <div>
-                    <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                    <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                       NET PROFIT
                     </span>
                     <p className="mt-1 font-mono text-lg font-bold text-[#00FF88]">
@@ -141,7 +141,7 @@ export function AutoSettleCard({ onLog }: Props) {
                   </div>
                   {result.transferAmount && (
                     <div>
-                      <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                      <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                         TRANSFER
                       </span>
                       <p className="mt-1 font-mono text-lg font-bold text-white">
@@ -154,7 +154,7 @@ export function AutoSettleCard({ onLog }: Props) {
 
               {result.transactionId && (
                 <div>
-                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#8a8a8a]">
+                  <span className="font-mono text-[9px] font-bold tracking-wider text-[#a0a0a0]">
                     TRANSACTION ID
                   </span>
                   <p className="mt-1 break-all font-mono text-[11px] text-white">
@@ -171,10 +171,10 @@ export function AutoSettleCard({ onLog }: Props) {
 
               {result.raw && (
                 <details className="font-mono text-[11px]">
-                  <summary className="cursor-pointer text-[#8a8a8a] hover:text-white">
+                  <summary className="cursor-pointer text-[#a0a0a0] hover:text-white">
                     Raw output
                   </summary>
-                  <pre className="mt-2 max-h-48 overflow-auto border border-[#2f2f2f] bg-[#0C0C0C] p-3 text-[10px] text-[#8a8a8a]">
+                  <pre className="mt-2 max-h-48 overflow-auto border border-[#2f2f2f] bg-[#0C0C0C] p-3 text-[10px] text-[#a0a0a0]">
                     {result.raw}
                   </pre>
                 </details>

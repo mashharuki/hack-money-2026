@@ -62,7 +62,7 @@ export function SessionLogCard() {
             <span className="font-sans text-base font-semibold text-white">
               YELLOW SESSION
             </span>
-            <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+            <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
               Gasless arbitrage execution log
             </p>
           </div>
@@ -90,7 +90,7 @@ export function SessionLogCard() {
       {/* Content */}
       <div className="border-t border-[#2f2f2f] px-6 py-4">
         {trades.length === 0 ? (
-          <span className="font-mono text-xs text-[#8a8a8a]">
+          <span className="font-mono text-xs text-[#a0a0a0]">
             Click RUN DEMO to simulate a gasless arbitrage session
           </span>
         ) : (
@@ -98,7 +98,7 @@ export function SessionLogCard() {
             <div className="max-h-52 overflow-y-auto">
               {trades.map((t) => (
                 <div key={t.id} className="flex items-center gap-3 py-1">
-                  <span className="font-mono text-[10px] text-[#8a8a8a]">
+                  <span className="font-mono text-[10px] text-[#a0a0a0]">
                     {t.time}
                   </span>
                   <span
@@ -110,13 +110,13 @@ export function SessionLogCard() {
                   >
                     {t.action}
                   </span>
-                  <span className="w-24 font-mono text-[11px] text-[#8a8a8a]">
+                  <span className="w-24 font-mono text-[11px] text-[#a0a0a0]">
                     {t.pair}
                   </span>
                   <span className="w-12 text-right font-mono text-[11px] text-white">
                     {t.amount}
                   </span>
-                  <span className="w-20 text-right font-mono text-[11px] text-[#8a8a8a]">
+                  <span className="w-20 text-right font-mono text-[11px] text-[#a0a0a0]">
                     @{t.price}
                   </span>
                   {t.pnl && (
@@ -129,7 +129,7 @@ export function SessionLogCard() {
             </div>
             {totalPnl > 0 && (
               <div className="flex items-center justify-between border border-[#00FF8840] bg-[#00FF8810] px-4 py-2">
-                <span className="font-mono text-[11px] text-[#8a8a8a]">
+                <span className="font-mono text-[11px] text-[#a0a0a0]">
                   Session PnL ({trades.filter((t) => t.pnl).length} arb rounds)
                 </span>
                 <span className="font-mono text-sm font-bold text-[#00FF88]">

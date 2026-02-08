@@ -37,20 +37,20 @@ export function ProfitHistoryChart({ priceHistory }: ProfitHistoryChartProps) {
           <span className="font-sans text-base font-semibold text-white">
             CPT PRICE HISTORY
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             CPT-A / CPT-B price tracking (auto-refresh 5s)
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 bg-[#00FF88]" />
-            <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+            <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
               CPT-A
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 bg-[#FF8800]" />
-            <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+            <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
               CPT-B
             </span>
           </div>
@@ -60,7 +60,7 @@ export function ProfitHistoryChart({ priceHistory }: ProfitHistoryChartProps) {
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length < 2 ? (
           <div className="flex h-[220px] items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Collecting data points... ({data.length}/2 minimum)
             </span>
           </div>
@@ -72,7 +72,7 @@ export function ProfitHistoryChart({ priceHistory }: ProfitHistoryChartProps) {
                 dataKey="time"
                 tick={{
                   fontSize: 10,
-                  fill: "#8a8a8a",
+                  fill: "#a0a0a0",
                   fontFamily: "monospace",
                 }}
                 stroke="#2f2f2f"
@@ -80,7 +80,7 @@ export function ProfitHistoryChart({ priceHistory }: ProfitHistoryChartProps) {
               <YAxis
                 tick={{
                   fontSize: 10,
-                  fill: "#8a8a8a",
+                  fill: "#a0a0a0",
                   fontFamily: "monospace",
                 }}
                 stroke="#2f2f2f"

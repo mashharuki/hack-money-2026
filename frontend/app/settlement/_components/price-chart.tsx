@@ -56,7 +56,7 @@ export function PriceChart({ history }: Props) {
           <span className="font-sans text-base font-semibold text-white">
             CPT PRICE HISTORY
           </span>
-          <p className="mt-0.5 font-mono text-[11px] text-[#8a8a8a]">
+          <p className="mt-0.5 font-mono text-[11px] text-[#a0a0a0]">
             Price snapshots across chains (auto-refreshes)
           </p>
         </div>
@@ -67,7 +67,7 @@ export function PriceChart({ history }: Props) {
                 className="h-2 w-2"
                 style={{ backgroundColor: COLORS[label] ?? "#888" }}
               />
-              <span className="font-mono text-[10px] font-medium text-[#8a8a8a]">
+              <span className="font-mono text-[10px] font-medium text-[#a0a0a0]">
                 {label.toUpperCase()}
               </span>
             </div>
@@ -79,7 +79,7 @@ export function PriceChart({ history }: Props) {
       <div className="border-t border-[#2f2f2f] px-6 py-5">
         {data.length < 2 ? (
           <div className="flex h-[200px] items-center justify-center">
-            <span className="font-mono text-xs text-[#8a8a8a]">
+            <span className="font-mono text-xs text-[#a0a0a0]">
               Collecting data points... ({data.length}/2 minimum)
             </span>
           </div>
@@ -89,11 +89,11 @@ export function PriceChart({ history }: Props) {
               <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
               <XAxis
                 dataKey="time"
-                tick={{ fontSize: 10, fill: "#8a8a8a", fontFamily: "monospace" }}
+                tick={{ fontSize: 10, fill: "#a0a0a0", fontFamily: "monospace" }}
                 stroke="#2f2f2f"
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "#8a8a8a", fontFamily: "monospace" }}
+                tick={{ fontSize: 10, fill: "#a0a0a0", fontFamily: "monospace" }}
                 stroke="#2f2f2f"
                 tickFormatter={(v: number) => v.toFixed(4)}
               />
