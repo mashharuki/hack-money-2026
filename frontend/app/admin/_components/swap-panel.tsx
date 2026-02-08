@@ -18,8 +18,8 @@ interface SwapPanelProps {
 }
 
 const DEFAULTS = {
-  usdc: { raw: "5000000", label: "5 USDC (6 dec)" },
-  cpt: { raw: "5000000000000000000", label: "5 CPT (18 dec)" },
+  usdc: { raw: "5000", label: "0.005 USDC ≈ 5 bps" },
+  cpt: { raw: "5000000000000000", label: "0.005 CPT ≈ 5 bps" },
 };
 
 export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
@@ -98,7 +98,7 @@ export function SwapPanel({ chain, label, onSuccess, onLog }: SwapPanelProps) {
         </div>
         <div>
           <label className="mb-1 block font-mono text-[10px] text-[#8a8a8a]">
-            AMOUNT (raw) — {zeroForOne ? "USDC 6dec" : "CPT 18dec"}
+            AMOUNT (raw) — {zeroForOne ? "USDC 6dec" : "CPT 18dec"} — {zeroForOne ? DEFAULTS.usdc.label : DEFAULTS.cpt.label}
           </label>
           <input
             type="text"
