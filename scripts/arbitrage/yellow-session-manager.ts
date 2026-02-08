@@ -8,6 +8,7 @@ import type {
   TradeOrder,
 } from './types.js';
 import { MockYellowSession } from './mock/mock-yellow-session.js';
+import { RealYellowSession } from './real-yellow-session.js';
 
 const COMPONENT = 'YellowSessionManager';
 
@@ -22,9 +23,14 @@ export class YellowSessionManager implements IYellowSessionManager {
       this.session = new MockYellowSession();
       this.logger.info(COMPONENT, 'Using MockYellowSession (USE_YELLOW_MOCK=true)');
     } else {
-      // Fallback to mock if real session is not available
-      this.logger.warn(COMPONENT, 'Real Yellow session not available, falling back to mock');
-      this.session = new MockYellowSession();
+      try {
+        this.session = new RealYellowSession();
+        this.logger.info(COMPONENT, 'Using RealYellowSession (USE_YELLOW_MOCK=false)');
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        this.logger.warn(COMPONENT, `RealYellowSession init failed: ${errMsg}, falling back to mock`);
+        this.session = new MockYellowSession();
+      }
     }
   }
 
